@@ -33,10 +33,92 @@
       background-color: black; /* Replace with the actual color you want */
       color: white; /* Adjust text color if needed */
     }
+    .sitename {
+  color: white;
+  font-size: 36px;
+  font-family: 'Arial Black', sans-serif;
+  text-shadow: 1px 1px 6px rgba(255, 215, 0, 0.5);
+  letter-spacing: 2px;
+  padding: 0;
+  margin-left: 0;  /* Ensures no extra margin */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
+}
+
 
     .hero {
       background-color: black; /* Adjust this if the hero section needs a background */
     }
+    #hero {
+  position: relative;
+  margin-top: 10px;
+  overflow: hidden;
+  padding: 80px 20px;
+  color: white;
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translateX(20%);
+  opacity: 0.7;
+  height: 100vh;
+  width: auto;
+  filter: brightness(90%);
+  z-index: -1;
+}
+
+/* Hero content always on top and aligned left */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: left;
+  max-width: 700px;
+  margin-left: 0;
+  margin-right: auto;
+  padding-left: 20px;
+}
+
+/* Style social icons */
+/* Match footer icon style */
+.hero-content .social-links a {
+  font-size: 22px;
+  color: black;
+  margin-right: 20px;
+  transition: color 0.3s ease;
+  background-color: gold;
+}
+
+.hero-content .social-links a:hover {
+  color: gold;
+}
+
+/* On small screens - remove background image and adjust padding */
+@media screen and (max-width: 768px) {
+  .hero-bg {
+    display: none; /* Completely hides the image on small screens */
+  }
+
+  #hero {
+    padding: 60px 15px;
+    background-color: black; /* fallback background */
+  }
+
+  .hero-content {
+    text-align: left;
+    padding-left: 10px;
+    margin: 0;
+  }
+}
+
+
+
     /* #footer {
       background-color: black;
     } */
@@ -51,9 +133,9 @@
 
       <a href="index.html" class="logo d-flex align-items-center">
         <img src="assets/img/logo.jpeg" alt="Logo" style="width: 50px; height: 50px;">
-        
-        <h1 class="sitename" style="color: white; font-size: 36px; font-family: 'Arial Black', sans-serif; text-shadow: 1px 1px 6px rgba(255, 215, 0, 0.5); letter-spacing: 2px; padding: 5px 15px; border-radius: 8px; margin-left: 10px;">BURGTECH</h1>
+        <h1 class="sitename ms-1">BURGTECH</h1>
       </a>
+      
       
       
 
@@ -84,31 +166,26 @@
 
   <main class="main">
 
-    <!-- Hero Section -->
-    <section id="hero" class="hero section dark-background" style="margin-top: 10px;  ">
-      <!-- <img src="assets/img/hero-bg.jpeg" 
-      alt=""  
-      style="position: absolute; top: 0; right: 0; transform: translateX(20%); opacity: 0.7; height: 100vh; filter: brightness(30%);"
-      onload="if(window.innerWidth < 768){this.style.position='static';this.style.transform='none';this.style.width='100%';this.style.height='auto';}">
-  -->
-  <img src="assets/img/hero-bg.jpeg" 
-  alt=""  
-  style="position: absolute; top:0; right: 0; transform: translateX(20%); opacity: 0.7; height: 100vh;"
-  onload="if(window.innerWidth < 768){this.style.position='static';this.style.transform='none';this.style.width='100%';this.style.height='auto';}">
+<!-- Hero Section -->
+<section id="hero" class="hero section dark-background">
+  <img src="assets/img/hero-bg.jpeg" alt="Hero Background" class="hero-bg">
+
+  <div class="container hero-content" data-aos="zoom-out" data-aos-delay="100">
+    <h2>Burgess A. Glay</h2>
+    <p>I'm a <span class="typed" data-typed-items="Software Engineer, Full Stack Developer, Mathematician"></span><span class="typed-cursor typed-cursor--blink"></span></p>
+    
+    <div class="social-links d-flex">
+      <a href="https://twitter.com/GlayBurgess27267" class="me-3"><i class="bi bi-twitter-x"></i></a>
+      <a href="https://www.facebook.com/share/19G3APZmqn/?mibextid=wwXIfr" class="me-3"><i class="bi bi-facebook"></i></a>
+      <a href="https://www.instagram.com/biggest_carpediem" class="me-3"><i class="bi bi-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4"><i class="bi bi-linkedin"></i></a>
+    </div>
+  </div>
+</section>
 
 
-      <div class="container" data-aos="zoom-out" data-aos-delay="100">
-        <h2>Burgess A. Glay</h2>
-        <p>I'm a <span class="typed" data-typed-items="Software Engineer, Full Stack Developer, Mathematician"></span><span class="typed-cursor typed-cursor--blink"></span></p>
-        <div class="social-links">
-          <a href="https://twitter.com/GlayBurgess27267"><i class="bi bi-twitter-x"></i></a>
-          <a href="https://www.facebook.com/share/19G3APZmqn/?mibextid=wwXIfr"><i class="bi bi-facebook"></i></a>
-          <a href="https://www.instagram.com/biggest_carpediem"><i class="bi bi-instagram"></i></a>
-          <a href="https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4"><i class="bi bi-linkedin"></i></a>
-        </div>
-      </div>
 
-    </section><!-- /Hero Section -->
+
 
   </main>
 
