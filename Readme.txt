@@ -10,7 +10,7 @@ Welcome to my personal portfolio website — a professional platform that showca
 ## 🧭 Pages
 
 - **About Me** – Insight into who I am, my background, and values  
-- **Resume** – Detailed overview of my academic and professional background 
+- **Resume** – Detailed overview of my academic and professional background (includes **downloadable CV**)  
 - **Services** – Description of the services I offer through Burtech (web development, tutoring, etc.)  
 - **Portfolio** – Gallery of various projects I’ve built  
 - **Contact** – Contact form for inquiries and collaborations (PHP-powered)
@@ -22,7 +22,7 @@ Welcome to my personal portfolio website — a professional platform that showca
 - Responsive design across devices  
 - Clean and minimal UI/UX  
 - Organized project showcase  
-- Resume page with CV viewing (downloadable support coming soon)  
+- Resume page with downloadable CV 
 - Contact form built with PHP  
 - Hosted using GitHub Pages
 
