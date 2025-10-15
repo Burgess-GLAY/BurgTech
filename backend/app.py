@@ -163,15 +163,6 @@ Just ask me about any of these topics, or mention a specific project name!"""
 # Initialize chatbot
 chatbot = PortfolioChatbot(portfolio_data)
 
-@app.route('/')
-def home():
-    """Home endpoint"""
-    return jsonify({
-        "message": "BurgTech AI Portfolio Backend",
-        "status": "running",
-        "timestamp": datetime.now().isoformat()
-    })
-
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """Chat endpoint for AI chatbot"""

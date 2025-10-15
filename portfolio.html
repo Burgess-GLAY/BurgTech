@@ -297,8 +297,81 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
-  
+  <script src="assets/js/portfolio-chatbot.js"></script>
 
-</body>
+  <script>
+    // Dynamic project loading
+    document.addEventListener('DOMContentLoaded', function() {
+      loadProjects();
+    });
+
+    async function loadProjects() {
+      try {
+        // Use production URL if available, fallback to localhost for development
+        const backendUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+          ? 'http://localhost:5000'
+          : 'https://burgtech-production.up.railway.app'; // Your live Railway URL
+
+        const response = await fetch(`${backendUrl}/api/projects`);
+        const data = await response.json();
+
+        if (data.projects && data.projects.length > 0) {
+          displayProjects(data.projects);
+        }
+      } catch (error) {
+        console.log('Could not load projects from API, using static content');
+      }
+    }
+
+    function displayProjects(projects) {
+      const container = document.querySelector('.isotope-container');
+      if (!container) return;
+
+      // Clear existing projects
+      container.innerHTML = '';
+
+      projects.forEach(project => {
+        const projectHTML = createProjectHTML(project);
+        container.appendChild(projectHTML);
+      });
+
+      // Reinitialize isotope if needed
+      if (window.Isotope) {
+        const isotope = new Isotope('.isotope-container', {
+          itemSelector: '.portfolio-item',
+          layoutMode: 'masonry'
+        });
+      }
+    }
+
+    function createProjectHTML(project) {
+      const div = document.createElement('div');
+      div.className = `col-lg-4 col-md-6 portfolio-item isotope-item filter-${project.category.toLowerCase().replace('/', '').replace(' ', '-')}`;
+
+      const technologies = project.technologies ? project.technologies.join(', ') : '';
+      const githubLink = project.github_url ? `<a href="${project.github_url}" target="_blank" title="View Source"><i class="bi bi-github"></i></a>` : '';
+      const liveLink = project.live_url ? `<a href="${project.live_url}" target="_blank" title="Live Demo"><i class="bi bi-box-arrow-up-right"></i></a>` : '';
+
+      div.innerHTML = `
+        <div class="portfolio-content h-100">
+          <img src="${project.image}" class="img-fluid" alt="" style="width: 100%; height: auto; object-fit: cover;">
+          <div class="portfolio-info">
+            <h4>${project.title}</h4>
+            <p>${project.description}</p>
+            ${technologies ? `<small class="text-muted">${technologies}</small><br>` : ''}
+            <div class="project-links mt-2">
+              ${githubLink}
+              ${liveLink}
+              <a href="${project.image}" title="${project.title}" data-gallery="portfolio-gallery-${project.category.toLowerCase()}" class="glightbox preview-link">
+                <i class="bi bi-zoom-in"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      return div;
+    }
+  </script>
 
 </html>

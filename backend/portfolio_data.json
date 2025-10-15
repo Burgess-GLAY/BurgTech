@@ -1,0 +1,173 @@
+{
+  "personal_info": {
+    "name": "Burgess A. Glay",
+    "title": "Software Engineer & Full Stack Developer",
+    "email": "burgessglay@example.com",
+    "location": "Your Location",
+    "bio": "Passionate and results-driven software engineer with extensive experience in web development, project management, and database systems. I specialize in creating innovative solutions that drive business growth and user satisfaction.",
+    "social_links": {
+      "twitter": "https://twitter.com/GlayBurgess27267",
+      "facebook": "https://www.facebook.com/share/19G3APZmqn/?mibextid=wwXIfr",
+      "instagram": "https://www.instagram.com/biggest_carpediem",
+      "linkedin": "https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4"
+    }
+  },
+  "skills": [
+    "Python",
+    "JavaScript",
+    "React",
+    "PHP",
+    "Laravel",
+    "HTML/CSS",
+    "Bootstrap",
+    "Tailwind CSS",
+    "Node.js",
+    "Express.js",
+    "MySQL",
+    "MongoDB",
+    "Git",
+    "REST APIs",
+    "Project Management",
+    "Database Design",
+    "UI/UX Design",
+    "Responsive Web Design"
+  ],
+  "experience": [
+    {
+      "title": "Software Engineer Intern",
+      "company": "Frontdream Technologies",
+      "duration": "2023 - Present",
+      "description": "Developed and maintained web applications using modern technologies. Collaborated with cross-functional teams to deliver high-quality software solutions.",
+      "achievements": [
+        "Built Nigeria Business Registry System using Laravel & PHP",
+        "Developed project management tools and documentation systems",
+        "Implemented responsive web designs meeting client requirements"
+      ]
+    },
+    {
+      "title": "Full Stack Developer",
+      "company": "BurgTech",
+      "duration": "2022 - Present",
+      "description": "Independent development of web applications and AI-powered solutions. Specialized in creating user-friendly interfaces and robust backend systems.",
+      "achievements": [
+        "Developed AI Voice Chatbot with React, Python, and Tailwind",
+        "Built online travel agency booking platform",
+        "Created database solutions for transportation systems"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "id": "ai-chatbot",
+      "title": "AI Voice Chatbot Development",
+      "category": "Website/Application",
+      "description": "Built an Advanced AI Chatbot with React, Python, and Tailwind",
+      "image": "assets/img/portfolio/website5.jpg",
+      "technologies": ["React", "Python", "Tailwind CSS", "AI/ML"],
+      "github_url": "https://github.com/yourusername/ai-chatbot",
+      "live_url": "https://your-chatbot-demo.com",
+      "featured": true,
+      "details": "This project showcases my expertise in AI integration and modern web development. The chatbot uses natural language processing to provide intelligent responses and voice interaction capabilities."
+    },
+    {
+      "id": "nigeria-registry",
+      "title": "Nigeria Business Registry System",
+      "category": "Website/Application",
+      "description": "A Robust Platform for Business Registration Built with Laravel & PHP",
+      "image": "assets/img/portfolio/website2.png",
+      "technologies": ["Laravel", "PHP", "MySQL", "Bootstrap"],
+      "github_url": "https://github.com/yourusername/nigeria-registry",
+      "live_url": "https://registry-demo.com",
+      "featured": true,
+      "details": "Comprehensive business registration platform with user authentication, document management, and payment integration. Handles thousands of registrations with secure data storage."
+    },
+    {
+      "id": "travel-agency",
+      "title": "Online Travel Agency Website",
+      "category": "Website/Application",
+      "description": "Seamless Travel Booking Platform Developed with PHP",
+      "image": "assets/img/portfolio/website1.png",
+      "technologies": ["PHP", "MySQL", "JavaScript", "CSS"],
+      "github_url": "https://github.com/yourusername/travel-agency",
+      "live_url": "https://travel-agency-demo.com",
+      "featured": true,
+      "details": "Full-featured travel booking platform with search functionality, booking management, payment processing, and admin dashboard for managing tours and bookings."
+    },
+    {
+      "id": "bus-database",
+      "title": "Online Bus Travel System Database Development",
+      "category": "Project Management",
+      "description": "Efficient, Scalable, and Secure Database Solutions",
+      "image": "assets/img/portfolio/project1.jpeg",
+      "technologies": ["MySQL", "Database Design", "PHP"],
+      "github_url": "https://github.com/yourusername/bus-database",
+      "featured": false,
+      "details": "Designed and implemented a comprehensive database system for bus transportation with route management, booking systems, and real-time tracking capabilities."
+    },
+    {
+      "id": "project-management",
+      "title": "Project Management – Nigeria Business Registry",
+      "category": "Project Management",
+      "description": "Internship Project at Frontdream Technologies",
+      "image": "assets/img/portfolio/project4.jpeg",
+      "technologies": ["Laravel", "PHP", "Project Management", "Agile"],
+      "github_url": "https://github.com/yourusername/project-management",
+      "featured": false,
+      "details": "Led the development of project management tools and documentation systems for the Nigeria Business Registry project, implementing Agile methodologies."
+    },
+    {
+      "id": "frontixx-docs",
+      "title": "Frontixx Website Documentation",
+      "category": "Project Management",
+      "description": "Comprehensive Software Documentation for Seamless Development",
+      "image": "assets/img/portfolio/project3.jpeg",
+      "technologies": ["Technical Writing", "Documentation", "Git"],
+      "github_url": "https://github.com/yourusername/frontixx-docs",
+      "featured": false,
+      "details": "Created comprehensive software documentation including API references, user guides, and developer documentation for the Frontixx web platform."
+    },
+    {
+      "id": "malta-flyer",
+      "title": "Study Abroad - Malta Travel Agency Flyer",
+      "category": "flyers",
+      "description": "A Promotional Design for an Educational Travel Agency",
+      "image": "assets/img/portfolio/flyer1.jpeg",
+      "technologies": ["Graphic Design", "Adobe Creative Suite", "Branding"],
+      "featured": false,
+      "details": "Designed promotional materials for Malta travel agency specializing in educational travel programs and study abroad opportunities."
+    },
+    {
+      "id": "cell-outreach",
+      "title": "Cell Out-reach Cup Flyer",
+      "category": "flyers",
+      "description": "A Promotional Design for a Cell Outreach Event",
+      "image": "assets/img/portfolio/flyer6.jpeg",
+      "technologies": ["Graphic Design", "Event Promotion", "Branding"],
+      "featured": false,
+      "details": "Created engaging promotional flyer for community outreach event, focusing on visual appeal and clear information hierarchy."
+    },
+    {
+      "id": "church-flyer",
+      "title": "Christ Embassy Gönyeli Church Flyer",
+      "category": "flyers",
+      "description": "A Promotional Design for Our Church Event",
+      "image": "assets/img/portfolio/flyer3.jpeg",
+      "technologies": ["Graphic Design", "Religious Branding", "Event Promotion"],
+      "featured": false,
+      "details": "Designed promotional materials for church events with appropriate religious iconography and community-focused messaging."
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Science in Computer Science",
+      "institution": "Your University",
+      "year": "2018 - 2022",
+      "description": "Focused on software engineering, algorithms, and web development"
+    }
+  ],
+  "certifications": [
+    "AWS Certified Developer",
+    "Google Cloud Professional",
+    "Meta Frontend Developer Certificate"
+  ]
+}
