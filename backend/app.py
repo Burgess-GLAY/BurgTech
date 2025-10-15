@@ -2,18 +2,34 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import os
+import sys
 from datetime import datetime
+import logging
+
+# Configure logging for Railway
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend integration
+
+logger.info('Flask app initialized')
+logger.info(f'Python version: {sys.version}')
+logger.info(f'Working directory: {os.getcwd()}')
 
 # Production settings
 if os.environ.get('FLASK_ENV') == 'production':
     # Disable debug mode in production
     app.config['DEBUG'] = False
+    logger.info('Running in PRODUCTION mode')
 else:
     # Enable debug mode in development
     app.config['DEBUG'] = True
+    logger.info('Running in DEVELOPMENT mode')
 
 # Load portfolio data (lazy loading)
 _portfolio_data = None
@@ -23,10 +39,17 @@ def get_portfolio_data():
     global _portfolio_data
     if _portfolio_data is None:
         try:
-            with open('portfolio_data.json', 'r', encoding='utf-8') as f:
+            json_path = os.path.join(os.path.dirname(__file__), 'portfolio_data.json')
+            logger.info(f'Loading portfolio data from: {json_path}')
+            with open(json_path, 'r', encoding='utf-8') as f:
                 _portfolio_data = json.load(f)
-        except FileNotFoundError:
+            logger.info(f'Portfolio data loaded successfully: {len(_portfolio_data.get("projects", []))} projects')
+        except FileNotFoundError as e:
+            logger.error(f'Portfolio data file not found: {e}')
             _portfolio_data = {"error": "Portfolio data not found"}
+        except Exception as e:
+            logger.error(f'Error loading portfolio data: {e}')
+            _portfolio_data = {"error": str(e)}
     return _portfolio_data
 
 # Initialize chatbot with lazy data loading
@@ -210,6 +233,7 @@ def get_experience():
 @app.route('/')
 def home():
     """Home endpoint - Health check for Railway"""
+    logger.info('Root route accessed')
     return jsonify({
         "message": "BurgTech AI Portfolio Backend",
         "status": "running",
