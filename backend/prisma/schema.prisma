@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  TEAM_MEMBER
+  CLIENT
+}
+
+enum ProjectStatus {
+  COMPLETED
+  IN_PROGRESS
+  ARCHIVED
+}
+
+enum MessageStatus {
+  UNREAD
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+enum SenderType {
+  VISITOR
+  ADMIN
+  BOT
+}
+
+enum PostCategory {
+  COMPANY_NEWS
+  TECH_INSIGHTS
+  PROJECT_ANNOUNCEMENT
+  AI_DATA_SCIENCE
+  TUTORIAL
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         Role      @default(CLIENT)
+  avatarUrl    String?
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  teamMember   TeamMember?
+  messages     Message[]
+  chatSessions ChatSession[]
+  blogPosts    BlogPost[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model TeamMember {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  bio         String
+  photoUrl    String?
+  skills      String[]
+  linkedinUrl String?
+  githubUrl   String?
+  twitterUrl  String?
+  order       Int      @default(0)
+  isVisible   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isVisible])
+}
+
+model Service {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  summary      String
+  description  String   @db.Text
+  icon         String?
+  technologies String[]
+  useCases     String[]
+  benefits     String[]
+  ctaLabel     String   @default("Get Started")
+  isPublished  Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([slug])
+  @@index([isPublished])
+}
+
+model Project {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  title        String
+  summary      String
+  description  String        @db.Text
+  client       String?
+  partner      String?
+  technologies String[]
+  imageUrls    String[]
+  liveUrl      String?
+  repoUrl      String?
+  status       ProjectStatus @default(COMPLETED)
+  isFeatured   Boolean       @default(false)
+  completedAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([slug])
+  @@index([isFeatured])
+  @@index([status])
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  authorName  String
+  authorRole  String
+  company     String?
+  avatarUrl   String?
+  content     String   @db.Text
+  rating      Int      @default(5)
+  isFeatured  Boolean  @default(false)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isFeatured, isPublished])
+}
+
+model BlogPost {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  title       String
+  summary     String
+  content     String       @db.Text
+  coverImage  String?
+  category    PostCategory @default(TECH_INSIGHTS)
+  tags        String[]
+  authorId    String
+  author      User         @relation(fields: [authorId], references: [id])
+  isPublished Boolean      @default(false)
+  publishedAt DateTime?
+  readTimeMin Int          @default(5)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([slug])
+  @@index([isPublished, publishedAt])
+  @@index([category])
+}
+
+model Message {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  body      String        @db.Text
+  status    MessageStatus @default(UNREAD)
+  userId    String?
+  user      User?         @relation(fields: [userId], references: [id])
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ChatSession {
+  id          String        @id @default(cuid())
+  visitorId   String
+  userId      String?
+  user        User?         @relation(fields: [userId], references: [id])
+  isActive    Boolean       @default(true)
+  adminJoined Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  messages    ChatMessage[]
+
+  @@index([visitorId])
+  @@index([isActive])
+}
+
+model ChatMessage {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sender    SenderType
+  content   String      @db.Text
+  readAt    DateTime?
+  createdAt DateTime    @default(now())
+
+  @@index([sessionId, createdAt])
+}
+
+model SiteSetting {
+  key       String   @id
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
