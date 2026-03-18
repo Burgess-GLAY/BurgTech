@@ -26,9 +26,15 @@ servicesRouter.get('/', optionalAuth, async (req: AuthRequest, res: Response) =>
   res.json({ services })
 })
 
-servicesRouter.get('/:slug', async (req: Request, res: Response) => {
+servicesRouter.get('/:slug', optionalAuth, async (req: AuthRequest, res: Response) => {
   const service = await prisma.service.findUnique({ where: { slug: req.params.slug } })
   if (!service) return res.status(404).json({ error: 'Service not found' })
+
+  const isAdmin = req.user && ['SUPER_ADMIN', 'ADMIN'].includes(req.user.role)
+  if (!service.isPublished && !isAdmin) {
+    return res.status(404).json({ error: 'Service not found' })
+  }
+
   res.json({ service })
 })
 

@@ -117,12 +117,15 @@ export default function AdminServicesPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl font-bold text-white">Services Management</h2>
-          <p className="text-sm text-white/40">Manage your core service offerings.</p>
+          <p className="text-sm text-white/40 mt-0.5">{services.length} total</p>
         </div>
-        <button onClick={() => handleOpenModal()} className="btn-primary flex items-center gap-2">
+        <button 
+          onClick={() => handleOpenModal()} 
+          className="flex items-center gap-2 px-4 py-2.5 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl hover:bg-cyan-300 transition-colors w-full sm:w-auto justify-center"
+        >
           <Plus className="w-4 h-4" /> Add Service
         </button>
       </div>

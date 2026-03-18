@@ -121,14 +121,29 @@ export default function AdminTeamPage() {
     }
   }
 
+  const toggleVisibility = async (member: any) => {
+    try {
+      await apiClient.put(`/team/${member.id}`, { isVisible: !member.isVisible })
+      toast.success(member.isVisible ? 'Member hidden' : 'Member visible')
+      fetchTeam()
+    } catch (err) {
+      toast.error('Failed to update visibility')
+    }
+  }
+
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl font-bold text-white">Team Management</h2>
-          <p className="text-sm text-white/40">Manage your expert team members here.</p>
+          <p className="text-sm text-white/40 mt-0.5">{members.length} total</p>
         </div>
-        <button onClick={() => handleOpenModal()} className="btn-primary flex items-center gap-2">
+        <button 
+          onClick={() => handleOpenModal()} 
+          className="flex items-center gap-2 px-4 py-2.5 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl hover:bg-cyan-300 transition-colors w-full sm:w-auto justify-center"
+        >
           <Plus className="w-4 h-4" /> Add Member
         </button>
       </div>
@@ -136,59 +151,129 @@ export default function AdminTeamPage() {
       {loading ? (
         <Skeleton lines={5} className="h-20 w-full rounded-2xl" />
       ) : members.length > 0 ? (
-        <div className="glass-card overflow-hidden">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-white/5 text-xs uppercase tracking-widest text-white/40">
-                <th className="px-6 py-4 font-medium">Member</th>
-                <th className="px-6 py-4 font-medium">Title</th>
-                <th className="px-6 py-4 font-medium">Visibility</th>
-                <th className="px-6 py-4 font-medium">Order</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {members.map((member: any) => (
-                <tr key={member.id} className="hover:bg-white/[0.02] transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center text-white/40">
-                        {member.photoUrl ? (
-                          <img src={member.photoUrl} alt="" className="w-full h-full object-cover" />
-                        ) : (
-                          <Users className="w-5 h-5" />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-medium text-white">{member.user.name}</p>
-                        <p className="text-xs text-white/40">{member.user.email}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-white/60">{member.title}</td>
-                  <td className="px-6 py-4">
-                    <span className={cn(
-                      'px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider',
-                      member.isVisible ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-white/40'
-                    )}>
-                      {member.isVisible ? 'Visible' : 'Hidden'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-white/40">{member.order}</td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => handleOpenModal(member)} className="p-2 rounded-lg hover:bg-white/5 text-white/60 hover:text-white transition-all">
-                        <Edit2 className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleDelete(member.id)} className="p-2 rounded-lg hover:bg-white/5 text-red-400 hover:bg-red-500/10 transition-all">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
+        <div className="space-y-6">
+          {/* DESKTOP TABLE — hidden on mobile */}
+          <div className="hidden md:block glass-card overflow-hidden">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-white/5 text-xs uppercase tracking-widest text-white/40">
+                  <th className="px-6 py-4 font-medium">Member</th>
+                  <th className="px-6 py-4 font-medium">Title</th>
+                  <th className="px-6 py-4 font-medium">Visibility</th>
+                  <th className="px-6 py-4 font-medium">Order</th>
+                  <th className="px-6 py-4 font-medium text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {members.map((member: any) => (
+                  <tr key={member.id} className="hover:bg-white/[0.02] transition-colors group">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-slate-800 overflow-hidden flex items-center justify-center text-white/40">
+                          {member.photoUrl ? (
+                            <img src={member.photoUrl} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <Users className="w-5 h-5" />
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-medium text-white">{member.user.name}</p>
+                          <p className="text-xs text-white/40">{member.user.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-white/60">{member.title}</td>
+                    <td className="px-6 py-4">
+                      <span className={cn(
+                        'px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider',
+                        member.isVisible ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-white/40'
+                      )}>
+                        {member.isVisible ? 'Visible' : 'Hidden'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-white/40">{member.order}</td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={() => handleOpenModal(member)} className="p-2 rounded-lg hover:bg-white/5 text-white/60 hover:text-white transition-all">
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(member.id)} className="p-2 rounded-lg hover:bg-white/5 text-red-400 hover:bg-red-500/10 transition-all">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* MOBILE CARDS — hidden on desktop */}
+          <div className="md:hidden space-y-3">
+            {members.map((member: any) => (
+              <div key={member.id} className="glass-card p-4 flex flex-col gap-3">
+                {/* ROW 1 — Avatar + Name + Title */}
+                <div className="flex items-center gap-3">
+                  {member.photoUrl ? (
+                    <img src={member.photoUrl} alt={member.user?.name} className="w-11 h-11 rounded-xl object-cover flex-shrink-0" />
+                  ) : (
+                    <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-cyan-500 flex items-center justify-center text-white font-bold text-base flex-shrink-0">
+                      {member.user?.name?.charAt(0) || '?'}
+                    </div>
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-white truncate">{member.user?.name || 'Team Member'}</p>
+                    <p className="text-xs text-cyan-400 truncate">{member.title}</p>
+                  </div>
+                </div>
+
+                {/* ROW 2 — Skills pills */}
+                <div>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1.5">Skills</p>
+                  <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
+                    {member.skills?.slice(0, 4).map((skill: string) => (
+                      <span key={skill} className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/50 whitespace-nowrap flex-shrink-0">
+                        {skill}
+                      </span>
+                    ))}
+                    {member.skills?.length > 4 && (
+                      <span className="text-[10px] text-white/30 flex-shrink-0 py-0.5">+{member.skills.length - 4} more</span>
+                    )}
+                  </div>
+                </div>
+
+                {/* ROW 3 — Order + Visibility side by side */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Display order</p>
+                    <span className="text-sm font-mono text-white/70 bg-white/[0.06] px-2 py-0.5 rounded-md">#{member.order}</span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Visibility</p>
+                    <button
+                      onClick={() => toggleVisibility(member)}
+                      className={cn(
+                        "inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border transition-all font-medium",
+                        member.isVisible ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-white/[0.05] text-white/40 border-white/[0.08]'
+                      )}
+                    >
+                      {member.isVisible ? <><Check className="w-3 h-3" /> Visible</> : <><X className="w-3 h-3" /> Hidden</>}
+                    </button>
+                  </div>
+                </div>
+
+                {/* ROW 4 — Actions */}
+                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06]">
+                  <button onClick={() => handleOpenModal(member)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors text-xs font-medium">
+                    <Edit2 className="w-3.5 h-3.5" /> Edit
+                  </button>
+                  <button onClick={() => handleDelete(member.id)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-red-500/20 text-red-400/70 hover:text-red-400 hover:bg-red-500/[0.07] transition-colors text-xs font-medium">
+                    <Trash2 className="w-3.5 h-3.5" /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
         <EmptyState 

@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Edit2, Trash2, Search, Loader2, X } from 'lucide-react'
+import { Plus, Edit2, Trash2, Search, Loader2, X, ExternalLink } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { useForm } from 'react-hook-form'
 import { apiClient } from '@/lib/api'
@@ -97,53 +97,139 @@ export default function AdminProjects() {
 
   return (
     <div className="space-y-6 max-w-6xl">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl font-semibold">Projects</h2>
           <p className="text-sm text-white/40 mt-0.5">{data?.total ?? 0} total</p>
         </div>
-        <button onClick={() => { setEdit(null); setShowModal(true) }} className="flex items-center gap-2 px-4 py-2 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl hover:bg-cyan-300 transition-colors">
+        <button 
+          onClick={() => { setEdit(null); setShowModal(true) }} 
+          className="flex items-center gap-2 px-4 py-2.5 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl hover:bg-cyan-300 transition-colors w-full sm:w-auto justify-center"
+        >
           <Plus className="w-4 h-4" /> New project
         </button>
       </div>
 
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex flex-col sm:flex-row gap-3 mb-6 flex-wrap">
         <div className="relative flex-1 min-w-48">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
           <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..." className="w-full pl-9 pr-4 py-2 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder-white/30 outline-none focus:border-cyan-400/40 transition-colors" />
         </div>
-        {['ALL','COMPLETED','IN_PROGRESS','ARCHIVED'].map(s => (
-          <button key={s} onClick={() => setStatus(s)} className={cn('px-3 py-2 rounded-xl text-xs font-medium transition-colors', statusFilter === s ? 'bg-cyan-400/15 text-cyan-400 border border-cyan-400/25' : 'border border-white/[0.08] text-white/40 hover:text-white')}>
-            {s === 'ALL' ? 'All' : s.replace('_', ' ')}
-          </button>
-        ))}
+        <div className="flex gap-2 flex-wrap">
+          {['ALL','COMPLETED','IN_PROGRESS','ARCHIVED'].map(s => (
+            <button key={s} onClick={() => setStatus(s)} className={cn('px-3 py-2 rounded-xl text-xs font-medium transition-colors', statusFilter === s ? 'bg-cyan-400/15 text-cyan-400 border border-cyan-400/25' : 'border border-white/[0.08] text-white/40 hover:text-white')}>
+              {s === 'ALL' ? 'All' : s.replace('_', ' ')}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="glass-card overflow-hidden">
-        <table className="w-full">
-          <thead><tr className="border-b border-white/[0.06]">{['Project','Client','Status','Tech','Actions'].map(h => <th key={h} className="text-left px-5 py-3 text-xs font-medium text-white/30 uppercase tracking-wide">{h}</th>)}</tr></thead>
-          <tbody className="divide-y divide-white/[0.04]">
-            {isLoading
-              ? Array(4).fill(0).map((_, i) => <tr key={i}>{Array(5).fill(0).map((_,j) => <td key={j} className="px-5 py-4"><div className="h-3 bg-white/10 rounded animate-pulse" /></td>)}</tr>)
-              : filtered.length === 0
-                ? <tr><td colSpan={5} className="px-5 py-10 text-center text-white/30 text-sm">No projects found</td></tr>
-                : filtered.map((p: any) => (
-                    <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
-                      <td className="px-5 py-4"><p className="text-sm font-medium">{p.title}</p>{p.isFeatured && <span className="text-[10px] text-cyan-400">Featured</span>}</td>
-                      <td className="px-5 py-4 text-sm text-white/50">{p.client || '—'}</td>
-                      <td className="px-5 py-4"><span className={cn('text-xs px-2 py-1 rounded-full font-medium', p.status==='COMPLETED' ? 'bg-emerald-500/10 text-emerald-400' : p.status==='IN_PROGRESS' ? 'bg-blue-500/10 text-blue-400' : 'bg-white/10 text-white/40')}>{p.status.replace('_',' ')}</span></td>
-                      <td className="px-5 py-4"><div className="flex flex-wrap gap-1">{p.technologies.slice(0,3).map((t: string) => <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-white/50">{t}</span>)}</div></td>
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => { setEdit(p); setShowModal(true) }} className="p-1.5 text-white/40 hover:text-white rounded-lg hover:bg-white/5 transition-colors"><Edit2 className="w-3.5 h-3.5" /></button>
-                          <button onClick={() => setDeleteId(p.id)} className="p-1.5 text-white/40 hover:text-red-400 rounded-lg hover:bg-red-500/5 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-            }
-          </tbody>
-        </table>
+      <div className="space-y-4">
+        {/* DESKTOP TABLE — hidden on mobile */}
+        <div className="hidden md:block glass-card overflow-hidden">
+          <table className="w-full">
+            <thead><tr className="border-b border-white/[0.06]">{['Project','Client','Status','Tech','Actions'].map(h => <th key={h} className="text-left px-5 py-3 text-xs font-medium text-white/30 uppercase tracking-wide">{h}</th>)}</tr></thead>
+            <tbody className="divide-y divide-white/[0.04]">
+              {isLoading
+                ? Array(4).fill(0).map((_, i) => <tr key={i}>{Array(5).fill(0).map((_,j) => <td key={j} className="px-5 py-4"><div className="h-3 bg-white/10 rounded animate-pulse" /></td>)}</tr>)
+                : filtered.length === 0
+                  ? <tr><td colSpan={5} className="px-5 py-10 text-center text-white/30 text-sm">No projects found</td></tr>
+                  : filtered.map((p: any) => (
+                      <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
+                        <td className="px-5 py-4"><p className="text-sm font-medium">{p.title}</p>{p.isFeatured && <span className="text-[10px] text-cyan-400">Featured</span>}</td>
+                        <td className="px-5 py-4 text-sm text-white/50">{p.client || '—'}</td>
+                        <td className="px-5 py-4"><span className={cn('text-xs px-2 py-1 rounded-full font-medium', p.status==='COMPLETED' ? 'bg-emerald-500/10 text-emerald-400' : p.status==='IN_PROGRESS' ? 'bg-blue-500/10 text-blue-400' : 'bg-white/10 text-white/40')}>{p.status.replace('_',' ')}</span></td>
+                        <td className="px-5 py-4"><div className="flex flex-wrap gap-1">{p.technologies.slice(0,3).map((t: string) => <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-white/50">{t}</span>)}</div></td>
+                        <td className="px-5 py-4">
+                          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => { setEdit(p); setShowModal(true) }} className="p-1.5 text-white/40 hover:text-white rounded-lg hover:bg-white/5 transition-colors"><Edit2 className="w-3.5 h-3.5" /></button>
+                            <button onClick={() => setDeleteId(p.id)} className="p-1.5 text-white/40 hover:text-red-400 rounded-lg hover:bg-red-500/5 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+              }
+            </tbody>
+          </table>
+        </div>
+
+        {/* MOBILE CARDS — hidden on desktop */}
+        <div className="md:hidden space-y-3">
+          {isLoading ? (
+            Array(3).fill(0).map((_, i) => <div key={i} className="glass-card p-4 h-40 animate-pulse" />)
+          ) : filtered.length === 0 ? (
+            <div className="glass-card p-10 text-center text-white/30 text-sm">No projects found</div>
+          ) : (
+            filtered.map((project: any) => (
+              <div key={project.id} className="glass-card p-4 flex flex-col gap-3">
+                {/* ROW 1 — Thumbnail + Title + Featured badge */}
+                <div className="flex gap-3 items-start">
+                  <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-white/[0.05]">
+                    {project.imageUrls?.[0] ? (
+                      <img src={project.imageUrls[0]} alt={project.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-900 to-slate-900 flex items-center justify-center text-blue-700 text-xl font-bold">
+                        {project.title.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="text-sm font-semibold text-white line-clamp-2 leading-snug">{project.title}</p>
+                      {project.isFeatured && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-400/15 text-cyan-400 border border-cyan-400/20 whitespace-nowrap flex-shrink-0">
+                          Featured
+                        </span>
+                      )}
+                    </div>
+                    {project.client && <p className="text-xs text-white/40 mt-0.5">Client: {project.client}</p>}
+                  </div>
+                </div>
+
+                {/* ROW 2 — Status + Technologies side by side */}
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Status</p>
+                    <span className={cn(
+                      'text-xs px-2.5 py-0.5 rounded-full border font-medium',
+                      project.status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
+                      project.status === 'IN_PROGRESS' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 
+                      'bg-white/[0.05] text-white/40 border-white/[0.08]'
+                    )}>
+                      {project.status.replace('_', ' ')}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Technologies</p>
+                    <div className="flex flex-wrap gap-1">
+                      {project.technologies?.slice(0, 3).map((t: string) => (
+                        <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-white/50">{t}</span>
+                      ))}
+                      {project.technologies?.length > 3 && (
+                        <span className="text-[10px] text-white/30">+{project.technologies.length - 3}</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* ROW 3 — Actions */}
+                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06]">
+                  {project.liveUrl && (
+                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors text-xs font-medium">
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+                  <button onClick={() => { setEdit(project); setShowModal(true) }} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors text-xs font-medium">
+                    <Edit2 className="w-3.5 h-3.5" /> Edit
+                  </button>
+                  <button onClick={() => setDeleteId(project.id)} className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-red-500/20 text-red-400/70 hover:text-red-400 hover:bg-red-500/[0.07] transition-colors text-xs font-medium">
+                    <Trash2 className="w-3.5 h-3.5" /> Delete
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       <AnimatePresence>

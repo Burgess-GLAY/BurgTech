@@ -5,7 +5,8 @@ import { cn } from '@/lib/utils'
 
 async function getProject(slug: string) {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/projects/${slug}`, { next: { revalidate: 3600 } })
+    const base = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
+    const res = await fetch(`${base}/api/v1/projects/${slug}`, { next: { revalidate: 60 } })
     if (!res.ok) return null
     const data = await res.json()
     return data.project
@@ -34,7 +35,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
           <div className="lg:col-span-7 space-y-10">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <span className={cn('text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full border', 
+                <span className={cn('text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full border',
                   project.status === 'COMPLETED' ? 'bg-emerald-400/10 text-emerald-400 border-emerald-400/20' : 'bg-blue-400/10 text-blue-400 border-blue-400/20'
                 )}>{project.status.replace('_', ' ')}</span>
                 {project.isFeatured && (

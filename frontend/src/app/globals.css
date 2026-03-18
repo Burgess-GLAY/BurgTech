@@ -3,19 +3,83 @@
 @tailwind utilities;
 
 @layer base {
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    font-size: 15.5px;
+  }
 
   body {
     @apply bg-surface text-white;
-    background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(51,143,255,0.12), transparent);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-image: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(51, 143, 255, 0.12), transparent);
   }
 
-  ::selection { background: rgba(0, 217, 255, 0.25); }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
 
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #0a0f1e; }
-  ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 3px; }
-  ::-webkit-scrollbar-thumb:hover { background: #338fff; }
+  h1 {
+    font-size: clamp(1.9rem, 4vw, 3.25rem);
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2.375rem);
+  }
+
+  h3 {
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  }
+
+  h4 {
+    font-size: 1.3rem;
+  }
+
+  h5 {
+    font-size: 1.125rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+  }
+
+  p {
+    font-size: 0.9375rem;
+    line-height: 1.8;
+  }
+
+  ::selection {
+    background: rgba(0, 217, 255, 0.25);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0a0f1e;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1f2937;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #338fff;
+  }
 }
 
 @layer components {
@@ -32,76 +96,111 @@
   }
 
   .section-pad {
-    @apply py-24 px-4 md:px-8 max-w-7xl mx-auto;
+    @apply py-28 px-4 md:px-8 max-w-7xl mx-auto;
   }
 
+  /* ── INPUTS — larger, more readable ── */
   .input-base {
-    @apply w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder-white/30 outline-none focus:border-cyan-400/40 transition-colors;
+    @apply w-full px-4 py-3 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder-white/30 outline-none focus:border-cyan-400/40 transition-colors;
+    font-size: 0.9375rem;
+    line-height: 1.5;
   }
 
+  /* ── BUTTONS — substantial and clickable ── */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-cyan-400 text-surface font-semibold rounded-xl hover:bg-cyan-300 transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2.5 px-6 py-3 bg-cyan-400 text-slate-900 font-semibold rounded-xl hover:bg-cyan-300 transition-all duration-200;
+    font-size: 0.9375rem;
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+    letter-spacing: -0.01em;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-white/15 text-white font-semibold rounded-xl hover:bg-white/5 hover:border-white/30 transition-all duration-200;
+    @apply inline-flex items-center justify-center gap-2.5 px-6 py-3 border border-white/15 text-white font-semibold rounded-xl hover:bg-white/5 hover:border-white/30 transition-all duration-200;
+    font-size: 0.9375rem;
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+    letter-spacing: -0.01em;
   }
 
+  /* ── PROSE for blog/insight article content ── */
   .prose-custom {
-    @apply text-white/70 leading-relaxed;
-  }
-  .prose-custom p {
-    margin-bottom: 1.4rem;
-    font-size: 1.0625rem;
+    color: rgba(255, 255, 255, 0.75);
     line-height: 1.85;
-    color: rgba(255, 255, 255, 0.72);
+    font-size: 1.125rem;
   }
+
+  .prose-custom p {
+    margin-bottom: 1.5rem;
+    font-size: 1.125rem;
+    line-height: 1.85;
+  }
+
   .prose-custom h2 {
-    color: #ffffff;
-    font-size: 1.5rem;
+    color: #fff;
+    font-size: 1.75rem;
     font-weight: 700;
-    margin: 2.25rem 0 1rem;
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    margin: 2.5rem 0 1.25rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   }
+
   .prose-custom h3 {
-    color: #ffffff;
-    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.375rem;
     font-weight: 600;
-    margin: 1.75rem 0 0.75rem;
-    color: rgba(255, 255, 255, 0.9);
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+    letter-spacing: -0.015em;
+    margin: 2rem 0 0.875rem;
   }
+
   .prose-custom a {
     color: #00d9ff;
     text-decoration: underline;
     text-underline-offset: 3px;
   }
+
   .prose-custom ul,
   .prose-custom ol {
-    padding-left: 1.5rem;
-    margin-bottom: 1.25rem;
-    color: rgba(255, 255, 255, 0.70);
+    padding-left: 1.75rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.125rem;
   }
+
   .prose-custom li {
-    margin-bottom: 0.5rem;
-    line-height: 1.75;
+    margin-bottom: 0.625rem;
+    line-height: 1.8;
   }
+
   .prose-custom code {
     background: rgba(255, 255, 255, 0.08);
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-size: 0.875em;
+    border-radius: 5px;
+    padding: 3px 7px;
+    font-size: 0.9375em;
     color: #00d9ff;
   }
+
   .prose-custom blockquote {
     border-left: 3px solid #00d9ff;
-    padding: 0.5rem 0 0.5rem 1.25rem;
+    padding: 0.75rem 0 0.75rem 1.5rem;
     color: rgba(255, 255, 255, 0.55);
     font-style: italic;
-    margin: 1.5rem 0;
+    font-size: 1.125rem;
+    margin: 1.75rem 0;
   }
+
   .prose-custom strong {
-    color: rgba(255, 255, 255, 0.92);
+    color: rgba(255, 255, 255, 0.95);
     font-weight: 600;
+  }
+
+  /* ── SCROLLBAR HIDE ── */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

@@ -4,28 +4,25 @@ import { formatDate } from '@/lib/utils'
 import { BlogCoverImage } from '@/components/blog/BlogCoverImage'
 
 const CATEGORY_BADGE: Record<string, string> = {
-  AI_DATA_SCIENCE:       'bg-violet-500/15 text-violet-400 border border-violet-500/20',
-  COMPANY_NEWS:          'bg-cyan-500/15   text-cyan-400   border border-cyan-500/20',
-  TECH_INSIGHTS:         'bg-blue-500/15   text-blue-400   border border-blue-500/20',
-  PROJECT_ANNOUNCEMENT:  'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20',
-  TUTORIAL:              'bg-amber-500/15  text-amber-400  border border-amber-500/20',
+  AI_DATA_SCIENCE: 'bg-violet-500/15 text-violet-400 border border-violet-500/20',
+  COMPANY_NEWS: 'bg-cyan-500/15   text-cyan-400   border border-cyan-500/20',
+  TECH_INSIGHTS: 'bg-blue-500/15   text-blue-400   border border-blue-500/20',
+  PROJECT_ANNOUNCEMENT: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20',
+  TUTORIAL: 'bg-amber-500/15  text-amber-400  border border-amber-500/20',
 }
 
 async function getPost(slug: string) {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
-                 || 'http://localhost:4000'
+  const base = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
   try {
-    const res = await fetch(
-      `${apiUrl}/api/v1/blog/${slug}`,
-      {
-        next: { revalidate: 3600 },
-        headers: { 'Content-Type': 'application/json' },
-      }
-    )
+    const res = await fetch(`${base}/api/v1/blog/${slug}`, {
+      next: { revalidate: 60 },
+      headers: { 'Content-Type': 'application/json' },
+    })
     if (!res.ok) return null
     const data = await res.json()
-    return data.post || null
-  } catch {
+    return data.post ?? null
+  } catch (err) {
+    console.error('getPost error:', err)
     return null
   }
 }

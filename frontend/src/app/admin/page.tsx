@@ -1,7 +1,7 @@
 'use client'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { MessageSquare, FolderOpen, Users, FileText, Star, TrendingUp } from 'lucide-react'
+import { MessageSquare, FolderOpen, Users, FileText, Star, Plus, Layers } from 'lucide-react'
 import { apiClient } from '@/lib/api'
 import { formatDate } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -15,12 +15,13 @@ export default function AdminDashboard() {
     { label: 'Team members',    value: data?.team       ?? '—', icon: Users,          color: 'bg-emerald-500/10 text-emerald-400' },
     { label: 'Published posts', value: data?.posts      ?? '—', icon: FileText,       color: 'bg-amber-500/10 text-amber-400' },
     { label: 'Testimonials',    value: data?.testimonials ?? '—', icon: Star,          color: 'bg-pink-500/10 text-pink-400' },
+    { label: 'Services offered', value: data?.services   ?? '—', icon: Layers,        color: 'bg-blue-500/10 text-blue-400' },
   ]
 
   return (
     <div className="space-y-8 max-w-5xl">
-      <div>
-        <h2 className="text-xl font-semibold mb-1">Overview</h2>
+      <div className="flex flex-col gap-1">
+        <h2 className="text-xl font-semibold">Overview</h2>
         <p className="text-sm text-white/40">Welcome back. Here's what's happening at Burtech.</p>
       </div>
 

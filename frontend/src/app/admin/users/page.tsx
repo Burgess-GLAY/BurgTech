@@ -71,70 +71,142 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-bold text-white">Identity & Access</h2>
-        <p className="text-sm text-white/40">Manage system users, roles, and permissions.</p>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+        <div>
+          <h2 className="text-xl font-bold text-white">Identity & Access</h2>
+          <p className="text-sm text-white/40 mt-0.5">{users.length} total</p>
+        </div>
       </div>
 
       {loading ? (
         <Skeleton lines={5} className="h-20 w-full rounded-2xl" />
       ) : users.length > 0 ? (
-        <div className="glass-card overflow-hidden">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-white/5 text-xs uppercase tracking-widest text-white/40">
-                <th className="px-6 py-4 font-medium">Identity</th>
-                <th className="px-6 py-4 font-medium">Role</th>
-                <th className="px-6 py-4 font-medium">Status</th>
-                <th className="px-6 py-4 font-medium">Last Active</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {users.map((user: any) => (
-                <tr key={user.id} className="hover:bg-white/[0.02] transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/20">
-                        <UserIcon className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-white text-sm">{user.name}</p>
-                        <p className="text-[10px] text-white/20 font-mono tracking-tighter">{user.id}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                       {user.role === 'SUPER_ADMIN' && <ShieldAlert className="w-3.5 h-3.5 text-red-400" />}
-                       {user.role === 'ADMIN' && <Shield className="w-3.5 h-3.5 text-cyan-400" />}
-                       <span className={cn(
-                         'text-[10px] font-black tracking-widest',
-                         user.role === 'SUPER_ADMIN' ? 'text-red-400' : 
-                         user.role === 'ADMIN' ? 'text-cyan-400' : 'text-white/40'
-                       )}>
-                         {user.role.replace('_', ' ')}
-                       </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <div className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.4)]' : 'bg-white/10'}`} />
-                      <span className="text-xs text-white/60">{user.email}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-xs text-white/20">
-                    {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString() : 'Never'}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button onClick={() => handleOpenEdit(user)} className="p-2 rounded-lg hover:bg-white/5 text-white/40 hover:text-white transition-all">
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                  </td>
+        <div className="space-y-4">
+          {/* DESKTOP TABLE — hidden on mobile */}
+          <div className="hidden md:block glass-card overflow-hidden">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-white/5 text-xs uppercase tracking-widest text-white/40">
+                  <th className="px-6 py-4 font-medium">Identity</th>
+                  <th className="px-6 py-4 font-medium">Role</th>
+                  <th className="px-6 py-4 font-medium">Status</th>
+                  <th className="px-6 py-4 font-medium">Last Active</th>
+                  <th className="px-6 py-4 font-medium text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {users.map((user: any) => (
+                  <tr key={user.id} className="hover:bg-white/[0.02] transition-colors group">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-white/5 flex items-center justify-center text-white/20">
+                          <UserIcon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-white text-sm">{user.name}</p>
+                          <p className="text-[10px] text-white/20 font-mono tracking-tighter">{user.id}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                         {user.role === 'SUPER_ADMIN' && <ShieldAlert className="w-3.5 h-3.5 text-red-400" />}
+                         {user.role === 'ADMIN' && <Shield className="w-3.5 h-3.5 text-cyan-400" />}
+                         <span className={cn(
+                           'text-[10px] font-black tracking-widest',
+                           user.role === 'SUPER_ADMIN' ? 'text-red-400' : 
+                           user.role === 'ADMIN' ? 'text-cyan-400' : 'text-white/40'
+                         )}>
+                           {user.role.replace('_', ' ')}
+                         </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.4)]' : 'bg-white/10'}`} />
+                        <span className="text-xs text-white/60">{user.email}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-xs text-white/20">
+                      {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString() : 'Never'}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button onClick={() => handleOpenEdit(user)} className="p-2 rounded-lg hover:bg-white/5 text-white/40 hover:text-white transition-all">
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* MOBILE CARDS — hidden on desktop */}
+          <div className="md:hidden space-y-3">
+            {users.map((user: any) => (
+              <div key={user.id} className="glass-card p-4 flex flex-col gap-3">
+                {/* ROW 1 — Avatar + Name + Email */}
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-blue-500/20 flex items-center justify-center text-sm font-bold text-blue-400 flex-shrink-0">
+                    {user.name.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-white truncate">{user.name}</p>
+                    <p className="text-xs text-white/40 truncate">{user.email}</p>
+                  </div>
+                </div>
+
+                {/* ROW 2 — Role + Status side by side */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Role</p>
+                    <span className={cn(
+                      "inline-flex items-center text-xs px-2.5 py-1 rounded-full font-medium border",
+                      user.role === 'SUPER_ADMIN' ? 'bg-violet-500/15 text-violet-400 border-violet-500/20' :
+                      user.role === 'ADMIN' ? 'bg-blue-500/15 text-blue-400 border-blue-500/20' :
+                      user.role === 'TEAM_MEMBER' ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20' :
+                      'bg-white/[0.05] text-white/40 border-white/[0.08]'
+                    )}>
+                      {user.role.replace('_', ' ')}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Status</p>
+                    <span className={cn(
+                      "inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full",
+                      user.isActive 
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+                        : "bg-white/[0.05] text-white/40 border border-white/[0.08]"
+                    )}>
+                      {user.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* ROW 3 — Last login */}
+                <div>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider mb-0.5">Last login</p>
+                  <p className="text-xs text-white/50">{user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleString() : 'Never'}</p>
+                </div>
+
+                {/* ROW 4 — Joined date */}
+                <div>
+                  <p className="text-[10px] text-white/30 uppercase tracking-wider mb-0.5">Joined</p>
+                  <p className="text-xs text-white/50">{new Date(user.createdAt).toLocaleDateString()}</p>
+                </div>
+
+                {/* ROW 5 — Action buttons */}
+                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06] mt-1">
+                  <button
+                    onClick={() => handleOpenEdit(user)}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors text-xs font-medium"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" /> Edit
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : (
         <EmptyState 

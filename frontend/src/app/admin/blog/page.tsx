@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, FileText, Search, Calendar, ChevronRight } from 'lucide-react'
+import { Plus, Edit2, Trash2, FileText, Search, Calendar, ChevronRight, Eye, EyeOff } from 'lucide-react'
 import { apiClient } from '@/lib/api'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -10,11 +10,20 @@ import { toast } from 'react-hot-toast'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
+const MOBILE_CATEGORY_BADGE: Record<string, string> = {
+  AI_DATA_SCIENCE: 'text-xs px-2.5 py-0.5 rounded-full bg-violet-500/15 text-violet-400 border border-violet-500/20',
+  COMPANY_NEWS: 'text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/20',
+  TECH_INSIGHTS: 'text-xs px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/20',
+  PROJECT_ANNOUNCEMENT: 'text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/20',
+  TUTORIAL: 'text-xs px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/20',
+}
+
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [deleteId, setDeleteId] = useState<string | null>(null) // Added for delete modal/confirm consistency
 
   useEffect(() => {
     fetchPosts()
@@ -44,14 +53,27 @@ export default function AdminBlogPage() {
     }
   }
 
+  const togglePublish = async (post: any) => {
+    try {
+      await apiClient.put(`/blog/${post.id}`, { isPublished: !post.isPublished })
+      toast.success(post.isPublished ? 'Post unpublished' : 'Post published')
+      fetchPosts()
+    } catch (err) {
+      toast.error('Failed to update status')
+    }
+  }
+
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
           <h2 className="text-xl font-bold text-white">Blog Management</h2>
-          <p className="text-sm text-white/40">Manage your company insights and news.</p>
+          <p className="text-sm text-white/40 mt-0.5">{posts.length} total</p>
         </div>
-        <Link href="/admin/blog/new" className="btn-primary flex items-center gap-2">
+        <Link 
+          href="/admin/blog/new" 
+          className="flex items-center gap-2 px-4 py-2.5 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl hover:bg-cyan-300 transition-colors w-full sm:w-auto justify-center"
+        >
           <Plus className="w-4 h-4" /> Create Post
         </Link>
       </div>
@@ -60,7 +82,8 @@ export default function AdminBlogPage() {
         <Skeleton lines={5} className="h-20 w-full rounded-2xl" />
       ) : posts.length > 0 ? (
         <div className="space-y-6">
-          <div className="glass-card overflow-hidden">
+          {/* DESKTOP TABLE — hidden on mobile */}
+          <div className="hidden md:block glass-card overflow-hidden">
             <table className="w-full text-left">
               <thead>
                 <tr className="border-b border-white/5 text-xs uppercase tracking-widest text-white/40">
@@ -91,7 +114,7 @@ export default function AdminBlogPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/40 text-[10px] font-bold tracking-wider">
-                        {post.category.replace('_', ' ')}
+                        {post.category?.replace('_', ' ')}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-xs text-white/40">
@@ -119,6 +142,87 @@ export default function AdminBlogPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* MOBILE CARDS — hidden on desktop */}
+          <div className="md:hidden space-y-3">
+            {posts.map((post: any) => (
+              <div key={post.id} className="glass-card p-4 flex flex-col gap-3">
+                {/* ROW 1 — Cover thumbnail + Title + Summary */}
+                <div className="flex gap-3 items-start">
+                  <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-white/[0.05]">
+                    {post.coverImage ? (
+                      <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-violet-900 to-blue-900 flex items-center justify-center text-violet-400 text-xs font-bold">
+                        {post.title.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-white line-clamp-2 leading-snug">{post.title}</p>
+                    <p className="text-xs text-white/40 mt-0.5">By {post.author?.name || 'Unknown'}</p>
+                  </div>
+                </div>
+
+                {/* ROW 2 — Category + Status side by side */}
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <div>
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Category</p>
+                    <span className={MOBILE_CATEGORY_BADGE[post.category] || 'text-xs px-2.5 py-0.5 rounded-full bg-white/5 text-white/40 border border-white/10'}>
+                      {post.category?.replace(/_/g, ' ') || 'Uncategorised'}
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Status</p>
+                    <span className={cn(
+                      "inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full",
+                      post.isPublished ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.05] text-white/40 border border-white/[0.08]"
+                    )}>
+                      {post.isPublished ? 'Published' : 'Draft'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* ROW 3 — Date + Read time side by side */}
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-0.5">Published</p>
+                    <p className="text-xs text-white/50">{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : '—'}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] text-white/30 uppercase tracking-wider mb-0.5">Read time</p>
+                    <p className="text-xs text-white/50">{post.readTimeMin || 5} min</p>
+                  </div>
+                </div>
+
+                {/* ROW 4 — Actions */}
+                <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06]">
+                  <button
+                    onClick={() => togglePublish(post)}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors text-xs font-medium"
+                  >
+                    {post.isPublished ? (
+                      <><EyeOff className="w-3.5 h-3.5" /> Unpublish</>
+                    ) : (
+                      <><Eye className="w-3.5 h-3.5" /> Publish</>
+                    )}
+                  </button>
+                  <Link
+                    href={`/admin/blog/${post.id}`}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-white/[0.08] text-white/60 hover:text-white hover:bg-white/[0.05] transition-colors text-xs font-medium"
+                  >
+                    <Edit2 className="w-3.5 h-3.5" /> Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(post.id)}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-red-500/20 text-red-400/70 hover:text-red-400 hover:bg-red-500/[0.07] transition-colors text-xs font-medium"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" /> Delete
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
           
           <Pagination 

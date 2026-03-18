@@ -18,13 +18,6 @@ interface TeamMember {
   twitterUrl?: string
 }
 
-const FALLBACK: TeamMember[] = [
-  { id:'1', name:'Burgess Awalayah Glay', title:'Chief Systems Architect & Founder', photoUrl: '/images/burgess.jpg', bio:'BSc Software Engineering, Rauf Denktas University. MSc candidate at Nanjing University of Post & Telecommunications. Research focus: AI, Data Science, Analytics.', skills:['System Architecture','AI/ML','Data Science','Full-Stack','Cloud'], linkedinUrl:'https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4/', githubUrl:'#' },
-  { id:'2', name:'Growth Lead', title:'Growth Strategist', bio:'Drives go-to-market strategy, partnership development, and data-informed client acquisition.', skills:['Growth Strategy','Digital Marketing','Analytics','CRM','SEO'], linkedinUrl:'#' },
-  { id:'3', name:'Design Lead', title:'Experience Design Lead', bio:'Crafts pixel-perfect, user-centred interfaces balancing aesthetics with function.', skills:['UI/UX Design','Figma','Design Systems','Prototyping','User Research'], linkedinUrl:'#' },
-  { id:'4', name:'Operations Lead', title:'Head of Operations', bio:'Ensures seamless project delivery and client satisfaction through agile methodology.', skills:['Project Management','Agile','Operations','Client Success','QA'], linkedinUrl:'#' },
-]
-
 export default function TeamPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['team'],
@@ -32,7 +25,7 @@ export default function TeamPage() {
     staleTime: 5 * 60 * 1000,
   })
 
-  const team: TeamMember[] = data?.length ? data : FALLBACK
+  const team: TeamMember[] = data ?? []
 
   return (
     <div className="pt-32 pb-24 bg-[#020617] min-h-screen">
@@ -55,11 +48,15 @@ export default function TeamPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[1, 2, 3, 4].map(i => <TeamSkeleton key={i} />)}
           </div>
-        ) : (
+        ) : team.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {team.map((m, i) => (
               <TeamCard key={m.id} member={m} index={i} />
             ))}
+          </div>
+        ) : (
+          <div className="text-center py-20">
+            <p className="text-white/40 text-lg">Team information coming soon</p>
           </div>
         )}
       </div>
