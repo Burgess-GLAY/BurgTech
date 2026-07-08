@@ -4,8 +4,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -53,11 +54,13 @@ model User {
   lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  mfaEnabled   Boolean   @default(false)
 
   teamMember   TeamMember?
   messages     Message[]
   chatSessions ChatSession[]
   blogPosts    BlogPost[]
+  auditLogs    AuditLog[]
 
   @@index([email])
   @@index([role])
@@ -111,6 +114,7 @@ model Project {
   client       String?
   partner      String?
   technologies String[]
+  highlights   String[]
   imageUrls    String[]
   liveUrl      String?
   repoUrl      String?
@@ -210,4 +214,19 @@ model SiteSetting {
   key       String   @id
   value     String   @db.Text
   updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String   // CREATE | UPDATE | DELETE
+  entity    String   // BlogPost | Project | Service | TeamMember | Testimonial | User
+  entityId  String
+  changes   Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([entity, entityId])
+  @@index([createdAt])
 }

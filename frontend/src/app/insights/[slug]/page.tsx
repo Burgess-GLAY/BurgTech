@@ -4,11 +4,11 @@ import { formatDate } from '@/lib/utils'
 import { BlogCoverImage } from '@/components/blog/BlogCoverImage'
 
 const CATEGORY_BADGE: Record<string, string> = {
-  AI_DATA_SCIENCE: 'bg-violet-500/15 text-violet-400 border border-violet-500/20',
-  COMPANY_NEWS: 'bg-cyan-500/15   text-cyan-400   border border-cyan-500/20',
-  TECH_INSIGHTS: 'bg-blue-500/15   text-blue-400   border border-blue-500/20',
-  PROJECT_ANNOUNCEMENT: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/20',
-  TUTORIAL: 'bg-amber-500/15  text-amber-400  border border-amber-500/20',
+  AI_DATA_SCIENCE: 'bg-bt-teal-subtle text-bt-cyan border border-bt-teal/20',
+  COMPANY_NEWS: 'bg-bt-cyan-subtle   text-bt-cyan   border border-bt-cyan-border',
+  TECH_INSIGHTS: 'bg-bt-teal-subtle   text-bt-cyan   border border-bt-teal/20',
+  PROJECT_ANNOUNCEMENT: 'bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border',
+  TUTORIAL: 'bg-bt-teal-subtle  text-bt-cyan  border border-bt-teal/20',
 }
 
 async function getPost(slug: string) {
@@ -36,8 +36,7 @@ function NotFoundState() {
         This article may have been removed or the link may be incorrect.
       </p>
       <Link href="/insights"
-        className="inline-flex items-center gap-2 px-6 py-3 bg-cyan-400
-                   text-slate-900 font-semibold rounded-xl hover:bg-cyan-300 transition-colors">
+        className="btn-primary">
         Browse all insights
       </Link>
     </div>
@@ -97,12 +96,12 @@ function ArticleLayout({ post }: { post: any }) {
 
       {/* Author Block */}
       <div className="flex items-center gap-3 py-4 border-y border-white/[0.08] mb-8">
-        <div className="w-10 h-10 rounded-full bg-cyan-400/20 flex items-center justify-center text-sm font-bold text-cyan-400 flex-shrink-0">
+        <div className="w-10 h-10 rounded-full bg-bt-cyan-subtle flex items-center justify-center text-sm font-bold text-bt-cyan flex-shrink-0">
           {post.author?.name?.charAt(0) || 'B'}
         </div>
         <div>
           <p className="text-sm font-semibold">
-            {post.author?.name || 'Burtech Solution'}
+            {post.author?.name || 'BurgTech Solutions'}
           </p>
           <p className="text-xs text-white/40">
             {post.publishedAt ? formatDate(post.publishedAt) : ''}
@@ -155,9 +154,9 @@ export async function generateMetadata({
   params
 }: { params: { slug: string } }) {
   const post = await getPost(params.slug)
-  if (!post) return { title: 'Article Not Found | Burtech Solution' }
+  if (!post) return { title: 'Article Not Found | BurgTech Solutions' }
   return {
-    title: `${post.title} | Burtech Solution`,
+    title: `${post.title} | BurgTech Solutions`,
     description: post.summary,
     openGraph: {
       title: post.title,

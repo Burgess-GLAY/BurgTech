@@ -33,7 +33,7 @@ export default function ContactPage() {
   return (
     <div className="pt-28 pb-24 px-4 max-w-6xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16">
-        <span className="text-cyan-400 text-sm font-medium tracking-wide uppercase">Get in touch</span>
+        <span className="text-bt-cyan text-sm font-medium tracking-wide uppercase">Get in touch</span>
         <h1 className="text-4xl md:text-5xl font-bold mt-3 mb-4">Let's build something <span className="gradient-text-brand">great together</span></h1>
         <p className="text-white/50 text-lg max-w-xl mx-auto">Have a project in mind? We'd love to hear from you.</p>
       </motion.div>
@@ -49,12 +49,12 @@ export default function ContactPage() {
             const Icon = c.icon
             return (
               <div key={c.label} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
-                  <Icon className="w-4 h-4 text-blue-400" />
+                <div className="w-10 h-10 rounded-xl bg-bt-cyan/10 border border-bt-cyan/20 flex items-center justify-center flex-shrink-0">
+                  <Icon className="w-4 h-4 text-bt-cyan" />
                 </div>
                 <div>
                   <p className="text-xs text-white/40 mb-0.5">{c.label}</p>
-                  {c.href ? <a href={c.href} target="_blank" rel="noopener" className="text-white hover:text-cyan-400 transition-colors font-medium">{c.value}</a> : <p className="text-white font-medium">{c.value}</p>}
+                  {c.href ? <a href={c.href} target="_blank" rel="noopener" className="text-white hover:text-bt-cyan transition-colors font-medium">{c.value}</a> : <p className="text-white font-medium">{c.value}</p>}
                 </div>
               </div>
             )
@@ -63,14 +63,14 @@ export default function ContactPage() {
             <p className="text-xs text-white/40 mb-3 uppercase tracking-wide">Follow us</p>
             <div className="flex gap-3">
               {[
-                { icon: Facebook, href: 'https://www.facebook.com/profile.php?id=61575516834594', label: 'Facebook' },
-                { icon: Instagram, href: 'https://www.instagram.com/biggest_carpediem/', label: 'Instagram' },
-                { icon: Linkedin, href: 'https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4/', label: 'LinkedIn' },
-                { icon: Github, href: 'https://github.com/burtech', label: 'GitHub' }
+                { icon: Facebook, href: 'https://www.facebook.com/share/1T74GwKndw/?mibextid=wwXIfr', label: 'Facebook' },
+                { icon: Instagram, href: 'https://www.instagram.com/burgess.glay?igsh=MWJtazIyaWxzcXJ5dQ%3D%3D&utm_source=qr', label: 'Instagram' },
+                { icon: Linkedin, href: 'https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4?utm_source=share_via&utm_content=profile&utm_medium=member_ios', label: 'LinkedIn' },
+                { icon: Github, href: 'https://github.com/Burgess-GLAY', label: 'GitHub' }
               ].map(s => {
                 const Icon = s.icon
                 return (
-                  <a key={s.label} href={s.href} target="_blank" rel="noopener" aria-label={s.label} className="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white/40 hover:text-white hover:border-cyan-400/30 transition-all">
+                  <a key={s.label} href={s.href} target="_blank" rel="noopener" aria-label={s.label} className="w-10 h-10 rounded-xl glass-card flex items-center justify-center text-white/40 hover:text-white hover:border-bt-cyan/30 transition-all">
                     <Icon className="w-4 h-4" />
                   </a>
                 )
@@ -86,7 +86,7 @@ export default function ContactPage() {
         <motion.div initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }} className="lg:col-span-3">
           {done ? (
             <div className="glass-card p-10 text-center">
-              <div className="w-14 h-14 rounded-full bg-cyan-400/10 flex items-center justify-center mx-auto mb-4"><Send className="w-6 h-6 text-cyan-400" /></div>
+              <div className="w-14 h-14 rounded-full bg-bt-cyan/10 flex items-center justify-center mx-auto mb-4"><Send className="w-6 h-6 text-bt-cyan" /></div>
               <h3 className="text-xl font-semibold mb-2">Message sent!</h3>
               <p className="text-white/50 mb-6">Thanks for reaching out. We'll get back to you shortly.</p>
               <button onClick={() => setDone(false)} className="px-6 py-2.5 border border-white/15 rounded-xl text-sm hover:bg-white/5 transition-colors">Send another message</button>
@@ -114,7 +114,7 @@ export default function ContactPage() {
                 <textarea {...register('body')} rows={6} placeholder="Tell us about your project..." className="input-base resize-none" />
                 {errors.body && <p className="mt-1 text-xs text-red-400">{errors.body.message}</p>}
               </div>
-              <button type="submit" disabled={isSubmitting} className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-cyan-400 text-slate-900 font-semibold rounded-xl hover:bg-cyan-300 disabled:opacity-60 disabled:cursor-not-allowed transition-all">
+              <button type="submit" disabled={isSubmitting} className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-bt-cyan text-bg-primary font-semibold rounded-xl hover:bg-bt-cyan-light disabled:opacity-60 disabled:cursor-not-allowed transition-all">
                 {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</> : <><Send className="w-4 h-4" /> Send message</>}
               </button>
             </form>

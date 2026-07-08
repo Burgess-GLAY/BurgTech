@@ -3,11 +3,11 @@ import rateLimit from 'express-rate-limit'
 export function createRateLimiter() {
   return rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 200,
+    max: 10000,
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: 'Too many requests, please try again later.' },
-    skip: (req) => req.path === '/health',
+    skip: (req) => req.path === '/health' || req.path.startsWith('/api/v1/blog'),
   })
 }
 

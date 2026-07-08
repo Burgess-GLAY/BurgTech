@@ -27,21 +27,21 @@ export default function UpcomingPage() {
         <div className="max-w-4xl mx-auto mb-20">
           <div className="glass-card p-8 md:p-12 relative overflow-hidden">
             {/* Background Gradients */}
-            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-500/5 pointer-events-none" />
-            <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-[100px] opacity-50 pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] opacity-50 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-bt-cyan/5 to-bt-teal/5 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-bt-cyan/10 rounded-full blur-[100px] opacity-50 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-bt-teal/10 rounded-full blur-[100px] opacity-50 pointer-events-none" />
 
             <div className="relative z-10">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
                 <div className="flex items-center gap-3 text-sm font-semibold text-white/50">
-                  <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-cyan-400" /> April 11, 2026</span>
+                  <span className="flex items-center gap-1.5"><Calendar className="w-4 h-4 text-bt-cyan" /> April 11, 2026</span>
                   <span className="hidden sm:inline">·</span>
-                  <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-cyan-400" /> One Day</span>
+                  <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-bt-cyan" /> One Day</span>
                   <span className="hidden sm:inline">·</span>
-                  <span className="flex items-center gap-1.5"><Video className="w-4 h-4 text-cyan-400" /> Google Meet</span>
+                  <span className="flex items-center gap-1.5"><Video className="w-4 h-4 text-bt-cyan" /> Google Meet</span>
                 </div>
-                <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-cyan-400/15 text-cyan-400 border border-cyan-400/25 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-bt-cyan/15 text-bt-cyan border border-bt-cyan/25 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-bt-cyan animate-pulse" />
                   Upcoming
                 </span>
               </div>
@@ -50,11 +50,11 @@ export default function UpcomingPage() {
               
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-12 h-12 rounded-full bg-slate-800 border border-white/10 overflow-hidden relative">
-                  <img src="/images/burgess.jpg" alt="Burgess Awalayah Glay" className="object-cover w-full h-full" />
+                  <img src="/images/burgessprofile.jpeg" alt="Burgess Awalayah Glay" className="object-cover w-full h-full" />
                 </div>
                 <div>
                   <p className="font-semibold text-white/90">Burgess Awalayah Glay</p>
-                  <p className="text-sm text-cyan-400">Founder, Burtech Solution</p>
+                  <p className="text-sm text-bt-cyan">Founder, Burtech Solution</p>
                 </div>
               </div>
 
@@ -66,7 +66,7 @@ export default function UpcomingPage() {
 
               <div className="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8 mb-10">
                 <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-cyan-400" /> What you will learn
+                  <BookOpen className="w-5 h-5 text-bt-cyan" /> What you will learn
                 </h3>
                 <ul className="grid sm:grid-cols-2 gap-4">
                   {[
@@ -79,8 +79,8 @@ export default function UpcomingPage() {
                     'Practical hands-on exercises'
                   ].map((topic, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm text-white/70">
-                      <span className="w-5 h-5 rounded-full bg-cyan-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                      <span className="w-5 h-5 rounded-full bg-bt-cyan/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-bt-cyan" />
                       </span>
                       <span className="leading-relaxed">{topic}</span>
                     </li>
@@ -90,7 +90,7 @@ export default function UpcomingPage() {
 
               <div className="flex flex-col sm:flex-row items-center gap-4">
                 <Link href="/contact"
-                  className="w-full sm:w-auto px-8 py-4 bg-cyan-400 text-slate-900 font-bold rounded-xl hover:bg-cyan-300 transition-colors text-center inline-flex justify-center items-center gap-2">
+                  className="w-full sm:w-auto px-8 py-4 bg-bt-cyan text-bg-primary font-bold rounded-xl hover:bg-bt-cyan-light transition-colors text-center inline-flex justify-center items-center gap-2">
                   Register now — it is free <ArrowRight className="w-5 h-5" />
                 </Link>
                 <a href="https://www.facebook.com/burgtech" target="_blank" rel="noopener noreferrer"
@@ -108,7 +108,7 @@ export default function UpcomingPage() {
         {/* Past Sessions Link */}
         <div className="text-center">
           <p className="text-white/50 mb-4">Missed a previous session? View our complete session history.</p>
-          <Link href="/academy/sessions" className="text-cyan-400 font-medium hover:text-cyan-300 transition-colors">
+          <Link href="/academy/sessions" className="text-bt-cyan font-medium hover:text-bt-cyan-light transition-colors">
             View all past sessions →
           </Link>
         </div>

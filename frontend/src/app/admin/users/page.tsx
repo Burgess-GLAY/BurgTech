@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Key, Shield, User as UserIcon, Check, X, ShieldAlert, Edit2, Save } from 'lucide-react'
+import { Key, Shield, User as UserIcon, Check, X, ShieldAlert, Edit2, Save, Trash2 } from 'lucide-react'
 import { apiClient } from '@/lib/api'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -14,12 +14,14 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
   const [editingUser, setEditingUser] = useState<any>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     role: 'CLIENT',
     isActive: true,
     password: '',
+    confirmPassword: '',
   })
 
   useEffect(() => {
@@ -50,13 +52,19 @@ export default function AdminUsersPage() {
       role: user.role,
       isActive: user.isActive,
       password: '',
+      confirmPassword: '',
     })
     setModalOpen(true)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (formData.password && formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match')
+      return
+    }
     const payload: any = { ...formData }
+    delete payload.confirmPassword
     if (!payload.password) delete payload.password
 
     try {
@@ -66,6 +74,18 @@ export default function AdminUsersPage() {
       fetchUsers()
     } catch (err: any) {
       toast.error(err.response?.data?.error || 'Update failed')
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return
+    try {
+      await apiClient.delete(`/users/${deleteTarget.id}`)
+      toast.success('User deleted successfully')
+      setDeleteTarget(null)
+      fetchUsers()
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Delete failed')
     }
   }
 
@@ -110,20 +130,20 @@ export default function AdminUsersPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                         {user.role === 'SUPER_ADMIN' && <ShieldAlert className="w-3.5 h-3.5 text-red-400" />}
-                         {user.role === 'ADMIN' && <Shield className="w-3.5 h-3.5 text-cyan-400" />}
-                         <span className={cn(
-                           'text-[10px] font-black tracking-widest',
-                           user.role === 'SUPER_ADMIN' ? 'text-red-400' : 
-                           user.role === 'ADMIN' ? 'text-cyan-400' : 'text-white/40'
-                         )}>
-                           {user.role.replace('_', ' ')}
-                         </span>
+                        {user.role === 'SUPER_ADMIN' && <ShieldAlert className="w-3.5 h-3.5 text-red-400" />}
+                        {user.role === 'ADMIN' && <Shield className="w-3.5 h-3.5 text-bt-cyan" />}
+                        <span className={cn(
+                          'text-[10px] font-black tracking-widest',
+                          user.role === 'SUPER_ADMIN' ? 'text-red-400' :
+                            user.role === 'ADMIN' ? 'text-bt-cyan' : 'text-white/40'
+                        )}>
+                          {user.role.replace('_', ' ')}
+                        </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <div className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.4)]' : 'bg-white/10'}`} />
+                        <div className={`w-1.5 h-1.5 rounded-full ${user.isActive ? 'bg-bt-cyan shadow-[0_0_8px_rgba(61,214,200,0.4)]' : 'bg-white/10'}`} />
                         <span className="text-xs text-white/60">{user.email}</span>
                       </div>
                     </td>
@@ -133,6 +153,9 @@ export default function AdminUsersPage() {
                     <td className="px-6 py-4 text-right">
                       <button onClick={() => handleOpenEdit(user)} className="p-2 rounded-lg hover:bg-white/5 text-white/40 hover:text-white transition-all">
                         <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => setDeleteTarget({ id: user.id, name: user.name })} className="p-2 rounded-lg hover:bg-red-500/10 text-white/40 hover:text-red-400 transition-all ml-1">
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </td>
                   </tr>
@@ -147,7 +170,7 @@ export default function AdminUsersPage() {
               <div key={user.id} className="glass-card p-4 flex flex-col gap-3">
                 {/* ROW 1 — Avatar + Name + Email */}
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-blue-500/20 flex items-center justify-center text-sm font-bold text-blue-400 flex-shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-bt-cyan-subtle flex items-center justify-center text-sm font-bold text-bt-cyan flex-shrink-0">
                     {user.name.charAt(0)}
                   </div>
                   <div className="min-w-0">
@@ -162,10 +185,10 @@ export default function AdminUsersPage() {
                     <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Role</p>
                     <span className={cn(
                       "inline-flex items-center text-xs px-2.5 py-1 rounded-full font-medium border",
-                      user.role === 'SUPER_ADMIN' ? 'bg-violet-500/15 text-violet-400 border-violet-500/20' :
-                      user.role === 'ADMIN' ? 'bg-blue-500/15 text-blue-400 border-blue-500/20' :
-                      user.role === 'TEAM_MEMBER' ? 'bg-cyan-500/15 text-cyan-400 border-cyan-500/20' :
-                      'bg-white/[0.05] text-white/40 border-white/[0.08]'
+                      user.role === 'SUPER_ADMIN' ? 'bg-red-500/15 text-red-300 border-red-500/20' :
+                        user.role === 'ADMIN' ? 'bg-bt-cyan-subtle text-bt-cyan border-bt-cyan-border' :
+                          user.role === 'TEAM_MEMBER' ? 'bg-bt-teal-subtle text-bt-cyan border-bt-cyan-border/20' :
+                            'bg-white/[0.05] text-white/40 border-white/[0.08]'
                     )}>
                       {user.role.replace('_', ' ')}
                     </span>
@@ -174,8 +197,8 @@ export default function AdminUsersPage() {
                     <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Status</p>
                     <span className={cn(
                       "inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full",
-                      user.isActive 
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
+                      user.isActive
+                        ? "bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border"
                         : "bg-white/[0.05] text-white/40 border border-white/[0.08]"
                     )}>
                       {user.isActive ? 'Active' : 'Inactive'}
@@ -203,13 +226,19 @@ export default function AdminUsersPage() {
                   >
                     <Edit2 className="w-3.5 h-3.5" /> Edit
                   </button>
+                  <button
+                    onClick={() => setDeleteTarget({ id: user.id, name: user.name })}
+                    className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border border-red-500/20 text-red-400/70 hover:text-red-400 hover:bg-red-500/10 transition-colors text-xs font-medium"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" /> Delete
+                  </button>
                 </div>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <EmptyState 
+        <EmptyState
           icon={Shield}
           title="No users found"
           description="If you see this, there might be a synchronization issue with the database."
@@ -220,15 +249,14 @@ export default function AdminUsersPage() {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         title="Modify User Status"
-        className="max-w-md"
       >
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-white/40">Full Name</label>
-              <input 
+              <input
                 type="text" required
-                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 transition-colors"
+                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-bt-cyan/50 transition-colors"
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
               />
@@ -236,9 +264,9 @@ export default function AdminUsersPage() {
 
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-white/40">Email Address</label>
-              <input 
+              <input
                 type="email" required
-                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 transition-colors"
+                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-bt-cyan/50 transition-colors"
                 value={formData.email}
                 onChange={e => setFormData({ ...formData, email: e.target.value })}
               />
@@ -246,8 +274,8 @@ export default function AdminUsersPage() {
 
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-white/40">System Role</label>
-              <select 
-                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 transition-colors"
+              <select
+                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-bt-cyan/50 transition-colors"
                 value={formData.role}
                 onChange={e => setFormData({ ...formData, role: e.target.value })}
               >
@@ -261,9 +289,9 @@ export default function AdminUsersPage() {
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-white/40">New Password (leave blank to keep)</label>
               <div className="relative">
-                <input 
+                <input
                   type="password"
-                  className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 transition-colors"
+                  className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-bt-cyan/50 transition-colors"
                   value={formData.password}
                   onChange={e => setFormData({ ...formData, password: e.target.value })}
                 />
@@ -271,10 +299,25 @@ export default function AdminUsersPage() {
               </div>
             </div>
 
+            {formData.password && (
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-white/40">Confirm New Password</label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    className="w-full bg-slate-900 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-white focus:outline-none focus:border-bt-cyan/50 transition-colors"
+                    value={formData.confirmPassword}
+                    onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
+                  />
+                  <Key className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-white/20" />
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center gap-3 pt-2">
-              <input 
+              <input
                 type="checkbox" id="isActive"
-                className="w-4 h-4 rounded border-white/10 bg-slate-900 text-cyan-400 focus:ring-cyan-400/50"
+                className="w-4 h-4 rounded border-white/10 bg-slate-900 text-bt-cyan focus:ring-bt-cyan/50"
                 checked={formData.isActive}
                 onChange={e => setFormData({ ...formData, isActive: e.target.checked })}
               />
@@ -291,6 +334,35 @@ export default function AdminUsersPage() {
             </button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        isOpen={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        title="Delete User"
+        size="sm"
+      >
+        <div className="space-y-5">
+          <p className="text-sm text-white/70">
+            Are you sure you want to delete <span className="text-white font-semibold">{deleteTarget?.name}</span>? This action cannot be undone.
+          </p>
+          <div className="flex justify-end gap-3 pt-2 border-t border-white/5">
+            <button
+              type="button"
+              onClick={() => setDeleteTarget(null)}
+              className="px-5 py-2.5 rounded-xl text-white/40 hover:text-white transition-colors text-sm font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="px-5 py-2.5 rounded-xl bg-red-500/20 text-red-400 hover:bg-red-500/30 hover:text-red-300 transition-colors text-sm font-medium border border-red-500/20"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
       </Modal>
     </div>
   )

@@ -28,7 +28,7 @@ function Modal({ project, onClose, onSaved }: { project?: any; onClose: () => vo
     } catch (err: any) { toast.error(err.response?.data?.error ?? 'Failed to save') }
   }
 
-  const inp = 'w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder-white/30 outline-none focus:border-cyan-400/40 transition-colors'
+  const inp = 'w-full px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder-white/30 outline-none focus:border-bt-cyan/40 transition-colors'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -62,7 +62,7 @@ function Modal({ project, onClose, onSaved }: { project?: any; onClose: () => vo
           <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" {...register('isFeatured')} /><span className="text-sm text-white/70">Featured project (shown on homepage)</span></label>
           <div className="flex gap-3 pt-2 border-t border-white/[0.06]">
             <button type="button" onClick={onClose} className="flex-1 py-2.5 border border-white/[0.08] rounded-xl text-sm text-white/50 hover:text-white transition-colors">Cancel</button>
-            <button type="submit" disabled={isSubmitting} className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl hover:bg-cyan-300 disabled:opacity-60 transition-colors">
+            <button type="submit" disabled={isSubmitting} className="btn-primary flex-1 py-2.5 text-sm">
               {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</> : (isEdit ? 'Save changes' : 'Create project')}
             </button>
           </div>
@@ -74,14 +74,15 @@ function Modal({ project, onClose, onSaved }: { project?: any; onClose: () => vo
 
 export default function AdminProjects() {
   const qc = useQueryClient()
-  const [search, setSearch]         = useState('')
-  const [statusFilter, setStatus]   = useState('ALL')
-  const [editProject, setEdit]      = useState<any>(null)
-  const [showModal, setShowModal]   = useState(false)
-  const [deleteId, setDeleteId]     = useState<string | null>(null)
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatus] = useState('ALL')
+  const [editProject, setEdit] = useState<any>(null)
+  const [showModal, setShowModal] = useState(false)
+  const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-projects', statusFilter],
+    staleTime: 60_000,
     queryFn: () => apiClient.get(`/projects${statusFilter !== 'ALL' ? `?status=${statusFilter}` : ''}`).then(r => r.data),
   })
 
@@ -102,9 +103,9 @@ export default function AdminProjects() {
           <h2 className="text-xl font-semibold">Projects</h2>
           <p className="text-sm text-white/40 mt-0.5">{data?.total ?? 0} total</p>
         </div>
-        <button 
-          onClick={() => { setEdit(null); setShowModal(true) }} 
-          className="flex items-center gap-2 px-4 py-2.5 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl hover:bg-cyan-300 transition-colors w-full sm:w-auto justify-center"
+        <button
+          onClick={() => { setEdit(null); setShowModal(true) }}
+          className="btn-primary px-4 py-2.5 text-sm w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" /> New project
         </button>
@@ -113,11 +114,11 @@ export default function AdminProjects() {
       <div className="flex flex-col sm:flex-row gap-3 mb-6 flex-wrap">
         <div className="relative flex-1 min-w-48">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..." className="w-full pl-9 pr-4 py-2 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder-white/30 outline-none focus:border-cyan-400/40 transition-colors" />
+          <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search projects..." className="w-full pl-9 pr-4 py-2 bg-white/[0.04] border border-white/[0.08] rounded-xl text-sm text-white placeholder-white/30 outline-none focus:border-bt-cyan/40 transition-colors" />
         </div>
         <div className="flex gap-2 flex-wrap">
-          {['ALL','COMPLETED','IN_PROGRESS','ARCHIVED'].map(s => (
-            <button key={s} onClick={() => setStatus(s)} className={cn('px-3 py-2 rounded-xl text-xs font-medium transition-colors', statusFilter === s ? 'bg-cyan-400/15 text-cyan-400 border border-cyan-400/25' : 'border border-white/[0.08] text-white/40 hover:text-white')}>
+          {['ALL', 'COMPLETED', 'IN_PROGRESS', 'ARCHIVED'].map(s => (
+            <button key={s} onClick={() => setStatus(s)} className={cn('px-3 py-2 rounded-xl text-xs font-medium transition-colors', statusFilter === s ? 'bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border' : 'border border-white/[0.08] text-white/40 hover:text-white')}>
               {s === 'ALL' ? 'All' : s.replace('_', ' ')}
             </button>
           ))}
@@ -128,26 +129,26 @@ export default function AdminProjects() {
         {/* DESKTOP TABLE — hidden on mobile */}
         <div className="hidden md:block glass-card overflow-hidden">
           <table className="w-full">
-            <thead><tr className="border-b border-white/[0.06]">{['Project','Client','Status','Tech','Actions'].map(h => <th key={h} className="text-left px-5 py-3 text-xs font-medium text-white/30 uppercase tracking-wide">{h}</th>)}</tr></thead>
+            <thead><tr className="border-b border-white/[0.06]">{['Project', 'Client', 'Status', 'Tech', 'Actions'].map(h => <th key={h} className="text-left px-5 py-3 text-xs font-medium text-white/30 uppercase tracking-wide">{h}</th>)}</tr></thead>
             <tbody className="divide-y divide-white/[0.04]">
               {isLoading
-                ? Array(4).fill(0).map((_, i) => <tr key={i}>{Array(5).fill(0).map((_,j) => <td key={j} className="px-5 py-4"><div className="h-3 bg-white/10 rounded animate-pulse" /></td>)}</tr>)
+                ? Array(4).fill(0).map((_, i) => <tr key={i}>{Array(5).fill(0).map((_, j) => <td key={j} className="px-5 py-4"><div className="h-3 bg-white/10 rounded animate-pulse" /></td>)}</tr>)
                 : filtered.length === 0
                   ? <tr><td colSpan={5} className="px-5 py-10 text-center text-white/30 text-sm">No projects found</td></tr>
                   : filtered.map((p: any) => (
-                      <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
-                        <td className="px-5 py-4"><p className="text-sm font-medium">{p.title}</p>{p.isFeatured && <span className="text-[10px] text-cyan-400">Featured</span>}</td>
-                        <td className="px-5 py-4 text-sm text-white/50">{p.client || '—'}</td>
-                        <td className="px-5 py-4"><span className={cn('text-xs px-2 py-1 rounded-full font-medium', p.status==='COMPLETED' ? 'bg-emerald-500/10 text-emerald-400' : p.status==='IN_PROGRESS' ? 'bg-blue-500/10 text-blue-400' : 'bg-white/10 text-white/40')}>{p.status.replace('_',' ')}</span></td>
-                        <td className="px-5 py-4"><div className="flex flex-wrap gap-1">{p.technologies.slice(0,3).map((t: string) => <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-white/50">{t}</span>)}</div></td>
-                        <td className="px-5 py-4">
-                          <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => { setEdit(p); setShowModal(true) }} className="p-1.5 text-white/40 hover:text-white rounded-lg hover:bg-white/5 transition-colors"><Edit2 className="w-3.5 h-3.5" /></button>
-                            <button onClick={() => setDeleteId(p.id)} className="p-1.5 text-white/40 hover:text-red-400 rounded-lg hover:bg-red-500/5 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
+                    <tr key={p.id} className="hover:bg-white/[0.02] transition-colors group">
+                      <td className="px-5 py-4"><p className="text-sm font-medium">{p.title}</p>{p.isFeatured && <span className="text-[10px] text-bt-cyan">Featured</span>}</td>
+                      <td className="px-5 py-4 text-sm text-white/50">{p.client || '—'}</td>
+                      <td className="px-5 py-4"><span className={cn('text-xs px-2 py-1 rounded-full font-medium', p.status === 'COMPLETED' ? 'bg-bt-cyan-subtle text-bt-cyan' : p.status === 'IN_PROGRESS' ? 'bg-bt-teal-subtle text-bt-cyan' : 'bg-white/10 text-white/40')}>{p.status.replace('_', ' ')}</span></td>
+                      <td className="px-5 py-4"><div className="flex flex-wrap gap-1">{p.technologies.slice(0, 3).map((t: string) => <span key={t} className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] text-white/50">{t}</span>)}</div></td>
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button onClick={() => { setEdit(p); setShowModal(true) }} className="p-1.5 text-white/40 hover:text-white rounded-lg hover:bg-white/5 transition-colors"><Edit2 className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => setDeleteId(p.id)} className="p-1.5 text-white/40 hover:text-red-400 rounded-lg hover:bg-red-500/5 transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
               }
             </tbody>
           </table>
@@ -168,7 +169,7 @@ export default function AdminProjects() {
                     {project.imageUrls?.[0] ? (
                       <img src={project.imageUrls[0]} alt={project.title} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-900 to-slate-900 flex items-center justify-center text-blue-700 text-xl font-bold">
+                      <div className="w-full h-full bg-bt-teal flex items-center justify-center text-white/40 text-xl font-bold">
                         {project.title.charAt(0)}
                       </div>
                     )}
@@ -177,7 +178,7 @@ export default function AdminProjects() {
                     <div className="flex items-start justify-between gap-2">
                       <p className="text-sm font-semibold text-white line-clamp-2 leading-snug">{project.title}</p>
                       {project.isFeatured && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-400/15 text-cyan-400 border border-cyan-400/20 whitespace-nowrap flex-shrink-0">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border whitespace-nowrap flex-shrink-0">
                           Featured
                         </span>
                       )}
@@ -192,9 +193,9 @@ export default function AdminProjects() {
                     <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Status</p>
                     <span className={cn(
                       'text-xs px-2.5 py-0.5 rounded-full border font-medium',
-                      project.status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 
-                      project.status === 'IN_PROGRESS' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' : 
-                      'bg-white/[0.05] text-white/40 border-white/[0.08]'
+                      project.status === 'COMPLETED' ? 'bg-bt-cyan-subtle text-bt-cyan border-bt-cyan-border' :
+                        project.status === 'IN_PROGRESS' ? 'bg-bt-teal-subtle text-bt-cyan border-bt-cyan-border/20' :
+                          'bg-white/[0.05] text-white/40 border-white/[0.08]'
                     )}>
                       {project.status.replace('_', ' ')}
                     </span>

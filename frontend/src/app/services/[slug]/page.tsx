@@ -24,9 +24,9 @@ async function getService(slug: string) {
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const service = await getService(params.slug)
-  if (!service) return { title: 'Service Not Found | Burtech Solution' }
+  if (!service) return { title: 'Service Not Found | BurgTech Solutions' }
   return {
-    title: `${service.title} | Burtech Solution`,
+    title: `${service.title} | BurgTech Solutions`,
     description: service.summary,
   }
 }
@@ -74,8 +74,8 @@ export default async function ServicePage({ params }: { params: { slug: string }
         {/* 4. Three-column info grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           <div className="glass-card p-8 rounded-3xl border border-white/10">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400 mb-6 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" /> Technologies
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-bt-cyan mb-6 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-bt-cyan" /> Technologies
             </h3>
             <div className="flex flex-wrap gap-2">
               {service.technologies?.map((tech: string) => (
@@ -87,13 +87,13 @@ export default async function ServicePage({ params }: { params: { slug: string }
           </div>
 
           <div className="glass-card p-8 rounded-3xl border border-white/10">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400 mb-6 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" /> Use Cases
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-bt-cyan mb-6 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-bt-cyan" /> Use Cases
             </h3>
             <ul className="space-y-3">
               {service.useCases?.map((useCase: string) => (
                 <li key={useCase} className="flex items-start gap-3 text-sm text-white/50 leading-relaxed">
-                  <CheckCircle size={16} className="text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle size={16} className="text-bt-cyan flex-shrink-0 mt-0.5" />
                   {useCase}
                 </li>
               ))}
@@ -101,13 +101,13 @@ export default async function ServicePage({ params }: { params: { slug: string }
           </div>
 
           <div className="glass-card p-8 rounded-3xl border border-white/10">
-            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-400 mb-6 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" /> Key Benefits
+            <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-bt-cyan mb-6 flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-bt-cyan" /> Key Benefits
             </h3>
             <ul className="space-y-3">
               {service.benefits?.map((benefit: string) => (
                 <li key={benefit} className="flex items-start gap-3 text-sm text-white/50 leading-relaxed">
-                  <CheckCircle size={16} className="text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle size={16} className="text-bt-cyan flex-shrink-0 mt-0.5" />
                   {benefit}
                 </li>
               ))}
@@ -125,7 +125,7 @@ export default async function ServicePage({ params }: { params: { slug: string }
 
         {/* 6. CTA banner */}
         <div className="glass-card p-12 md:p-16 rounded-[3rem] border border-white/10 text-center relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent opacity-50 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-br from-bt-cyan-subtle to-transparent opacity-50 pointer-events-none" />
           <div className="relative z-10">
             <h2 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">Ready to get started?</h2>
             <p className="text-white/40 text-lg mb-10 max-w-xl mx-auto">
@@ -133,7 +133,7 @@ export default async function ServicePage({ params }: { params: { slug: string }
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-3 px-10 py-4 bg-cyan-400 text-slate-900 font-bold rounded-2xl hover:bg-cyan-300 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="btn-primary"
             >
               {service.ctaLabel || 'Get Started'} <ArrowRight size={20} />
             </Link>

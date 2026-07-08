@@ -14,13 +14,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
         position="bottom-right"
         toastOptions={{
           style: {
-            background: '#111827',
+            background: '#0a1a20',
             color: '#fff',
             border: '1px solid rgba(255,255,255,0.08)',
             borderRadius: '12px',
             fontSize: '14px',
           },
-          success: { iconTheme: { primary: '#00d9ff', secondary: '#0a0f1e' } },
+          success: { iconTheme: { primary: '#3dd6c8', secondary: '#050e12' } },
           error:   { iconTheme: { primary: '#ef4444', secondary: '#fff' } },
         }}
       />

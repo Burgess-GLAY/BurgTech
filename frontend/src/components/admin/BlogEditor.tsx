@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import Link from 'next/link'
 import { ImageInput } from './ImageInput'
+import { RichTextEditor } from './RichTextEditor'
 
 interface BlogEditorProps {
   initialData?: any
@@ -70,7 +71,7 @@ export function BlogEditor({ initialData, id }: BlogEditorProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl pb-20">
-      <div className="flex items-center justify-between sticky top-[72px] z-10 py-4 bg-[#020617]/80 backdrop-blur-xl border-b border-white/5 -mx-4 px-4">
+      <div className="flex items-center justify-between sticky top-16 z-10 py-4 bg-[#050e12]/80 backdrop-blur-xl border-b border-white/5 -mx-4 px-4">
         <div className="flex items-center gap-4">
           <Link href="/admin/blog" className="p-2 rounded-lg hover:bg-white/5 transition-colors">
             <ChevronLeft className="w-5 h-5 text-white/40" />
@@ -78,14 +79,13 @@ export function BlogEditor({ initialData, id }: BlogEditorProps) {
           <h2 className="text-xl font-bold text-white">{id ? 'Edit' : 'New'} Blog Post</h2>
         </div>
         <div className="flex items-center gap-3">
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={() => setFormData({ ...formData, isPublished: !formData.isPublished })}
-            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${
-              formData.isPublished 
-                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
-                : 'bg-white/5 text-white/40 border border-white/10'
-            }`}
+            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${formData.isPublished
+              ? 'bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border'
+              : 'bg-white/5 text-white/40 border border-white/10'
+              }`}
           >
             {formData.isPublished ? 'Published' : 'Draft'}
           </button>
@@ -102,7 +102,7 @@ export function BlogEditor({ initialData, id }: BlogEditorProps) {
             <label className="text-xs font-bold uppercase tracking-widest text-white/40">Title</label>
             <input
               type="text" required
-              className="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 text-2xl font-bold text-white focus:outline-none focus:border-cyan-400/50 transition-colors placeholder:text-white/10"
+              className="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 text-2xl font-bold text-white focus:outline-none focus:border-bt-cyan/50 transition-colors placeholder:text-white/10"
               placeholder="Post Title"
               value={formData.title}
               onChange={e => setFormData({ ...formData, title: e.target.value })}
@@ -113,20 +113,18 @@ export function BlogEditor({ initialData, id }: BlogEditorProps) {
             <label className="text-xs font-bold uppercase tracking-widest text-white/40">Slug</label>
             <input
               type="text" required
-              className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2 text-sm text-cyan-400/60 font-mono focus:outline-none focus:border-cyan-400/50 transition-colors"
+              className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-2 text-sm text-bt-cyan/60 font-mono focus:outline-none focus:border-bt-cyan/50 transition-colors"
               value={formData.slug}
               onChange={e => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
             />
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-widest text-white/40">Content (Plain Text/Markdown)</label>
-            <textarea
-              required rows={20}
-              className="w-full bg-slate-900 border border-white/10 rounded-2xl px-5 py-4 text-white/70 leading-relaxed focus:outline-none focus:border-cyan-400/50 transition-colors font-mono text-sm"
-              placeholder="Write your article here..."
+            <label className="text-xs font-bold uppercase tracking-widest text-white/40">Content</label>
+            <RichTextEditor
               value={formData.content}
-              onChange={e => setFormData({ ...formData, content: e.target.value })}
+              onChange={html => setFormData({ ...formData, content: html })}
+              minHeight="400px"
             />
           </div>
         </div>
@@ -136,7 +134,7 @@ export function BlogEditor({ initialData, id }: BlogEditorProps) {
             <div className="space-y-2">
               <label className="text-xs font-bold uppercase tracking-widest text-white/40">Category</label>
               <select
-                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 transition-colors"
+                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-bt-cyan/50 transition-colors"
                 value={formData.category}
                 onChange={e => setFormData({ ...formData, category: e.target.value })}
               >
@@ -149,7 +147,7 @@ export function BlogEditor({ initialData, id }: BlogEditorProps) {
               <input
                 type="text"
                 placeholder="Tech, Engineering..."
-                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400/50 transition-colors"
+                className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-bt-cyan/50 transition-colors"
                 value={formData.tags}
                 onChange={e => setFormData({ ...formData, tags: e.target.value })}
               />
@@ -168,7 +166,7 @@ export function BlogEditor({ initialData, id }: BlogEditorProps) {
             <label className="text-xs font-bold uppercase tracking-widest text-white/40">Summary</label>
             <textarea
               rows={4}
-              className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white/40 focus:outline-none focus:border-cyan-400/50 transition-colors"
+              className="w-full bg-slate-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white/40 focus:outline-none focus:border-bt-cyan/50 transition-colors"
               placeholder="Short excerpt for lists..."
               value={formData.summary}
               onChange={e => setFormData({ ...formData, summary: e.target.value })}

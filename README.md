@@ -252,20 +252,15 @@ RESEND_API_KEY=re_...
 ADMIN_EMAIL=your@email.com
 ```
 
-### 3. Start the database and Redis
+### 3. Start the backend
 
-```bash
-docker compose up db redis -d
-```
-
-Wait approximately 10 seconds for both containers to pass their health checks.
-
-### 4. Set up and start the backend
+PostgreSQL is hosted on Neon — no local containers needed.
+Just ensure DATABASE_URL and DIRECT_URL are set in .env.
 
 ```bash
 cd backend
 npm install
-npx prisma migrate dev --name init
+npx prisma migrate deploy
 npm run db:seed
 npm run dev
 ```
@@ -273,7 +268,7 @@ npm run dev
 The API will be running at `http://localhost:4000`
 You can verify it with: `curl http://localhost:4000/health`
 
-### 5. Start the frontend (new terminal)
+### 4. Start the frontend (new terminal)
 
 ```bash
 cd frontend
@@ -283,7 +278,7 @@ npm run dev
 
 The website will be running at `http://localhost:3000`
 
-### 6. Access the platform
+### 5. Access the platform
 
 | URL | Description |
 |---|---|
@@ -309,8 +304,9 @@ All variables are documented in `.env.example`. Here is a summary:
 
 | Variable | Required | Description |
 |---|---|---|
-| `DATABASE_URL` | ✅ | Full PostgreSQL connection string |
-| `POSTGRES_PASSWORD` | ✅ | Password used by Docker Compose |
+| `DATABASE_URL` | ✅ | Neon pooled connection string (with pgbouncer=true) |
+| `DIRECT_URL` | ✅ | Neon direct connection string (for Prisma migrations) |
+| `REDIS_URL` | ✅ | Upstash Redis connection string (with TLS enabled) |
 | `JWT_SECRET` | ✅ | Secret for signing JWTs — min 32 chars |
 | `OPENAI_API_KEY` | ✅ | Powers the Buri AI chatbot |
 | `RESEND_API_KEY` | ✅ | Sends contact and chat alert emails |
@@ -475,8 +471,8 @@ Add an Nginx reverse proxy in front pointing:
 **Backend → Railway**
 1. Create a new Railway project
 2. Deploy from GitHub, set root directory to `backend`
-3. Add a PostgreSQL plugin and a Redis plugin from the Railway marketplace
-4. Copy all environment variables from `.env.example` into Railway's variable settings
+3. Set all environment variables from `.env.example`
+4. PostgreSQL is externally hosted on Neon (set DATABASE_URL, DIRECT_URL)
 5. Railway will auto-detect the Dockerfile and deploy
 
 **Frontend → Vercel**

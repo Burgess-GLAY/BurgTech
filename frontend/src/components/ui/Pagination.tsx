@@ -36,7 +36,7 @@ export function Pagination({
           className={cn(
             'w-10 h-10 rounded-lg border transition-all flex items-center justify-center font-medium',
             currentPage === p
-              ? 'bg-cyan-400/15 text-cyan-400 border-cyan-400/25'
+              ? 'bg-bt-cyan/15 text-bt-cyan border-bt-cyan/25'
               : 'border-white/10 text-white/60 hover:border-white/20 hover:text-white'
           )}
         >

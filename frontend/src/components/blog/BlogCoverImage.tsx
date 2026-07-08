@@ -1,5 +1,6 @@
 'use client'
 import { useMemo } from 'react'
+import { getInsightImage } from '@/utils/insightImages'
 
 interface BlogCoverImageProps {
   src?: string | null
@@ -15,7 +16,7 @@ const CATEGORY_CONFIG: Record<string, {
 }> = {
   AI_DATA_SCIENCE:       { bg1:'#0d1b3e', bg2:'#1a0a4e', accent:'#818cf8',
                             label:'AI & Data Science',    icon:'⬡' },
-  COMPANY_NEWS:          { bg1:'#0a1f2e', bg2:'#0f2a3a', accent:'#00d9ff',
+  COMPANY_NEWS:          { bg1:'#0a1f2e', bg2:'#0f2a3a', accent:'#3dd6c8',
                             label:'Company News',          icon:'◈' },
   TECH_INSIGHTS:         { bg1:'#0d1836', bg2:'#0a2040', accent:'#3b82f6',
                             label:'Tech Insights',         icon:'◎' },
@@ -28,6 +29,7 @@ const CATEGORY_CONFIG: Record<string, {
 export function BlogCoverImage({ src, alt, category, title, className }: BlogCoverImageProps) {
   const config = CATEGORY_CONFIG[category] || CATEGORY_CONFIG.TECH_INSIGHTS
   const slugifiedCategory = category.toLowerCase().replace(/_/g, '-')
+  const fallbackImage = getInsightImage(category)
 
   const titleLines = useMemo(() => {
     const maxLen = 38
@@ -48,73 +50,13 @@ export function BlogCoverImage({ src, alt, category, title, className }: BlogCov
     return lines.slice(0, 2)
   }, [title])
 
-  if (src && src.trim() !== '') {
-    return (
-      <img
-        src={src}
-        alt={alt}
-        className={className}
-      />
-    )
-  }
+  const imageSrc = (src && src.trim() !== '') ? src : fallbackImage
 
   return (
-    <svg
-      width="100%"
-      viewBox="0 0 800 420"
-      xmlns="http://www.w3.org/2000/svg"
+    <img
+      src={imageSrc}
+      alt={alt}
       className={className}
-      style={{ display: 'block' }}
-    >
-      <defs>
-        <linearGradient id={`bg-${slugifiedCategory}`}
-                        x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={config.bg1} />
-          <stop offset="100%" stopColor={config.bg2} />
-        </linearGradient>
-      </defs>
-      {/* Background */}
-      <rect width="800" height="420"
-            fill={`url(#bg-${slugifiedCategory})`} />
-      {/* Decorative circles */}
-      <circle cx="680" cy="80"  r="120"
-              fill={config.accent} fillOpacity="0.07" />
-      <circle cx="100" cy="340" r="90"
-              fill={config.accent} fillOpacity="0.05" />
-      <circle cx="400" cy="210" r="200"
-              fill={config.accent} fillOpacity="0.03" />
-      {/* Horizontal accent line */}
-      <line x1="80" y1="300" x2="720" y2="300"
-            stroke={config.accent} strokeOpacity="0.12"
-            strokeWidth="1" />
-      {/* Icon */}
-      <text x="400" y="175" textAnchor="middle"
-            fontSize="72" fill={config.accent}
-            fillOpacity="0.32" fontFamily="monospace">
-        {config.icon}
-      </text>
-      {/* Category label */}
-      <text x="400" y="220" textAnchor="middle"
-            fontSize="11" fill={config.accent}
-            letterSpacing="3" fontFamily="sans-serif"
-            style={{ textTransform: 'uppercase' }}>
-        {config.label.toUpperCase()}
-      </text>
-      {/* Post title — split at 38 chars */}
-      {titleLines.map((line, i) => (
-        <text key={i} x="400" y={255 + i * 28}
-              textAnchor="middle" fontSize="19"
-              fill="rgba(255,255,255,0.88)"
-              fontFamily="sans-serif" fontWeight="600">
-          {line}
-        </text>
-      ))}
-      {/* Watermark */}
-      <text x="780" y="408" textAnchor="end"
-            fontSize="10" fill="rgba(255,255,255,0.18)"
-            fontFamily="sans-serif">
-        Burtech Solution
-      </text>
-    </svg>
+    />
   )
 }

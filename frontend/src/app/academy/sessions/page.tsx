@@ -15,7 +15,7 @@ const SESSIONS = [
     duration:    'One day',
     format:      'Online — Google Meet',
     instructor:  'Burgess Awalayah Glay',
-    instructorRole: 'Founder, Burtech Solution',
+    instructorRole: 'Founder, BurgTech Solutions',
     status:      'completed',
     description: 'An introductory one-day workshop covering the building blocks of web development. Participants learned HTML document structure, semantic elements, CSS styling, selectors, the box model, flexbox basics, and how to build a complete web page from scratch. No prior experience required.',
     topics: [
@@ -38,7 +38,7 @@ const SESSIONS = [
     duration:    'One day',
     format:      'Online — Google Meet',
     instructor:  'Burgess Awalayah Glay',
-    instructorRole: 'Founder, Burtech Solution',
+    instructorRole: 'Founder, BurgTech Solutions',
     status:      'completed',
     description: 'A one-day beginner workshop introducing MATLAB to students and professionals. The session covered the MATLAB environment and workspace, variables and data types, matrix and array operations, basic plotting and data visualisation, writing scripts and functions, and practical exercises using real engineering and data problems.',
     topics: [
@@ -76,7 +76,7 @@ const SESSIONS = [
     ],
     facebookUrl: 'https://www.facebook.com/burgtech',
     image: '/images/teaching/cloud computing poster.jpeg',
-    colorKey: 'from-cyan-500/20 to-emerald-500/20',
+    colorKey: 'from-bt-cyan/20 to-bt-teal/20',
   },
   {
     id:          'prompt-engineering-2026',
@@ -86,7 +86,7 @@ const SESSIONS = [
     duration:    'One day',
     format:      'Online — Google Meet',
     instructor:  'Burgess Awalayah Glay',
-    instructorRole: 'Founder, Burtech Solution',
+    instructorRole: 'Founder, BurgTech Solutions',
     status:      'upcoming',
     description: 'A one-day hands-on masterclass on prompt engineering and working with AI agents. Learn how to write effective prompts, understand how large language models think, and how to use modern AI coding tools including Windsurf and Antigravity to build faster and smarter.',
     topics: [
@@ -121,9 +121,9 @@ export default function SessionsPage() {
         
         {/* Hero */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-cyan-400 text-sm font-medium tracking-wide uppercase">Training Sessions</span>
+          <span className="text-bt-cyan text-sm font-medium tracking-wide uppercase">Training Sessions</span>
           <h1 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
-            Workshops and classes from <span className="gradient-text-brand">Burtech Academy</span>
+            Workshops and classes from <span className="gradient-text-brand">BurgTech Academy</span>
           </h1>
           <p className="text-white/60 text-lg leading-relaxed">
             Every session is taught online via Google Meet by practitioners with real-world experience. Beginner-friendly and hands-on from the first hour.
@@ -139,7 +139,7 @@ export default function SessionsPage() {
               className={cn(
                 "px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200",
                 activeTab === tab 
-                  ? "bg-cyan-400/15 text-cyan-400 border border-cyan-400/25" 
+                  ? "bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border" 
                   : "bg-white/5 text-white/50 border border-transparent hover:text-white hover:bg-white/10"
               )}
             >
@@ -184,12 +184,12 @@ export default function SessionsPage() {
                   {/* Status Badge */}
                   <div className="absolute top-4 right-4 z-20">
                     {session.status === 'completed' ? (
-                      <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-lg backdrop-blur-md">
+                      <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-bt-teal-subtle text-bt-cyan border border-bt-teal/20 shadow-lg backdrop-blur-md">
                         Completed
                       </span>
                     ) : (
-                      <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-cyan-400/15 text-cyan-400 border border-cyan-400/25 shadow-lg backdrop-blur-md flex items-center gap-1.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                      <span className="px-3 py-1.5 text-xs font-semibold rounded-full bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border shadow-lg backdrop-blur-md flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-bt-cyan animate-pulse" />
                         Upcoming
                       </span>
                     )}
@@ -200,14 +200,14 @@ export default function SessionsPage() {
                 <div className="p-6 md:p-8 flex flex-col flex-1">
                   <h3 className="text-2xl font-bold text-white mb-2">{session.title}</h3>
                   <div className="flex items-center gap-2 text-white/60 text-sm mb-1">
-                    <Calendar className="w-4 h-4 text-cyan-400" />
+                    <Calendar className="w-4 h-4 text-bt-cyan" />
                     <span>{session.date} · {session.duration}</span>
                   </div>
                   <p className="text-white/40 text-sm mb-4">Online · Google Meet</p>
 
                   {/* Instructor */}
                   <div className="mt-2 pt-4 border-t border-white/[0.06] flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-slate-900 font-bold flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-bt-cyan to-bt-teal flex items-center justify-center text-slate-900 font-bold flex-shrink-0">
                       {session.instructor.charAt(0)}
                     </div>
                     <div>
@@ -227,7 +227,7 @@ export default function SessionsPage() {
                     <ul className="space-y-2">
                       {session.topics.map((t, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-sm text-white/65">
-                          <span className="text-cyan-400 mt-0.5 flex-shrink-0">✓</span>
+                          <span className="text-bt-cyan mt-0.5 flex-shrink-0">✓</span>
                           <span className="leading-snug">{t}</span>
                         </li>
                       ))}
@@ -235,16 +235,16 @@ export default function SessionsPage() {
                   </div>
 
                   {/* Action Row */}
-                  <div className="mt-auto pt-6 mt-8 border-t border-white/[0.06] flex items-center gap-3">
+                  <div className="mt-auto pt-6 border-t border-white/[0.06] flex items-center gap-3">
                     {session.status === 'completed' && session.facebookUrl && (
                       <a href={session.facebookUrl} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+                        className="flex items-center gap-1.5 text-sm font-semibold text-bt-cyan hover:text-bt-cyan-light transition-colors">
                         View on Facebook <ExternalLink className="w-4 h-4" />
                       </a>
                     )}
                     {session.status === 'upcoming' && (
                       <Link href="/contact"
-                        className="w-full flex items-center justify-center gap-2 py-3 bg-cyan-400 text-slate-900 font-bold rounded-xl hover:bg-cyan-300 transition-colors text-sm">
+                        className="btn-primary w-full">
                         Register now <ArrowRight className="w-4 h-4" />
                       </Link>
                     )}
@@ -256,9 +256,9 @@ export default function SessionsPage() {
         </div>
 
         {/* Info Banner */}
-        <div className="max-w-3xl mx-auto glass-card p-5 flex items-start sm:items-center gap-4 border-cyan-500/10">
-          <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center flex-shrink-0 mt-1 sm:mt-0">
-            <Info className="w-5 h-5 text-cyan-400" />
+        <div className="max-w-3xl mx-auto glass-card p-5 flex items-start sm:items-center gap-4 border-bt-cyan/10">
+          <div className="w-10 h-10 rounded-full bg-bt-cyan/10 flex items-center justify-center flex-shrink-0 mt-1 sm:mt-0">
+            <Info className="w-5 h-5 text-bt-cyan" />
           </div>
           <p className="text-white/60 text-sm leading-relaxed flex-1">
             When a new session is announced, it is also published in our Insights section. Follow BurgTech on Facebook for the latest announcements.

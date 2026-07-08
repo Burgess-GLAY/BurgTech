@@ -14,7 +14,7 @@ export default function AboutPage() {
 
       {/* Hero */}
       <div className="section-pad text-center">
-        <span className="text-cyan-400 text-sm font-medium
+        <span className="text-bt-cyan text-sm font-medium
                          tracking-wide uppercase">
           About us
         </span>
@@ -50,7 +50,7 @@ export default function AboutPage() {
             },
           ].map((v) => (
             <div key={v.title} className="glass-card p-6">
-              <h3 className="font-semibold text-lg mb-3 text-cyan-400">
+              <h3 className="font-semibold text-lg mb-3 text-bt-cyan">
                 {v.title}
               </h3>
               <p className="text-white/60 text-sm leading-relaxed">{v.body}</p>

@@ -15,8 +15,8 @@ const SERVICE_CATEGORIES = [
   {
     category: 'Development',
     Icon: Code2,
-    color: 'text-blue-400',
-    headerBg: 'bg-blue-500/10 border-blue-500/20',
+    color: 'text-bt-cyan',
+    headerBg: 'bg-bt-cyan/10 border-bt-cyan/20',
     services: [
       {
         label: 'Web Development',
@@ -53,8 +53,8 @@ const SERVICE_CATEGORIES = [
   {
     category: 'Data & Intelligence',
     Icon: BarChart3,
-    color: 'text-violet-400',
-    headerBg: 'bg-violet-500/10 border-violet-500/20',
+    color: 'text-bt-teal',
+    headerBg: 'bg-bt-teal/10 border-bt-teal/20',
     services: [
       {
         label: 'Data Analytics & BI',
@@ -81,8 +81,8 @@ const SERVICE_CATEGORIES = [
   {
     category: 'Cloud & Infrastructure',
     Icon: Cloud,
-    color: 'text-cyan-400',
-    headerBg: 'bg-cyan-500/10 border-cyan-500/20',
+    color: 'text-bt-cyan-light',
+    headerBg: 'bg-bt-cyan-light/10 border-bt-cyan-light/20',
     services: [
       {
         label: 'Cloud Migration',
@@ -177,14 +177,13 @@ export function Navbar() {
 
   return (
     <header className={cn(
-      'fixed top-0 inset-x-0 z-50 transition-all duration-300',
-      scrolled ? 'bg-surface/90 backdrop-blur-xl border-b border-white/[0.06]' : 'bg-transparent'
+      'bt-navbar fixed top-0 inset-x-0 z-50 transition-all duration-300',
+      scrolled ? 'bt-navbar--scrolled' : 'bg-transparent'
     )}>
       <nav className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center text-slate-900 font-bold text-sm">B</div>
-          <span className="font-bold text-xl">Burtech <span className="text-cyan-400">Solution</span></span>
+        <Link href="/" className="bt-navbar__logo">
+          <span className="text-2xl font-bold text-white tracking-tight">BURGTECH</span>
         </Link>
 
         {/* Desktop Nav */}
@@ -244,7 +243,7 @@ export function Navbar() {
         {/* Desktop CTA */}
         <div className="hidden lg:flex items-center gap-3">
           <Link href="/contact"
-            className="px-5 py-2.5 bg-cyan-400 text-slate-900 text-base font-semibold rounded-lg hover:bg-cyan-300 transition-colors">
+            className="btn-primary">
             Get in touch
           </Link>
         </div>
@@ -304,7 +303,7 @@ export function Navbar() {
                       <div className="pl-6 space-y-1 py-1">
                         {ABOUT_LINKS.map(link => (
                           <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-base text-white/50 hover:text-white transition-colors">
-                            <link.Icon className="w-4 h-4 text-cyan-400" />
+                            <link.Icon className="w-4 h-4 text-bt-cyan-light" />
                             {link.label}
                           </Link>
                         ))}
@@ -327,7 +326,7 @@ export function Navbar() {
                       <div className="pl-6 space-y-1 py-1">
                         {ACADEMY_LINKS.map(link => (
                           <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-base text-white/50 hover:text-white transition-colors">
-                            <link.Icon className="w-4 h-4 text-cyan-400" />
+                            <link.Icon className="w-4 h-4 text-bt-cyan-light" />
                             {link.label}
                           </Link>
                         ))}
@@ -341,7 +340,7 @@ export function Navbar() {
 
               <Link href="/contact" onClick={() => setMobileOpen(false)} className="block px-3 py-2.5 rounded-lg text-base text-white/70 hover:text-white hover:bg-white/5 transition-colors">Contact</Link>
 
-              <Link href="/contact" onClick={() => setMobileOpen(false)} className="block mt-4 px-4 py-3 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl text-center hover:bg-cyan-300 transition-colors">
+              <Link href="/contact" onClick={() => setMobileOpen(false)} className="btn-primary w-full mt-4">
                 Get in touch
               </Link>
             </div>
@@ -365,9 +364,9 @@ function ServicesMegaMenu({ onClose }: { onClose: () => void }) {
       <div
         className="rounded-2xl border border-white/[0.09] overflow-hidden
                    shadow-2xl shadow-black/50"
-        style={{ background: 'rgba(8,12,24,0.97)', backdropFilter: 'blur(28px)' }}
+        style={{ background: 'rgba(5,14,18,0.97)', backdropFilter: 'blur(28px)' }}
       >
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent" />
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-bt-cyan/50 to-transparent" />
 
         <div className="p-4 grid grid-cols-4 gap-4">
           {SERVICE_CATEGORIES.map((cat) => (
@@ -397,7 +396,7 @@ function ServicesMegaMenu({ onClose }: { onClose: () => void }) {
             Services across 4 specialisations
           </span>
           <Link href="/services" onClick={onClose}
-            className="flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+            className="flex items-center gap-1 text-sm text-bt-cyan hover:text-bt-cyan-light transition-colors">
             View all services <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -424,15 +423,15 @@ function SmallDropdown({ links, onClose }: { links: DropLink[]; onClose: () => v
     >
       <div
         className="rounded-2xl border border-white/[0.09] overflow-hidden shadow-2xl shadow-black/50 p-2"
-        style={{ background: 'rgba(8,12,24,0.97)', backdropFilter: 'blur(28px)' }}
+        style={{ background: 'rgba(5,14,18,0.97)', backdropFilter: 'blur(28px)' }}
       >
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent mb-2" />
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-bt-cyan/40 to-transparent mb-2" />
         {links.map((link) => (
           <Link key={link.href} href={link.href} onClick={onClose}
             className="group flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.06] transition-all duration-150"
           >
-            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center flex-shrink-0 group-hover:bg-cyan-500/20 transition-colors">
-              <link.Icon className="w-4 h-4 text-cyan-400" />
+            <div className="w-8 h-8 rounded-lg bg-bt-cyan/10 border border-bt-cyan/20 flex items-center justify-center flex-shrink-0 group-hover:bg-bt-cyan/20 transition-colors">
+              <link.Icon className="w-4 h-4 text-bt-cyan" />
             </div>
             <p className="text-sm font-medium text-white/85 group-hover:text-white transition-colors leading-snug">
               {link.label}

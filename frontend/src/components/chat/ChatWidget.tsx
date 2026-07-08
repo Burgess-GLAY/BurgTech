@@ -30,9 +30,10 @@ export function ChatWidget() {
   const [typing, setTyping]       = useState(false)
   const [unread, setUnread]       = useState(0)
   const bottomRef                 = useRef<HTMLDivElement>(null)
-  const visitorId                 = useRef(getVisitorId())
+  const visitorId                 = useRef<string | null>(null)
 
   useEffect(() => {
+    visitorId.current = getVisitorId()
     setMessages([{ id: 'w', content: "Hi! I'm Buri, Burtech's AI assistant. Ask me anything about our services, or click 'Talk to team' to connect with us directly.", sender: 'bot', createdAt: new Date() }])
   }, [])
 
@@ -51,7 +52,7 @@ export function ChatWidget() {
     if (socket?.connected) return
     socket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000', { transports: ['websocket'] })
     socket.on('connect', () => {
-      socket!.emit('chat:join', { visitorId: visitorId.current, sessionId: localStorage.getItem('bt_sid') || undefined })
+      socket!.emit('chat:join', { visitorId: visitorId.current || 'anon', sessionId: localStorage.getItem('bt_sid') || undefined })
     })
     socket.on('chat:session', ({ sessionId, history }: any) => {
       localStorage.setItem('bt_sid', sessionId)
@@ -123,8 +124,8 @@ export function ChatWidget() {
 
             {/* Mode toggle */}
             <div className="flex px-3 pt-2 gap-2">
-              <button onClick={() => setMode('ai')} className={cn('flex-1 text-xs py-1.5 rounded-lg transition-colors', mode === 'ai' ? 'bg-cyan-400/15 text-cyan-400 border border-cyan-400/25' : 'text-white/40 hover:text-white/60')}>AI Assistant</button>
-              <button onClick={switchToHuman}        className={cn('flex-1 text-xs py-1.5 rounded-lg transition-colors', mode === 'human' ? 'bg-cyan-400/15 text-cyan-400 border border-cyan-400/25' : 'text-white/40 hover:text-white/60')}>Talk to team</button>
+              <button onClick={() => setMode('ai')} className={cn('flex-1 text-xs py-1.5 rounded-lg transition-colors', mode === 'ai' ? 'bg-bt-cyan/15 text-bt-cyan border border-bt-cyan/25' : 'text-white/40 hover:text-white/60')}>AI Assistant</button>
+              <button onClick={switchToHuman}        className={cn('flex-1 text-xs py-1.5 rounded-lg transition-colors', mode === 'human' ? 'bg-bt-cyan/15 text-bt-cyan border border-bt-cyan/25' : 'text-white/40 hover:text-white/60')}>Talk to team</button>
             </div>
 
             {/* Messages */}
@@ -132,18 +133,18 @@ export function ChatWidget() {
               {messages.map((msg) => (
                 <div key={msg.id} className={cn('flex gap-2', msg.sender === 'visitor' ? 'flex-row-reverse' : 'flex-row')}>
                   {msg.sender !== 'visitor' && (
-                    <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      {msg.sender === 'admin' ? <User className="w-3 h-3 text-blue-400" /> : <Bot className="w-3 h-3 text-cyan-400" />}
+                    <div className="w-6 h-6 rounded-full bg-bt-cyan/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {msg.sender === 'admin' ? <User className="w-3 h-3 text-bt-cyan" /> : <Bot className="w-3 h-3 text-bt-cyan-light" />}
                     </div>
                   )}
                   <div className={cn('max-w-[75%] px-3 py-2 rounded-2xl text-sm leading-relaxed',
-                    msg.sender === 'visitor' ? 'bg-cyan-400 text-slate-900 rounded-tr-sm' : 'bg-white/[0.06] text-white/90 rounded-tl-sm'
+                    msg.sender === 'visitor' ? 'bg-bt-cyan text-bg-primary rounded-tr-sm' : 'bg-white/[0.06] text-white/90 rounded-tl-sm'
                   )}>{msg.content}</div>
                 </div>
               ))}
               {(loading || typing) && (
                 <div className="flex gap-2">
-                  <div className="w-6 h-6 rounded-full bg-blue-500/20 flex items-center justify-center"><Bot className="w-3 h-3 text-cyan-400" /></div>
+                  <div className="w-6 h-6 rounded-full bg-bt-cyan/20 flex items-center justify-center"><Bot className="w-3 h-3 text-bt-cyan-light" /></div>
                   <div className="bg-white/[0.06] px-3 py-2 rounded-2xl rounded-tl-sm flex items-center gap-1">
                     {[0,1,2].map(i => (
                       <motion.div key={i} className="w-1.5 h-1.5 rounded-full bg-white/40"
@@ -157,7 +158,7 @@ export function ChatWidget() {
                 <div className="flex flex-col gap-1.5 mt-2">
                   {QUICK.map(q => (
                     <button key={q} onClick={() => { setInput(q) }}
-                      className="text-left text-xs px-3 py-2 rounded-xl border border-white/10 text-white/50 hover:text-white hover:border-cyan-400/30 hover:bg-cyan-400/5 transition-all"
+                      className="text-left text-xs px-3 py-2 rounded-xl border border-white/10 text-white/50 hover:text-white hover:border-bt-cyan/30 hover:bg-bt-cyan/5 transition-all"
                     >{q}</button>
                   ))}
                 </div>
@@ -174,7 +175,7 @@ export function ChatWidget() {
                   className="flex-1 bg-transparent text-sm text-white placeholder-white/30 resize-none outline-none max-h-24"
                 />
                 <button onClick={sendMessage} disabled={!input.trim() || loading}
-                  className="p-1.5 rounded-lg bg-cyan-400 text-slate-900 disabled:opacity-40 hover:bg-cyan-300 transition-colors flex-shrink-0">
+                  className="p-1.5 rounded-lg bg-bt-cyan text-bg-primary disabled:opacity-40 hover:bg-bt-cyan-light transition-colors flex-shrink-0">
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </button>
               </div>

@@ -4,8 +4,8 @@ import { BookOpen, Laptop, CalendarDays, Calendar } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export const metadata: Metadata = { 
-  title: 'Burtech Academy | Training and Internships',
-  description: 'Practical technology training, professional workshops, and remote internship programmes by Burtech Solution.'
+  title: 'BurgTech Academy | Training and Internships',
+  description: 'Practical technology training, professional workshops, and remote internship programmes by BurgTech Solutions.'
 }
 
 const RECENT_SESSIONS = [
@@ -44,16 +44,16 @@ export default function AcademyPage() {
     <div className="pt-28 pb-20">
       {/* Hero */}
       <section className="text-center px-4 md:px-8 max-w-4xl mx-auto mb-20">
-        <span className="text-cyan-400 text-sm font-medium tracking-wide uppercase">Burtech Academy</span>
+        <span className="text-bt-cyan text-sm font-medium tracking-wide uppercase">BurgTech Academy</span>
         <h1 className="text-4xl md:text-6xl font-bold mt-4 mb-6">
           Learn from people <span className="gradient-text-brand">building real things</span>
         </h1>
         <p className="text-white/60 text-lg md:text-xl leading-relaxed mb-8">
-          Burtech Academy is the education arm of Burtech Solution. We deliver practical technology training online, host workshops taught by industry practitioners, and run remote internship programmes for developers and analysts across Africa and beyond.
+          BurgTech Academy is the education arm of BurgTech Solutions. We deliver practical technology training online, host workshops taught by industry practitioners, and run remote internship programmes for developers and analysts across Africa and beyond.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link href="/academy/sessions"
-            className="w-full sm:w-auto px-8 py-3.5 bg-white text-slate-900 font-semibold rounded-xl hover:bg-white/90 transition-colors">
+            className="btn-primary w-full sm:w-auto px-8 py-3.5 bg-white text-slate-900">
             View past sessions
           </Link>
           <Link href="/academy/internship"
@@ -70,8 +70,8 @@ export default function AcademyPage() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
           <div className="glass-card p-8">
-            <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-6">
-              <BookOpen className="w-6 h-6 text-blue-400" />
+            <div className="w-12 h-12 rounded-xl bg-bt-teal-subtle border border-bt-teal/20 flex items-center justify-center mb-6">
+              <BookOpen className="w-6 h-6 text-bt-cyan" />
             </div>
             <h3 className="text-xl font-bold mb-3">Live Training Sessions</h3>
             <p className="text-white/55 text-sm leading-relaxed">
@@ -80,18 +80,18 @@ export default function AcademyPage() {
           </div>
           
           <div className="glass-card p-8">
-            <div className="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-6">
-              <Laptop className="w-6 h-6 text-violet-400" />
+            <div className="w-12 h-12 rounded-xl bg-bt-cyan-subtle border border-bt-cyan-border flex items-center justify-center mb-6">
+              <Laptop className="w-6 h-6 text-bt-cyan" />
             </div>
             <h3 className="text-xl font-bold mb-3">Remote Internship Programme</h3>
             <p className="text-white/55 text-sm leading-relaxed">
-              A structured remote internship where participants work on real Burtech client projects. Mentored by the founding team. Builds a genuine production portfolio.
+              A structured remote internship where participants work on real BurgTech client projects. Mentored by the founding team. Builds a genuine production portfolio.
             </p>
           </div>
           
           <div className="glass-card p-8">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-6">
-              <CalendarDays className="w-6 h-6 text-emerald-400" />
+            <div className="w-12 h-12 rounded-xl bg-bt-teal-subtle border border-bt-teal/20 flex items-center justify-center mb-6">
+              <CalendarDays className="w-6 h-6 text-bt-cyan" />
             </div>
             <h3 className="text-xl font-bold mb-3">Upcoming Sessions</h3>
             <p className="text-white/55 text-sm leading-relaxed">
@@ -116,12 +116,12 @@ export default function AcademyPage() {
               {/* Badge */}
               <div className="absolute top-6 right-6">
                 {session.status === 'completed' ? (
-                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-bt-teal-subtle text-bt-cyan border border-bt-teal/20">
                     Completed
                   </span>
                 ) : (
-                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-cyan-400/15 text-cyan-400 border border-cyan-400/25 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-bt-cyan animate-pulse" />
                     Upcoming
                   </span>
                 )}
@@ -134,7 +134,7 @@ export default function AcademyPage() {
                 <span>{session.date}</span>
               </div>
               
-              <p className="text-sm mb-1"><span className="text-white/40">Instructor:</span> <span className="text-cyan-400 font-medium">{session.instructor}</span></p>
+              <p className="text-sm mb-1"><span className="text-white/40">Instructor:</span> <span className="text-bt-cyan font-medium">{session.instructor}</span></p>
               <p className="text-sm text-white/40 mb-6">Format: Online · Google Meet</p>
 
               <div className="mt-auto pt-5 border-t border-white/[0.06]">
@@ -143,7 +143,7 @@ export default function AcademyPage() {
                     View session details →
                   </Link>
                 ) : (
-                  <Link href="/contact" className="inline-block px-5 py-2.5 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-lg hover:bg-cyan-300 transition-colors">
+                  <Link href="/contact" className="btn-primary inline-block px-5 py-2.5 text-sm">
                     Register now
                   </Link>
                 )}
@@ -160,7 +160,7 @@ export default function AcademyPage() {
             Follow BurgTech on Facebook for live updates on all sessions
           </p>
           <a href="https://www.facebook.com/burgtech" target="_blank" rel="noopener noreferrer"
-             className="px-5 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-500 transition-colors">
+             className="px-5 py-2 bg-bt-cyan text-bg-primary font-medium rounded-lg hover:bg-bt-cyan-light transition-colors">
             View Facebook Page
           </a>
         </div>

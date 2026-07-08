@@ -6,10 +6,10 @@ import Link from 'next/link'
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen flex items-center justify-center p-4 bg-[#020617]">
+    <main className="min-h-screen flex items-center justify-center p-4 bg-[#050e12]">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-violet-500/10 blur-[120px] rounded-full" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-bt-cyan/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-bt-teal/10 blur-[120px] rounded-full" />
       </div>
 
       <div className="relative text-center space-y-8 max-w-xl">
@@ -19,7 +19,7 @@ export default function NotFound() {
           transition={{ type: "spring", stiffness: 100 }}
           className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-white/5 border border-white/10 mb-4"
         >
-          <Search className="w-10 h-10 text-cyan-400" />
+          <Search className="w-10 h-10 text-bt-cyan" />
         </motion.div>
 
         <div className="space-y-4">
@@ -37,7 +37,7 @@ export default function NotFound() {
             transition={{ delay: 0.2 }}
             className="text-3xl md:text-5xl font-bold text-white relative z-10"
           >
-            Lost in <span className="text-cyan-400">Cyberspace</span>
+            Lost in <span className="text-bt-cyan">Cyberspace</span>
           </motion.h2>
           <motion.p 
             initial={{ y: 20, opacity: 0 }}

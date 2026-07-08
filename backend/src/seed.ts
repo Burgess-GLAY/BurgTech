@@ -370,24 +370,93 @@ async function main() {
   })
   console.log('Testimonials created: 3')
 
-  // ── STEP 6: Create sample project ───────────────────────────────
+  // ── STEP 6: Create featured projects ───────────────────────────
   await prisma.project.deleteMany({})
 
-  await prisma.project.create({
-    data: {
-      slug: 'retail-analytics-dashboard',
-      title: 'Retail Analytics Dashboard',
-      summary: 'Real-time BI dashboard for a multi-location retailer.',
-      description: 'Built a comprehensive analytics platform integrating sales, inventory, and customer data from 12 store locations.',
-      client: 'RetailCo',
-      technologies: ['Next.js', 'Python', 'PostgreSQL', 'Power BI', 'AWS'],
-      imageUrls: [],
-      status: 'COMPLETED',
+  const projects = [
+    {
+      slug: 'basileia-mission',
+      title: 'Basileia Mission Platform',
+      summary: 'Comprehensive mission management and tracking system for large-scale operations.',
+      description: 'The Basileia Mission platform is a state-of-the-art solution designed to streamline mission management and oversight. Built with the latest technology stack, it provides real-time tracking of mission objectives, personnel, and resource allocation.\n\nThe platform\'s architecture is designed for high availability and security, ensuring that sensitive data is protected at all times. With integrated communication tools and automated reporting, stakeholders can maintain clear visibility into mission progress and make data-driven decisions.',
+      client: 'Basileia Tech',
+      technologies: ['Next.js', 'PostgreSQL', 'Prisma', 'Tailwind CSS', 'Docker'],
+      imageUrls: ['/images/project_images/basiela_mission_login_1.png'],
+      highlights: ['Real-time mission tracking', 'Role-based access control', 'Automated reporting'],
+      status: 'COMPLETED' as const,
       isFeatured: true,
-      completedAt: new Date('2026-01-15'),
+      completedAt: new Date('2025-12-10'),
     },
-  })
-  console.log('Sample project created')
+    {
+      slug: 'lhde-portal',
+      title: 'LHDE Digital Portal',
+      summary: 'Centralised digital gateway for stakeholders with integrated communication tools.',
+      description: 'The LHDE Portal serves as the primary digital interface for all stakeholders within the LHDE ecosystem. It provides a secure, unified gateway to essential resources, communication channels, and project documentation.\n\nKey features include an advanced document management system, peer-to-peer messaging, and personalised dashboards that surface the most relevant information to each user. The portal was designed with a mobile-first approach, ensuring accessibility across all devices.',
+      client: 'LHDE Group',
+      technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'AWS'],
+      imageUrls: ['/images/project_images/lhde_login.png'],
+      highlights: ['Stakeholder dashboard', 'Resource management', 'P2P messaging'],
+      status: 'COMPLETED' as const,
+      isFeatured: true,
+      completedAt: new Date('2026-01-20'),
+    },
+    {
+      slug: 'enterprise-analytics',
+      title: 'Enterprise BI Analytics',
+      summary: 'Advanced data visualisation tool for deep insights into business performance.',
+      description: 'Enterprise Analytics is a powerful tool designed to turn raw data into actionable business intelligence. It features a custom-built charting engine that allows users to create complex visualisations with ease.\n\nThe project incorporates predictive modelling capabilities, helping businesses anticipate market trends and optimise their operations. By integrating with various third-party APIs, it centralises data from across the enterprise into a single, cohesive view.',
+      client: 'DataLink Corp',
+      technologies: ['Python', 'D3.js', 'FastAPI', 'Redis', 'Kubernetes'],
+      imageUrls: ['/images/project_images/basiela_mission_image_1.png'],
+      highlights: ['Custom chart engine', 'Predictive modelling', 'Multi-source API sync'],
+      status: 'IN_PROGRESS' as const,
+      isFeatured: true,
+    },
+    {
+      slug: 'digital-transformation',
+      title: 'GovTech Digital Hub',
+      summary: 'Modernisation of public sector systems for seamless digital governance.',
+      description: 'This project focused on the complete overhaul and modernisation of a large-scale legacy infrastructure. The goal was to transition from monolithic on-premise systems to a cloud-native, microservices-based architecture.\n\nThe transformation involved refactoring core business logic, migrating massive databases without downtime, and implementing modern CI/CD pipelines. The result was a significantly more scalable, reliable, and maintainable system.',
+      client: 'Government Office',
+      technologies: ['Azure', 'Terraform', 'Spring Boot', 'Kafka', 'GraphQL'],
+      imageUrls: ['/images/project_images/lhde_image_1.png'],
+      highlights: ['Microservices migration', 'Zero-downtime database transition', 'CI/CD pipeline implementation'],
+      status: 'COMPLETED' as const,
+      isFeatured: true,
+      completedAt: new Date('2026-03-05'),
+    },
+    {
+      slug: 'smart-future-platform',
+      title: 'Smart Future Platform',
+      summary: 'AI-driven initiative focusing on sustainable technology for urban development.',
+      description: 'The Smart Future Platform is an ambitious initiative aimed at leveraging artificial intelligence to solve complex urban development challenges. It focuses on sustainability, energy efficiency, and improving the quality of life for urban residents.\n\nThe platform uses AI algorithms to optimise resource distribution, traffic flow, and waste management. It integrates data from a wide array of IoT sensors to provide a real-time view of urban dynamics.',
+      client: 'Sustainability Lab',
+      technologies: ['TensorFlow', 'IoT', 'MQTT', 'Rust', 'WebAssembly'],
+      imageUrls: ['/images/project_images/basiela_mission_image_2.png'],
+      highlights: ['AI-driven urban planning', 'IoT sensor integration', 'Sustainability metrics dashboard'],
+      status: 'COMPLETED' as const,
+      isFeatured: true,
+      completedAt: new Date('2026-03-30'),
+    },
+    {
+      slug: 'cloud-infrastructure',
+      title: 'Enterprise Cloud Grid',
+      summary: 'Managed high-availability services for mission-critical applications.',
+      description: 'Our Cloud Infrastructure services provide a robust and secure foundation for modern enterprise applications. We specialise in high-availability designs that ensure your applications stay online and performant under any circumstances.\n\nKey features include automated scaling, comprehensive monitoring, and advanced security protocols. We take care of the underlying infrastructure so your team can focus on building and delivering value.',
+      client: 'SkyNet Systems',
+      technologies: ['GCP', 'Ansible', 'Prometheus', 'Grafana', 'Go'],
+      imageUrls: ['/images/project_images/lhde_image_2.png'],
+      highlights: ['Auto-scaling grid', 'High-availability architecture', 'Integrated vulnerability scanning'],
+      status: 'COMPLETED' as const,
+      isFeatured: true,
+      completedAt: new Date('2026-04-02'),
+    },
+  ]
+
+  for (const project of projects) {
+    await prisma.project.create({ data: project })
+  }
+  console.log('Featured projects ready:', projects.length)
 
   // ── STEP 7: Create blog posts ───────────────────────────────────
   await prisma.blogPost.deleteMany({})

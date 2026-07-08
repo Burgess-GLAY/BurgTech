@@ -6,13 +6,12 @@
 |---|---|
 | Frontend | Next.js 14, React 18, TypeScript, Tailwind CSS, Framer Motion |
 | Backend | Express.js, TypeScript, Prisma ORM |
-| Database | PostgreSQL 16 |
-| Cache | Redis 7 |
-| Real-time | Socket.io |
+| Database | PostgreSQL (Neon) |
+| Real-time | Socket.io (in-memory) |
 | AI Chatbot | OpenAI GPT-4o-mini |
 | Email | Resend |
 | Auth | JWT (custom) |
-| Containers | Docker + Docker Compose |
+| Containers | Docker + Docker Compose (for app deployment only) |
 
 ---
 
@@ -20,7 +19,6 @@
 
 ### Prerequisites
 - Node.js 20+
-- Docker Desktop (for PostgreSQL + Redis)
 - Git
 
 ### 1. Clone and configure environment
@@ -32,27 +30,22 @@ cp .env.example .env
 # Open .env and fill in JWT_SECRET, OPENAI_API_KEY, RESEND_API_KEY, ADMIN_EMAIL
 ```
 
-### 2. Start the database and Redis
+### 2. Start the backend
 
-```bash
-docker compose up db redis -d
-```
-
-Wait about 10 seconds for the containers to become healthy.
-
-### 3. Start the backend
+PostgreSQL is hosted on Neon — no local containers needed.
+Just ensure DATABASE_URL and DIRECT_URL are set in .env.
 
 ```bash
 cd backend
 npm install
-npx prisma migrate dev --name init
+npx prisma migrate deploy
 npm run db:seed
 npm run dev
 ```
 
 The API will be running at **http://localhost:4000**
 
-### 4. Start the frontend (new terminal)
+### 3. Start the frontend (new terminal)
 
 ```bash
 cd frontend
@@ -115,7 +108,7 @@ BurgTech/
 │           ├── api.ts             # Axios client with JWT interceptor
 │           └── utils.ts           # cn(), formatDate(), slugify()
 │
-├── docker-compose.yml             # Full stack (db + redis + api + web)
+├── docker-compose.yml             # API + Web containers (db/redis externally hosted)
 ├── .env.example                   # Environment variable template
 └── docs/SETUP.md                  # This file
 ```
@@ -210,8 +203,8 @@ docker compose logs -f web
 
 1. **Backend → Railway**
    - Create project → Deploy from GitHub → select `/backend`
-   - Add PostgreSQL and Redis plugins from Railway marketplace
    - Set all environment variables from `.env.example`
+   - PostgreSQL is externally hosted on Neon (set DATABASE_URL, DIRECT_URL)
 
 2. **Frontend → Vercel**
    - Import repo → set Root Directory to `frontend`
@@ -221,7 +214,9 @@ docker compose logs -f web
 
 | Variable | Required | Notes |
 |---|---|---|
-| `DATABASE_URL` | ✅ | Full PostgreSQL connection string |
+| `DATABASE_URL` | ✅ | Neon pooled connection string (with pgbouncer=true) |
+| `DIRECT_URL` | ✅ | Neon direct connection string (for migrations) |
+| `REDIS_URL` | ✅ | Upstash Redis connection string (with TLS enabled) |
 | `JWT_SECRET` | ✅ | Min 32 chars, random |
 | `OPENAI_API_KEY` | ✅ | For AI chatbot (Buri) |
 | `RESEND_API_KEY` | ✅ | For contact + chat emails |

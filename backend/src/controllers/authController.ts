@@ -3,7 +3,8 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
-import { sendWelcomeEmail } from '../services/emailService'
+import { sendWelcomeEmail, sendOtpEmail } from '../services/emailService'
+import { generateOtp } from '../services/otpService'
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -30,6 +31,13 @@ export async function login(req: Request, res: Response) {
 
   const valid = await bcrypt.compare(password, user.passwordHash)
   if (!valid) return res.status(401).json({ error: 'Invalid credentials' })
+
+  // MFA check — if enabled, issue OTP instead of JWT
+  if (user.mfaEnabled) {
+    const otp = generateOtp(user.id)
+    sendOtpEmail(user.email, user.name, otp).catch(err => console.error('[OTP Email]', err))
+    return res.json({ mfaPending: true, userId: user.id })
+  }
 
   await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } })
 

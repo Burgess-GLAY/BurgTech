@@ -45,3 +45,20 @@ export async function sendChatNotificationEmail(message: string, visitorId: stri
       <p><a href="${process.env.FRONTEND_URL}/admin/messages">Reply in admin dashboard</a></p>`,
   })
 }
+
+export async function sendOtpEmail(to: string, name: string, otp: string) {
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: 'Your Burtech Admin Login Code',
+    html: `
+      <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+        <h1>Your One-Time Password</h1>
+        <p>Hi ${name},</p>
+        <p>Use the code below to complete your login:</p>
+        <p style="font-size: 2rem; font-family: monospace; font-weight: bold; letter-spacing: 0.25em;">${otp}</p>
+        <p>This code expires in <strong>10 minutes</strong>.</p>
+        <p style="color: #e53e3e;"><strong>Do not share this code with anyone.</strong></p>
+      </div>`,
+  })
+}

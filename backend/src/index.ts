@@ -23,6 +23,7 @@ import { aiRouter } from './routes/ai'
 import { adminRouter } from './routes/admin'
 
 const app = express()
+app.set('trust proxy', 1)
 const server = http.createServer(app)
 
 export const io = new SocketServer(server, {
@@ -39,7 +40,7 @@ registerSocketHandlers(io)
 app.use(helmet())
 app.use(compression())
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL || ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
 }))
 app.use(morgan('combined'))

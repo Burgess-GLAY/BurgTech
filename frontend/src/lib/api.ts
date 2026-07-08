@@ -20,7 +20,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && typeof window !== 'undefined') {
       const isAdminRoute = window.location.pathname.startsWith('/admin')
       if (isAdminRoute && window.location.pathname !== '/admin/login') {
-        localStorage.removeItem('bt_token')
+        // Redirect to login without clearing auth state — let the login page handle cleanup
         window.location.href = '/admin/login'
       }
     }

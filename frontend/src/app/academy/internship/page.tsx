@@ -14,7 +14,7 @@ export default function InternshipPage() {
         
         {/* Hero */}
         <div className="text-center max-w-4xl mx-auto mb-20">
-          <span className="text-cyan-400 text-sm font-medium tracking-wide uppercase">Internship Programme</span>
+          <span className="text-bt-cyan text-sm font-medium tracking-wide uppercase">Internship Programme</span>
           <h1 className="text-4xl md:text-6xl font-bold mt-4 mb-6">
             Real work. Real mentorship.<br/>
             <span className="gradient-text-brand">Real portfolio.</span>
@@ -24,7 +24,7 @@ export default function InternshipPage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/contact"
-              className="w-full sm:w-auto px-8 py-4 bg-cyan-400 text-slate-900 font-bold rounded-xl hover:bg-cyan-300 transition-colors">
+              className="w-full sm:w-auto px-8 py-4 bg-bt-cyan text-bg-primary font-bold rounded-xl hover:bg-bt-cyan-light transition-colors">
               Apply now
             </Link>
             <Link href="/academy/sessions"
@@ -43,7 +43,7 @@ export default function InternshipPage() {
             { label: 'Stipend', value: 'Performance-based' },
           ].map((stat, i) => (
             <div key={i} className="glass-card p-6 text-center">
-              <p className="text-sm text-cyan-400 font-medium uppercase tracking-wider mb-2">{stat.label}</p>
+              <p className="text-sm text-bt-cyan font-medium uppercase tracking-wider mb-2">{stat.label}</p>
               <p className="text-lg md:text-xl font-bold">{stat.value}</p>
             </div>
           ))}
@@ -65,7 +65,7 @@ export default function InternshipPage() {
                 'Publish at least one technical insight on the Burtech blog'
               ].map((item, i) => (
                 <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/[0.02] border border-white/[0.05]">
-                  <CheckCircle2 className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-bt-cyan flex-shrink-0 mt-0.5" />
                   <p className="text-white/80">{item}</p>
                 </div>
               ))}
@@ -83,7 +83,7 @@ export default function InternshipPage() {
                 { title: 'Offer and onboarding', desc: 'Documentation, system setup, and introduction to the team.' }
               ].map((step, i) => (
                 <div key={i} className="relative z-10">
-                  <div className="absolute -left-10 w-6 h-6 rounded-full bg-surface border-2 border-cyan-400 flex items-center justify-center text-xs font-bold text-cyan-400">
+                  <div className="absolute -left-10 w-6 h-6 rounded-full bg-surface border-2 border-bt-cyan flex items-center justify-center text-xs font-bold text-bt-cyan">
                     {i + 1}
                   </div>
                   <h3 className="text-xl font-bold mb-2">{step.title}</h3>
@@ -103,12 +103,12 @@ export default function InternshipPage() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="glass-card p-8">
-              <Code2 className="w-8 h-8 text-blue-400 mb-4" />
+              <Code2 className="w-8 h-8 text-bt-cyan mb-4" />
               <h3 className="text-xl font-bold mb-2">Developers</h3>
               <p className="text-white/60 text-sm">Familiar with React, Node.js, or similar modern frameworks. Ready to move beyond tutorials into production codebases.</p>
             </div>
             <div className="glass-card p-8">
-              <LineChart className="w-8 h-8 text-violet-400 mb-4" />
+              <LineChart className="w-8 h-8 text-bt-teal mb-4" />
               <h3 className="text-xl font-bold mb-2">Data Analysts</h3>
               <p className="text-white/60 text-sm">Comfortable with Python and SQL. Interested in building dashboards and models that actually drive business decisions.</p>
             </div>
@@ -121,11 +121,11 @@ export default function InternshipPage() {
         </div>
 
         {/* CTA */}
-        <div className="glass-card p-12 text-center bg-gradient-to-t from-cyan-500/10 to-transparent">
+        <div className="glass-card p-12 text-center bg-gradient-to-t from-bt-cyan/10 to-transparent">
           <h2 className="text-3xl font-bold mb-4">Applications for the next cohort are open</h2>
           <p className="text-white/60 mb-8 max-w-xl mx-auto">Submit your application today. We review submissions on a rolling basis.</p>
           <Link href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-cyan-400 text-slate-900 font-bold rounded-xl hover:bg-cyan-300 transition-colors">
+            className="inline-flex items-center gap-2 px-8 py-4 bg-bt-cyan text-bg-primary font-bold rounded-xl hover:bg-bt-cyan-light transition-colors">
             Apply for internship <ArrowRight className="w-5 h-5" />
           </Link>
         </div>

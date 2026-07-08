@@ -1,113 +1,160 @@
-import { apiClient } from '@/lib/api'
 import Link from 'next/link'
-import { ArrowLeft, ExternalLink, CheckCircle2, Globe, Cpu } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Github, Calendar, Tag, Activity } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { notFound } from 'next/navigation'
 
 async function getProject(slug: string) {
   try {
-    const base = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
-    const res = await fetch(`${base}/api/v1/projects/${slug}`, { next: { revalidate: 60 } })
+    const base = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
+    const res = await fetch(`${base}/api/v1/projects/${slug}`, { next: { revalidate: 10 } })
     if (!res.ok) return null
     const data = await res.json()
     return data.project
-  } catch { return null }
+  } catch (error) {
+    console.error('Error fetching project:', error)
+    return null
+  }
 }
 
 export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
   const project = await getProject(params.slug)
 
-  if (!project) return (
-    <div className="min-h-screen pt-32 pb-20 text-center">
-      <h1 className="text-3xl font-bold mb-4">Project not found</h1>
-      <Link href="/projects" className="text-cyan-400 hover:underline">Back to portfolio</Link>
-    </div>
-  )
+  if (!project) return notFound()
+
+  const year = project.completedAt ? new Date(project.completedAt).getFullYear() : 'Ongoing'
+  const mainImage = project.imageUrls?.[0] || ''
 
   return (
-    <main className="min-h-screen pt-32 pb-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <Link href="/projects" className="inline-flex items-center gap-2 text-white/40 hover:text-white mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4" /> Back to Portfolio
-        </Link>
+    <div className="bt-detail">
+      {/* Hero — text only, centered, no background image */}
+      <header className="bt-detail__hero">
+        {project.category && (
+          <span className="eyebrow bt-detail__eyebrow">{project.category}</span>
+        )}
+        <h1 className="bt-detail__title">{project.title}</h1>
+        {project.summary && (
+          <p className="bt-detail__summary">{project.summary}</p>
+        )}
+        {(project.client || year || project.technologies) && (
+          <div className="bt-detail__meta">
+            {project.client && <span>Client: <strong>{project.client}</strong></span>}
+            {year && <span>Year: <strong>{year}</strong></span>}
+            {project.technologies && (
+              <span>
+                Stack: <strong>
+                  {Array.isArray(project.technologies)
+                    ? project.technologies.join(', ')
+                    : project.technologies}
+                </strong>
+              </span>
+            )}
+          </div>
+        )}
+      </header>
 
-        <div className="grid lg:grid-cols-12 gap-12">
-          {/* Content */}
-          <div className="lg:col-span-7 space-y-10">
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <span className={cn('text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full border',
-                  project.status === 'COMPLETED' ? 'bg-emerald-400/10 text-emerald-400 border-emerald-400/20' : 'bg-blue-400/10 text-blue-400 border-blue-400/20'
-                )}>{project.status.replace('_', ' ')}</span>
-                {project.isFeatured && (
-                  <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-cyan-400/10 text-cyan-400 border border-cyan-400/20">Featured</span>
-                )}
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 gradient-text-brand">{project.title}</h1>
-              <p className="text-xl text-white/60 leading-relaxed font-light">{project.summary}</p>
-            </div>
+      {/* Cover image — contained, NOT full bleed */}
+      {mainImage && (
+        <div className="bt-detail__cover-wrap">
+          <div className="bt-detail__cover-box">
+            <img
+              src={mainImage}
+              alt={`${project.title} preview`}
+              className="bt-detail__cover-img"
+            />
+          </div>
+        </div>
+      )}
 
-            {/* Main Images */}
-            <div className="space-y-6">
-              {project.imageUrls?.map((url: string, i: number) => (
-                <div key={i} className="glass-card overflow-hidden rounded-3xl group">
-                  <img src={url} alt={`${project.title} - ${i + 1}`} className="w-full h-auto object-cover group-hover:scale-[1.02] transition-transform duration-700" />
-                </div>
+      {/* Body */}
+      <div className="bt-detail__body">
+        <div className="space-y-16">
+          <div className="bt-detail__section">
+            <h2>Overview</h2>
+            <div className="prose-custom">
+              {project.description.split('\n\n').map((para: string, i: number) => (
+                <p key={i}>{para}</p>
               ))}
-              {!project.imageUrls?.length && (
-                <div className="h-96 glass-card rounded-3xl flex items-center justify-center bg-gradient-to-br from-blue-900/20 to-slate-900/20 border-dashed border-2 border-white/5">
-                  <Globe className="w-16 h-16 text-white/10" />
-                </div>
-              )}
-            </div>
-
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold">About the Project</h2>
-              <div className="text-white/60 leading-relaxed space-y-4 whitespace-pre-wrap">
-                {project.description}
-              </div>
             </div>
           </div>
 
-          {/* Sidebar */}
-          <aside className="lg:col-span-5 space-y-8 h-fit lg:sticky lg:top-32">
-            <div className="glass-card p-8 rounded-3xl space-y-8">
-              {project.client && (
-                <div>
-                  <h4 className="text-[10px] uppercase font-bold tracking-widest text-white/40 mb-3">Client</h4>
-                  <p className="text-lg font-medium">{project.client}</p>
-                </div>
-              )}
+          {project.highlights?.length > 0 && (
+            <div className="bt-detail__section">
+              <h2>Key Features</h2>
+              <ul className="bt-detail__features-list">
+                {project.highlights.map((f: string, i: number) => (
+                  <li key={i}>
+                    <span className="bt-detail__check">✓</span> {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-              <div>
-                <h4 className="text-[10px] uppercase font-bold tracking-widest text-white/40 mb-3">Technologies</h4>
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies?.map((tech: string) => (
-                    <span key={tech} className="px-3 py-1.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-sm text-white/70">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+          {/* Additional screenshots — 2-col grid, contained */}
+          {project.imageUrls?.length > 1 && (
+            <div className="bt-detail__section">
+              <h2>Screenshots</h2>
+              <div className="bt-detail__gallery">
+                {project.imageUrls.map((img: string, i: number) => (
+                  <div key={i} className="bt-detail__gallery-item">
+                    <img
+                      src={img}
+                      alt={`${project.title} screenshot ${i + 1}`}
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
               </div>
+            </div>
+          )}
 
-              {project.liveUrl && (
-                <div className="pt-4">
-                  <a href={project.liveUrl} target="_blank" rel="noopener" className="btn-primary w-full flex items-center justify-center gap-2">
-                    <ExternalLink className="w-4 h-4" /> Visit Live Project
+          {/* Stack */}
+          <div className="bt-detail__section">
+            <h2>Stack</h2>
+            <div className="flex flex-wrap gap-3">
+              {project.technologies.map((tech: string) => (
+                <span key={tech} className="px-4 py-2 rounded-full bg-white/[0.05] border border-white/[0.08] text-white/80 text-sm">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Links */}
+          {(project.liveUrl || project.repoUrl) && (
+            <div className="bt-detail__section">
+              <h2>Links</h2>
+              <div className="flex gap-4">
+                {project.liveUrl && (
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener"
+                    className="btn-primary"
+                  >
+                    Live Demo <ExternalLink size={16} />
                   </a>
-                </div>
-              )}
+                )}
+                {project.repoUrl && (
+                  <a
+                    href={project.repoUrl}
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex items-center gap-2 px-6 py-3 border border-white/15 text-white font-semibold rounded-xl hover:bg-white/5 transition-colors"
+                  >
+                    View Source <Github size={16} />
+                  </a>
+                )}
+              </div>
             </div>
-
-            <div className="glass-card p-8 rounded-3xl bg-blue-500/5">
-              <Cpu className="w-8 h-8 text-cyan-400 mb-4" />
-              <h4 className="text-lg font-bold mb-2">Technical Rigor</h4>
-              <p className="text-sm text-white/50 leading-relaxed">
-                Every project at Burtech Solution is built with a focus on performance, scalability, and technical excellence, ensuring we deliver value that lasts.
-              </p>
-            </div>
-          </aside>
+          )}
         </div>
       </div>
-    </main>
+
+      {/* Back link */}
+      <div className="bt-detail__back-wrap">
+        <a href="/#projects" className="bt-detail__back">← Back to Projects</a>
+      </div>
+    </div>
   )
 }

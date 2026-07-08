@@ -11,11 +11,11 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 const MOBILE_CATEGORY_BADGE: Record<string, string> = {
-  AI_DATA_SCIENCE: 'text-xs px-2.5 py-0.5 rounded-full bg-violet-500/15 text-violet-400 border border-violet-500/20',
-  COMPANY_NEWS: 'text-xs px-2.5 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 border border-cyan-500/20',
-  TECH_INSIGHTS: 'text-xs px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-400 border border-blue-500/20',
-  PROJECT_ANNOUNCEMENT: 'text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/20',
-  TUTORIAL: 'text-xs px-2.5 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/20',
+  AI_DATA_SCIENCE: 'text-xs px-2.5 py-0.5 rounded-full bg-bt-teal-subtle text-bt-cyan border border-bt-teal/20',
+  COMPANY_NEWS: 'text-xs px-2.5 py-0.5 rounded-full bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border',
+  TECH_INSIGHTS: 'text-xs px-2.5 py-0.5 rounded-full bg-bt-teal-subtle text-bt-cyan border border-bt-teal/20',
+  PROJECT_ANNOUNCEMENT: 'text-xs px-2.5 py-0.5 rounded-full bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border',
+  TUTORIAL: 'text-xs px-2.5 py-0.5 rounded-full bg-bt-teal-subtle text-bt-cyan border border-bt-teal/20',
 }
 
 export default function AdminBlogPage() {
@@ -72,7 +72,7 @@ export default function AdminBlogPage() {
         </div>
         <Link 
           href="/admin/blog/new" 
-          className="flex items-center gap-2 px-4 py-2.5 bg-cyan-400 text-slate-900 text-sm font-semibold rounded-xl hover:bg-cyan-300 transition-colors w-full sm:w-auto justify-center"
+          className="btn-primary py-2.5 text-sm w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" /> Create Post
         </Link>
@@ -123,7 +123,7 @@ export default function AdminBlogPage() {
                     <td className="px-6 py-4 uppercase">
                       <span className={cn(
                         'text-[10px] font-black tracking-widest',
-                        post.isPublished ? 'text-cyan-400' : 'text-white/20'
+                        post.isPublished ? 'text-bt-cyan' : 'text-white/20'
                       )}>
                         {post.isPublished ? 'Published' : 'Draft'}
                       </span>
@@ -133,7 +133,7 @@ export default function AdminBlogPage() {
                         <Link href={`/admin/blog/${post.id}`} className="p-2 rounded-lg hover:bg-white/5 text-white/60 hover:text-white transition-all">
                           <Edit2 className="w-4 h-4" />
                         </Link>
-                        <button onClick={() => handleDelete(post.id)} className="p-2 rounded-lg hover:bg-white/5 text-red-400 hover:bg-red-500/10 transition-all">
+                        <button onClick={() => handleDelete(post.id)} className="p-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-all">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -154,7 +154,7 @@ export default function AdminBlogPage() {
                     {post.coverImage ? (
                       <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-violet-900 to-blue-900 flex items-center justify-center text-violet-400 text-xs font-bold">
+                      <div className="w-full h-full bg-bt-teal flex items-center justify-center text-white/40 text-xs font-bold">
                         {post.title.charAt(0)}
                       </div>
                     )}
@@ -177,7 +177,7 @@ export default function AdminBlogPage() {
                     <p className="text-[10px] text-white/30 uppercase tracking-wider mb-1">Status</p>
                     <span className={cn(
                       "inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full",
-                      post.isPublished ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-white/[0.05] text-white/40 border border-white/[0.08]"
+                      post.isPublished ? "bg-bt-cyan-subtle text-bt-cyan border border-bt-cyan-border" : "bg-white/[0.05] text-white/40 border border-white/[0.08]"
                     )}>
                       {post.isPublished ? 'Published' : 'Draft'}
                     </span>

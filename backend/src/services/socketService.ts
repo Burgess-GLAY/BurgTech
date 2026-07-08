@@ -3,6 +3,7 @@ import { prisma } from '../lib/prisma'
 import { sendChatNotificationEmail } from './emailService'
 
 export function registerSocketHandlers(io: Server) {
+
   io.on('connection', (socket: Socket) => {
     console.log(`[Socket] Connected: ${socket.id}`)
 

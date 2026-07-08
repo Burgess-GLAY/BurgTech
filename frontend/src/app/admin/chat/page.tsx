@@ -1,10 +1,11 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageSquare, Send, User, Bot, Loader2, Search, Clock, CheckCircle2 } from 'lucide-react'
+import { MessageSquare, Send, User, Bot, Loader2, Search, Clock, CheckCircle2, Plus } from 'lucide-react'
 import { io, Socket } from 'socket.io-client'
 import { useAuth } from '@/hooks/useAuth'
 import { cn, formatDate } from '@/lib/utils'
+import { Modal } from '@/components/admin/Modal'
 
 let socket: Socket | null = null
 
@@ -17,6 +18,11 @@ export default function AdminChatPage() {
   const [search, setSearch] = useState('')
   const [typing, setTyping] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+
+  // New Chat modal state
+  const [newChatOpen, setNewChatOpen] = useState(false)
+  const [visitorInput, setVisitorInput] = useState('')
+  const [visitorInputError, setVisitorInputError] = useState('')
 
   useEffect(() => {
     socket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000', {
@@ -47,6 +53,10 @@ export default function AdminChatPage() {
       if (role === 'visitor') setTyping(isTyping)
     })
 
+    socket.on('chat:sessionCreated', (newSession: any) => {
+      setSessions(prev => [newSession, ...prev])
+    })
+
     return () => {
       socket?.disconnect()
     }
@@ -68,7 +78,18 @@ export default function AdminChatPage() {
     setInput('')
   }
 
-  const filteredSessions = sessions.filter(s => 
+  const handleNewChatSubmit = () => {
+    if (!visitorInput.trim()) {
+      setVisitorInputError('Visitor ID is required.')
+      return
+    }
+    socket?.emit('chat:adminInitiate', { visitorId: visitorInput.trim() })
+    setVisitorInput('')
+    setVisitorInputError('')
+    setNewChatOpen(false)
+  }
+
+  const filteredSessions = sessions.filter(s =>
     s.visitorId.toLowerCase().includes(search.toLowerCase()) ||
     s.messages?.[0]?.content.toLowerCase().includes(search.toLowerCase())
   )
@@ -82,13 +103,22 @@ export default function AdminChatPage() {
       )}>
         <div className="p-4 border-b border-white/[0.06]">
           <h2 className="text-lg font-bold text-white mb-4 lg:hidden">Live Assistance</h2>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-            <input 
-              value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Search chats..." 
-              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-white/30 outline-none focus:border-cyan-400/40 transition-colors" 
-            />
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+              <input
+                value={search} onChange={e => setSearch(e.target.value)}
+                placeholder="Search chats..."
+                className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-white/30 outline-none focus:border-bt-cyan/40 transition-colors"
+              />
+            </div>
+            <button
+              onClick={() => { setVisitorInput(''); setVisitorInputError(''); setNewChatOpen(true) }}
+              title="New Chat"
+              className="flex-shrink-0 p-2 rounded-xl bg-bt-cyan/10 border border-bt-cyan/20 text-bt-cyan hover:bg-bt-cyan/20 transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
           </div>
         </div>
 
@@ -100,12 +130,12 @@ export default function AdminChatPage() {
             </div>
           ) : (
             filteredSessions.map(s => (
-              <button 
-                key={s.id} 
+              <button
+                key={s.id}
                 onClick={() => selectSession(s)}
                 className={cn(
                   "w-full text-left p-4 hover:bg-white/[0.02] transition-colors group",
-                  activeSession?.id === s.id && "bg-cyan-400/5"
+                  activeSession?.id === s.id && "bg-bt-cyan/5"
                 )}
               >
                 <div className="flex items-start justify-between mb-1">
@@ -116,7 +146,7 @@ export default function AdminChatPage() {
                   {s.messages?.[0]?.content || "No messages yet"}
                 </p>
                 {!s.adminJoined && (
-                  <span className="inline-block mt-2 w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
+                  <span className="inline-block mt-2 w-2 h-2 rounded-full bg-bt-cyan shadow-[0_0_8px_rgba(61,214,200,0.5)]" />
                 )}
               </button>
             ))
@@ -155,14 +185,14 @@ export default function AdminChatPage() {
                 <div key={m.id || i} className={cn("flex gap-3", m.sender === 'ADMIN' ? "flex-row-reverse" : "flex-row")}>
                   <div className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1",
-                    m.sender === 'ADMIN' ? "bg-cyan-400/20 text-cyan-400" : "bg-blue-500/20 text-blue-400"
+                    m.sender === 'ADMIN' ? "bg-bt-cyan/20 text-bt-cyan" : "bg-bt-teal/20 text-bt-teal"
                   )}>
                     {m.sender === 'ADMIN' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                   </div>
                   <div className="space-y-1">
                     <div className={cn(
                       "px-4 py-2 rounded-2xl text-sm leading-relaxed max-w-[280px] sm:max-w-md",
-                      m.sender === 'ADMIN' ? "bg-cyan-400 text-slate-900 rounded-tr-sm" : "bg-white/[0.06] text-white/90 rounded-tl-sm"
+                      m.sender === 'ADMIN' ? "bg-bt-cyan text-bg-primary rounded-tr-sm" : "bg-white/[0.06] text-white/90 rounded-tl-sm"
                     )}>
                       {m.content}
                     </div>
@@ -174,10 +204,10 @@ export default function AdminChatPage() {
               ))}
               {typing && (
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400"><Bot className="w-4 h-4" /></div>
+                  <div className="w-8 h-8 rounded-full bg-bt-teal/20 flex items-center justify-center text-bt-teal"><Bot className="w-4 h-4" /></div>
                   <div className="bg-white/[0.06] px-4 py-3 rounded-2xl rounded-tl-sm flex gap-1">
-                    {[0,1,2].map(i => (
-                      <motion.div key={i} className="w-1.5 h-1.5 rounded-full bg-white/40" animate={{ y: [0,-4,0] }} transition={{ duration: 0.6, delay: i*0.15, repeat: Infinity }} />
+                    {[0, 1, 2].map(i => (
+                      <motion.div key={i} className="w-1.5 h-1.5 rounded-full bg-white/40" animate={{ y: [0, -4, 0] }} transition={{ duration: 0.6, delay: i * 0.15, repeat: Infinity }} />
                     ))}
                   </div>
                 </div>
@@ -186,17 +216,17 @@ export default function AdminChatPage() {
             </div>
 
             <div className="px-4 lg:px-6 pb-6 pt-2">
-              <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-2 flex items-end gap-2 focus-within:border-cyan-400/40 transition-colors">
-                <textarea 
+              <div className="bg-white/[0.04] border border-white/[0.08] rounded-2xl p-2 flex items-end gap-2 focus-within:border-bt-cyan/40 transition-colors">
+                <textarea
                   value={input} onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() } }}
                   placeholder="Type a response..."
                   className="flex-1 bg-transparent text-sm text-white placeholder-white/30 resize-none outline-none py-2.5 px-3 min-h-[44px] max-h-32"
                 />
-                <button 
+                <button
                   onClick={sendMessage}
                   disabled={!input.trim()}
-                  className="p-3 rounded-xl bg-cyan-400 text-slate-900 disabled:opacity-40 hover:bg-cyan-300 transition-all flex-shrink-0"
+                  className="p-3 rounded-xl bg-bt-cyan text-bg-primary disabled:opacity-40 hover:bg-bt-cyan-light transition-all flex-shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </button>
@@ -213,6 +243,47 @@ export default function AdminChatPage() {
           </div>
         )}
       </div>
+
+      {/* New Chat Modal */}
+      <Modal
+        isOpen={newChatOpen}
+        onClose={() => setNewChatOpen(false)}
+        title="New Chat"
+        size="sm"
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-widest text-white/40 mb-2">
+              Visitor ID or Identifier
+            </label>
+            <input
+              type="text"
+              value={visitorInput}
+              onChange={e => { setVisitorInput(e.target.value); setVisitorInputError('') }}
+              onKeyDown={e => { if (e.key === 'Enter') handleNewChatSubmit() }}
+              placeholder="e.g. visitor-abc123"
+              className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 outline-none focus:border-bt-cyan/40 transition-colors"
+            />
+            {visitorInputError && (
+              <p className="mt-1.5 text-xs text-red-400">{visitorInputError}</p>
+            )}
+          </div>
+          <div className="flex justify-end gap-3 pt-1">
+            <button
+              onClick={() => setNewChatOpen(false)}
+              className="px-4 py-2 text-sm text-white/50 hover:text-white transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleNewChatSubmit}
+              className="px-4 py-2 text-sm bg-bt-cyan text-bg-primary font-semibold rounded-xl hover:bg-bt-cyan-light transition-colors"
+            >
+              Start Chat
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

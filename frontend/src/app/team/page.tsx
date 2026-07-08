@@ -28,14 +28,14 @@ export default function TeamPage() {
   const team: TeamMember[] = data ?? []
 
   return (
-    <div className="pt-32 pb-24 bg-[#020617] min-h-screen">
+    <div className="pt-32 pb-24 bg-[#050e12] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-20"
         >
-          <span className="text-blue-400 text-xs font-bold tracking-[0.2em] uppercase mb-4 block">World Class Talent</span>
+          <span className="text-bt-cyan text-xs font-bold tracking-[0.2em] uppercase mb-4 block">World Class Talent</span>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             The minds moving <span className="gradient-text-brand">Burtech</span> forward
           </h1>
@@ -88,13 +88,13 @@ function TeamCard({ member, index }: { member: TeamMember, index: number }) {
               </div>
             )}
           </div>
-          <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl glass-card flex items-center justify-center text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl glass-card flex items-center justify-center text-bt-cyan opacity-0 group-hover:opacity-100 transition-opacity">
             <ExternalLink size={14} />
           </div>
         </div>
 
         <h3 className="text-xl font-bold text-white mb-1">{name}</h3>
-        <p className="text-blue-400 text-sm font-semibold mb-4 tracking-wide uppercase">{member.title}</p>
+        <p className="text-bt-cyan text-sm font-semibold mb-4 tracking-wide uppercase">{member.title}</p>
         
         <p className="text-white/40 text-sm leading-relaxed mb-6 line-clamp-4 group-hover:line-clamp-none transition-all duration-500">
           {member.bio}
@@ -107,7 +107,7 @@ function TeamCard({ member, index }: { member: TeamMember, index: number }) {
             </span>
           ))}
           {member.skills.length > 3 && (
-            <span className="text-[10px] font-bold px-2 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400">
+            <span className="text-[10px] font-bold px-2 py-1 rounded-md bg-bt-cyan/10 border border-bt-cyan/20 text-bt-cyan">
               +{member.skills.length - 3}
             </span>
           )}

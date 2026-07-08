@@ -43,3 +43,11 @@ prisma/dev.db-journal
 .turbo
 coverage/
 issues/
+
+# Database backups
+*.sql
+*.sql.gz
+
+# Tool-specific directories
+.kiro/
+.windsurf/

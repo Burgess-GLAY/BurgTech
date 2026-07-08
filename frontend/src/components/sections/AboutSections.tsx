@@ -43,7 +43,7 @@ export function EthicsSection() {
   return (
     <section className="section-pad border-t border-white/[0.06]">
       <div className="text-center mb-14">
-        <span className="text-cyan-400 text-sm font-medium
+        <span className="text-bt-cyan text-sm font-medium
                          uppercase tracking-wide">
           How we operate
         </span>
@@ -66,10 +66,10 @@ export function EthicsSection() {
             transition={{ duration: 0.4, delay: i * 0.07 }}
             className="glass-card p-6"
           >
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border
-                            border-cyan-500/20 flex items-center
+            <div className="w-10 h-10 rounded-xl bg-bt-cyan-subtle border
+                            border-bt-cyan-border flex items-center
                             justify-center mb-4">
-              <e.Icon className="w-5 h-5 text-cyan-400" />
+              <e.Icon className="w-5 h-5 text-bt-cyan" />
             </div>
             <h3 className="font-semibold text-lg mb-2">{e.title}</h3>
             <p className="text-white/55 text-sm leading-relaxed">{e.body}</p>
@@ -84,7 +84,7 @@ export function PartnersSection() {
   return (
     <section className="section-pad border-t border-white/[0.06]">
       <div className="text-center mb-12">
-        <span className="text-cyan-400 text-sm font-medium
+        <span className="text-bt-cyan text-sm font-medium
                          uppercase tracking-wide">
           Collaborations
         </span>
@@ -97,26 +97,24 @@ export function PartnersSection() {
         </p>
       </div>
       <div className="glass-card p-12 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border
-                        border-cyan-500/20 flex items-center justify-center
+        <div className="w-16 h-16 rounded-2xl bg-bt-cyan-subtle border
+                        border-bt-cyan-border flex items-center justify-center
                         mx-auto mb-5">
-          <Handshake className="w-8 h-8 text-cyan-400" />
+          <Handshake className="w-8 h-8 text-bt-cyan" />
         </div>
         <h3 className="text-xl font-semibold mb-3">
           Partnership programme launching in 2026
         </h3>
         <p className="text-white/50 max-w-lg mx-auto text-sm
                       leading-relaxed mb-6">
-          Burtech Solution is establishing formal partnerships with
+          BurgTech Solutions is establishing formal partnerships with
           technology companies, academic institutions, and development
           organisations across Africa and globally. Interested in
           partnering with us?
         </p>
         <Link
           href="/contact"
-          className="inline-flex items-center gap-2 px-6 py-3
-                     bg-cyan-400 text-slate-900 font-semibold rounded-xl
-                     hover:bg-cyan-300 transition-colors text-sm"
+          className="btn-primary text-sm"
         >
           Discuss a partnership <ArrowRight className="w-4 h-4" />
         </Link>
