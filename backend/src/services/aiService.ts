@@ -1,6 +1,11 @@
 import OpenAI from 'openai'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+let openai: OpenAI | null = null
+if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'sk-...') {
+  openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+} else {
+  console.warn('Warning: OPENAI_API_KEY is not defined or is placeholder. AI Assistant will operate in fallback mode.')
+}
 
 const SYSTEM_PROMPT = `You are Buri, the AI assistant for Burtech Solution — a modern technology company founded in Cyprus.
 
@@ -31,6 +36,9 @@ export interface ChatMessage {
 }
 
 export async function getAIResponse(messages: ChatMessage[]): Promise<string> {
+  if (!openai) {
+    return "Thank you for your message. The AI Assistant is currently in offline mode. Please use the contact form to reach out to the team directly."
+  }
   const response = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.slice(-10)],
