@@ -679,18 +679,48 @@
 
     .bt-carousel-slide .bt-project-card {
       flex-direction: column;
-      padding: 1.75rem;
-      gap: 1.5rem;
+      padding: 1.5rem;
+      gap: 1.25rem;
+      min-height: auto;
+    }
+
+    .bt-carousel-slide .bt-project-card__content {
+      min-width: 0;
+      flex: 1;
     }
 
     .bt-carousel-slide .bt-project-card__visual {
       flex: 0 0 auto;
       width: 100%;
-      height: 200px;
+      height: 180px;
+      min-height: 180px;
+    }
+
+    .bt-carousel-slide .bt-project-card__title {
+      font-size: 1.25rem;
+      line-height: 1.3;
+    }
+
+    .bt-carousel-slide .bt-project-card__desc {
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .bt-carousel-slide .bt-project-card__features {
+      gap: 0.5rem;
+    }
+
+    .bt-carousel-slide .bt-project-card__feature-item {
+      font-size: 0.875rem;
     }
 
     .bt-carousel-edge {
       display: none;
+    }
+
+    /* Ensure projects are always visible on mobile */
+    .bt-carousel-viewport {
+      min-height: 400px;
     }
   }
 
@@ -701,6 +731,28 @@
     }
     .bt-carousel-track {
       padding: 0 4vw;
+    }
+
+    .bt-carousel-slide .bt-project-card {
+      padding: 1.25rem;
+      gap: 1rem;
+    }
+
+    .bt-carousel-slide .bt-project-card__visual {
+      height: 160px;
+      min-height: 160px;
+    }
+
+    .bt-carousel-slide .bt-project-card__title {
+      font-size: 1.125rem;
+    }
+
+    .bt-carousel-slide .bt-project-card__desc {
+      font-size: 0.875rem;
+    }
+
+    .bt-carousel-viewport {
+      min-height: 380px;
     }
   }
 

@@ -51,3 +51,5 @@ issues/
 # Tool-specific directories
 .kiro/
 .windsurf/
+# Local Netlify folder
+.netlify

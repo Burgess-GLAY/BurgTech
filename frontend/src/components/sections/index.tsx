@@ -322,6 +322,29 @@ export function FeaturedProjects() {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
   const isPausedRef = useRef(false);
+  const [slideWidth, setSlideWidth] = useState(860);
+
+  // Responsive slide width calculation
+  useEffect(() => {
+    const updateSlideWidth = () => {
+      if (typeof window !== 'undefined') {
+        const width = window.innerWidth;
+        if (width < 480) {
+          setSlideWidth(width * 0.92); // 92vw
+        } else if (width < 768) {
+          setSlideWidth(width * 0.88); // 88vw
+        } else if (width < 1024) {
+          setSlideWidth(720);
+        } else {
+          setSlideWidth(860);
+        }
+      }
+    };
+
+    updateSlideWidth();
+    window.addEventListener('resize', updateSlideWidth);
+    return () => window.removeEventListener('resize', updateSlideWidth);
+  }, []);
 
   const goTo = useCallback((index: number) => {
     if (isTransitioning || !projects?.length) return;
@@ -428,7 +451,7 @@ export function FeaturedProjects() {
         <div
           className="bt-carousel-track"
           style={{
-            transform: `translateX(calc(-${activeIndex} * (860px + 2rem)))`,
+            transform: `translateX(calc(-${activeIndex} * (${slideWidth}px + 2rem)))`,
           }}
         >
           {projects.map((project: Project, i: number) => {

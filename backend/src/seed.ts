@@ -485,7 +485,7 @@ async function main() {
       isPublished: true,
       publishedAt: new Date('2026-03-01'),
       readTimeMin: 6,
-      coverImage: null,
+      coverImage: '/images/blog/generativeai.jpg',
       authorId: admin.id,
     },
     {
@@ -511,7 +511,7 @@ async function main() {
       isPublished: true,
       publishedAt: new Date('2026-03-15'),
       readTimeMin: 4,
-      coverImage: null,
+      coverImage: '/images/blog/prompt.jpg',
       authorId: admin.id,
     },
   ]
