@@ -26,13 +26,6 @@
   status = 200
   force = true
 
-# Handle Next.js rewrites for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
-
 # Headers for security
 [[headers]]
   for = "/*"
