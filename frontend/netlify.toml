@@ -1,7 +1,6 @@
 [build]
-  base = "frontend"
-  command = "npm run build"
-  publish = ".next"
+  command = "cd frontend && npm run build"
+  publish = "frontend/.next"
 
 [build.environment]
   NODE_VERSION = "20"
@@ -13,10 +12,10 @@
   package = "@netlify/plugin-nextjs"
 
 [dev]
-  command = "npm run dev"
+  command = "cd frontend && npm run dev"
   port = 3000
   targetPort = 3000
-  publish = ".next"
+  publish = "frontend/.next"
 
 # Redirect API calls to backend (backend must be deployed separately)
 # This will be updated after backend deployment
