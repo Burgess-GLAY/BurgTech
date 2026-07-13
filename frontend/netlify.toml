@@ -1,11 +1,13 @@
 [build]
-  base = "."
+  base = "frontend"
   command = "npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
   NPM_FLAGS = "--legacy-peer-deps"
+  NEXT_PUBLIC_API_URL = "https://burtech-backend.onrender.com"
+  NEXT_PUBLIC_SITE_URL = "https://burgtech.netlify.app"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
