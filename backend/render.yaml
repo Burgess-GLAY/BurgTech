@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: burgtech-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && node dist/index.js
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_t5CyTGFgL4YE@ep-cool-lake-at7mligd-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+      - key: DIRECT_URL
+        value: postgresql://neondb_owner:npg_t5CyTGFgL4YE@ep-cool-lake-at7mligd-pooler.c-9.us-east-1.aws.neon.tech/neondb?sslmode=require
+      - key: JWT_SECRET
+        value: ab4407b7a2bd6997cbcaa450b301cc5d40c9bd327739e052d26afdadd455ad13
+      - key: RESEND_API_KEY
+        value: your_resend_api_key_here
+      - key: ADMIN_EMAIL
+        value: burgtechsolutions@gmail.com
+      - key: FRONTEND_URL
+        value: https://burgtech.vercel.app
+      - key: PORT
+        value: 4000
+      - key: NODE_ENV
+        value: production
