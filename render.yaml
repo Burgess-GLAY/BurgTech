@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: burgtech-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && node dist/index.js
+    envVars:
+      - key: DATABASE_URL
+        value: [Set in environment variables]
+      - key: DIRECT_URL
+        value: [Set in environment variables]
+      - key: JWT_SECRET
+        value: [Set in environment variables]
+      - key: RESEND_API_KEY
+        value: [Set in environment variables]
+      - key: ADMIN_EMAIL
+        value: burgtechsolutions@gmail.com
+      - key: FRONTEND_URL
+        value: https://burgtech.vercel.app
+      - key: PORT
+        value: 4000
+      - key: NODE_ENV
+        value: production
