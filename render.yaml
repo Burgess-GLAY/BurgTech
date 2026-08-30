@@ -7,11 +7,11 @@ services:
     startCommand: npx prisma migrate deploy && node dist/index.js
     envVars:
       - key: DATABASE_URL
-        value: [Set in environment variables]
+        value: SET_IN_RENDER_ENV
       - key: DIRECT_URL
-        value: [Set in environment variables]
+        value: SET_IN_RENDER_ENV
       - key: JWT_SECRET
-        value: [Set in environment variables]
+        value: SET_IN_RENDER_ENV
       - key: RESEND_API_KEY
         value: [Set in environment variables]
       - key: ADMIN_EMAIL
