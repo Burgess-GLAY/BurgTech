@@ -176,12 +176,22 @@ function MobileServiceItem({
 
 // ─── Services Preview ─────────────────────────────────────────────────────────
 export function ServicesPreview() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['services-all'],
     queryFn: () => apiClient.get('/services').then(r => r.data.services),
     staleTime: 5 * 60 * 1000,
   })
   const services: any[] = data ?? []
+
+  // Debug logging
+  useEffect(() => {
+    if (error) {
+      console.error('Services fetch error:', error)
+    }
+    if (data) {
+      console.log('Services data:', data)
+    }
+  }, [error, data])
 
   const [activeSlug, setActiveSlug] = useState<string>('')
   const [openCategory, setOpenCategory] = useState<string | null>(null)
@@ -310,13 +320,23 @@ interface Project {
 const AUTO_PLAY_INTERVAL = 5000; // 5 seconds per slide
 
 export function FeaturedProjects() {
-  const { data: projects, isLoading } = useQuery({
+  const { data: projects, isLoading, error } = useQuery({
     queryKey: ['featured-projects'],
     queryFn: async () => {
       const res = await apiClient.get('/projects?featured=true');
       return res.data.projects;
     }
   });
+
+  // Debug logging
+  useEffect(() => {
+    if (error) {
+      console.error('Featured projects fetch error:', error)
+    }
+    if (projects) {
+      console.log('Featured projects data:', projects)
+    }
+  }, [error, projects])
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -729,12 +749,22 @@ export function FounderSection() {
 
 // ─── Insights Preview ─────────────────────────────────────────────────────────
 export function InsightsPreview() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['blog-all'],
     queryFn: () => apiClient.get('/blog?limit=3').then(r => r.data.posts),
     staleTime: 5 * 60 * 1000,
   })
   const posts = data ?? []
+
+  // Debug logging
+  useEffect(() => {
+    if (error) {
+      console.error('Insights fetch error:', error)
+    }
+    if (data) {
+      console.log('Insights data:', data)
+    }
+  }, [error, data])
 
   return (
     <section id="insights" className="section-pad">
