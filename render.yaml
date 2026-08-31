@@ -30,7 +30,7 @@ services:
       - key: ADMIN_EMAIL
         value: burgtechsolutions@gmail.com
       - key: FRONTEND_URL
-        value: https://burgtech.vercel.app
+        value: https://burg-tech.vercel.app
       - key: PORT
         value: 4000
       - key: NODE_ENV
