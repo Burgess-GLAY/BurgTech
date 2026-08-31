@@ -16,8 +16,6 @@ services:
         value: SET_IN_ENV
       - key: OPENAI_API_KEY
         value: SET_IN_ENV
-      - key: REDIS_URL
-        value: SET_IN_ENV
       - key: ADMIN_EMAIL
         value: burgtechsolutions@gmail.com
       - key: FRONTEND_URL
