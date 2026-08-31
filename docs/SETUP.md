@@ -199,30 +199,34 @@ docker compose logs -f api
 docker compose logs -f web
 ```
 
-### Option B: Vercel + Railway (recommended for MVP)
+### Option B: Vercel + Render (recommended for MVP)
 
-1. **Backend → Railway**
-   - Create project → Deploy from GitHub → select `/backend`
-   - Set all environment variables from `.env.example`
-   - PostgreSQL is externally hosted on Neon (set DATABASE_URL, DIRECT_URL)
+1. **Backend → Render**
+   - Create new web service from GitHub repo
+   - Render will automatically detect `render.yaml` in the root
+   - PostgreSQL database is provisioned automatically via render.yaml
+   - Set remaining environment variables in Render dashboard:
+     - `JWT_SECRET` (generate: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`)
+     - `OPENAI_API_KEY` (from OpenAI dashboard)
+     - `RESEND_API_KEY` (from Resend dashboard)
+   - DATABASE_URL and DIRECT_URL are auto-configured from render.yaml
 
 2. **Frontend → Vercel**
    - Import repo → set Root Directory to `frontend`
-   - Set `NEXT_PUBLIC_API_URL` to your Railway backend URL
+   - Set `NEXT_PUBLIC_API_URL` to your Render backend URL (e.g., `https://burgtech-backend.onrender.com`)
 
 ### Environment Variables Checklist
 
 | Variable | Required | Notes |
 |---|---|---|
-| `DATABASE_URL` | ✅ | Neon pooled connection string (with pgbouncer=true) |
-| `DIRECT_URL` | ✅ | Neon direct connection string (for migrations) |
-| `REDIS_URL` | ✅ | Upstash Redis connection string (with TLS enabled) |
-| `JWT_SECRET` | ✅ | Min 32 chars, random |
-| `OPENAI_API_KEY` | ✅ | For AI chatbot (Buri) |
-| `RESEND_API_KEY` | ✅ | For contact + chat emails |
-| `ADMIN_EMAIL` | ✅ | Where alerts are sent |
-| `FRONTEND_URL` | ✅ | For CORS — your production domain |
-| `NEXT_PUBLIC_API_URL` | ✅ | Backend URL (used by browser) |
+| `DATABASE_URL` | ✅ | Auto-configured from Render PostgreSQL (render.yaml) |
+| `DIRECT_URL` | ✅ | Auto-configured from Render PostgreSQL (render.yaml) |
+| `JWT_SECRET` | ✅ | Min 32 chars, random (set in Render dashboard) |
+| `OPENAI_API_KEY` | ✅ | For AI chatbot (Buri) - from OpenAI dashboard |
+| `RESEND_API_KEY` | ✅ | For contact + chat emails - from Resend dashboard |
+| `ADMIN_EMAIL` | ✅ | Where alerts are sent (set in render.yaml) |
+| `FRONTEND_URL` | ✅ | For CORS — your production domain (set in render.yaml) |
+| `NEXT_PUBLIC_API_URL` | ✅ | Backend URL used by frontend (set in Vercel) |
 
 ---
 

@@ -8,6 +8,7 @@ import morgan from 'morgan'
 import { createRateLimiter } from './middleware/rateLimiter'
 import { errorHandler } from './middleware/errorHandler'
 import { registerSocketHandlers } from './services/socketService'
+import { prisma } from './lib/prisma'
 
 // Routes
 import { authRouter } from './routes/auth'
@@ -49,8 +50,22 @@ app.use(express.urlencoded({ extended: true }))
 app.use(createRateLimiter())
 
 // Health
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() })
+app.get('/health', async (_req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      database: 'connected'
+    })
+  } catch (error) {
+    res.status(503).json({ 
+      status: 'error', 
+      timestamp: new Date().toISOString(),
+      database: 'disconnected',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
+  }
 })
 
 // API Routes

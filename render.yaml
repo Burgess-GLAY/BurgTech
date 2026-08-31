@@ -1,16 +1,26 @@
+databases:
+  - name: burgtech-db
+    databaseName: burgtech
+    user: burgtech_user
+    plan: free
+
 services:
   - type: web
     name: burgtech-backend
     env: node
     plan: free
     rootDirectory: backend
-    buildCommand: npm install && npx prisma generate && npm run build
+    buildCommand: npm install --production=false && npx prisma generate && npm run build
     startCommand: npx prisma migrate deploy && node dist/index.js
     envVars:
       - key: DATABASE_URL
-        value: SET_IN_RENDER_ENV
+        fromDatabase:
+          name: burgtech-db
+          property: connectionString
       - key: DIRECT_URL
-        value: SET_IN_RENDER_ENV
+        fromDatabase:
+          name: burgtech-db
+          property: connectionString
       - key: JWT_SECRET
         value: SET_IN_RENDER_ENV
       - key: RESEND_API_KEY
