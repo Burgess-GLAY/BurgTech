@@ -29,7 +29,7 @@ const server = http.createServer(app)
 
 export const io = new SocketServer(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, ''),
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -41,7 +41,7 @@ registerSocketHandlers(io)
 app.use(helmet())
 app.use(compression())
 app.use(cors({
-  origin: process.env.FRONTEND_URL || ['http://localhost:3000', 'http://localhost:3001'],
+  origin: (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, ''),
   credentials: true,
 }))
 app.use(morgan('combined'))
