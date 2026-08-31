@@ -11,7 +11,7 @@ services:
     plan: free
     rootDirectory: backend
     buildCommand: npm install --production=false && npx prisma generate && npm run build
-    startCommand: npx prisma migrate deploy && node dist/index.js
+    startCommand: node dist/index.js
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -30,7 +30,7 @@ services:
       - key: ADMIN_EMAIL
         value: burgtechsolutions@gmail.com
       - key: FRONTEND_URL
-        value: https://burgtech.vercel.app
+        value: https://burg-tech.vercel.app
       - key: PORT
         value: 4000
       - key: NODE_ENV
