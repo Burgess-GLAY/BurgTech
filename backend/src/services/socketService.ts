@@ -1,11 +1,28 @@
 import { Server, Socket } from 'socket.io'
 import { prisma } from '../lib/prisma'
 import { sendChatNotificationEmail } from './emailService'
+import jwt from 'jsonwebtoken'
 
 export function registerSocketHandlers(io: Server) {
 
+  io.use((socket: any, next) => {
+    const token = socket.handshake.auth.token
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any
+        socket.data.user = decoded
+        next()
+      } catch (err) {
+        console.log('[Socket] Invalid token, allowing anonymous connection')
+        next() // Allow anonymous connections for visitors
+      }
+    } else {
+      next() // Allow anonymous connections for visitors
+    }
+  })
+
   io.on('connection', (socket: Socket) => {
-    console.log(`[Socket] Connected: ${socket.id}`)
+    console.log(`[Socket] Connected: ${socket.id}, User: ${socket.data.user?.email || 'anonymous'}`)
 
     socket.on('chat:join', async ({ visitorId, sessionId }: { visitorId: string; sessionId?: string }) => {
       let session = sessionId
@@ -65,9 +82,15 @@ export function registerSocketHandlers(io: Server) {
 
     socket.on('chat:getSessions', async () => {
       const sessions = await prisma.chatSession.findMany({
-        where: { isActive: true },
+        where: { 
+          OR: [
+            { isActive: true },
+            { updatedAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } } // Sessions updated in last 24 hours
+          ]
+        },
         include: { messages: { orderBy: { createdAt: 'desc' }, take: 1 } },
         orderBy: { updatedAt: 'desc' },
+        take: 50,
       })
       socket.emit('chat:sessions', sessions)
     })

@@ -25,8 +25,10 @@ export default function AdminChatPage() {
   const [visitorInputError, setVisitorInputError] = useState('')
 
   useEffect(() => {
+    const token = localStorage.getItem('bt_token')
     socket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000', {
       transports: ['websocket'],
+      auth: { token },
     })
 
     socket.on('connect', () => {

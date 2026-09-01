@@ -8,6 +8,7 @@ chatRouter.get('/sessions', requireAuth, requireAdmin, async (_req, res) => {
   const sessions = await prisma.chatSession.findMany({
     include: { messages: { orderBy: { createdAt: 'desc' }, take: 1 } },
     orderBy: { updatedAt: 'desc' },
+    take: 50,
   })
   res.json({ sessions })
 })
