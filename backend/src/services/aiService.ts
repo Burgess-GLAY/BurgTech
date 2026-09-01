@@ -1,8 +1,8 @@
 import OpenAI from 'openai'
 
-let openai: OpenAI | null = null
+let groqClient: OpenAI | null = null
 if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY !== 'gsk-...') {
-  openai = new OpenAI({
+  groqClient = new OpenAI({
     apiKey: process.env.GROQ_API_KEY,
     baseURL: 'https://api.groq.com/openai/v1'
   })
@@ -39,10 +39,10 @@ export interface ChatMessage {
 }
 
 export async function getAIResponse(messages: ChatMessage[]): Promise<string> {
-  if (!openai) {
+  if (!groqClient) {
     return "Thank you for your message. The AI Assistant is currently in offline mode. Please use the contact form to reach out to the team directly."
   }
-  const response = await openai.chat.completions.create({
+  const response = await groqClient.chat.completions.create({
     model: 'openai/gpt-oss-120b',
     messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.slice(-10)],
     max_tokens: 400,

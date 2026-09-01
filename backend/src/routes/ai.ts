@@ -2,6 +2,12 @@ import { Router, Request, Response } from 'express'
 import { z } from 'zod'
 import { getAIResponse, getQuickReplies } from '../services/aiService'
 import { aiLimiter } from '../middleware/rateLimiter'
+import multer from 'multer'
+
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+})
 
 export const aiRouter = Router()
 
@@ -12,14 +18,32 @@ const chatSchema = z.object({
   })).max(20),
 })
 
-aiRouter.post('/chat', aiLimiter, async (req: Request, res: Response) => {
-  const result = chatSchema.safeParse(req.body)
-  if (!result.success) return res.status(400).json({ error: result.error.flatten().fieldErrors })
+aiRouter.post('/chat', aiLimiter, upload.single('file'), async (req: Request, res: Response) => {
   try {
-    const reply = await getAIResponse(result.data.messages)
-    const lastMsg = result.data.messages[result.data.messages.length - 1]?.content ?? ''
+    let messages
+    
+    if (req.file) {
+      // Handle file upload
+      const file = req.file
+      const message = req.body.message || ''
+      
+      // For now, just acknowledge the file and process the text message
+      // File processing can be added later if needed
+      messages = [{
+        role: 'user' as const,
+        content: message || `I've uploaded a file: ${file.originalName}. Please help me with it.`
+      }]
+    } else {
+      const result = chatSchema.safeParse(req.body)
+      if (!result.success) return res.status(400).json({ error: result.error.flatten().fieldErrors })
+      messages = result.data.messages
+    }
+    
+    const reply = await getAIResponse(messages)
+    const lastMsg = messages[messages.length - 1]?.content ?? ''
     res.json({ reply, quickReplies: getQuickReplies(lastMsg) })
-  } catch {
+  } catch (error) {
+    console.error('AI chat error:', error)
     res.json({ reply: "I'm having trouble right now. Please try the contact form!" })
   }
 })

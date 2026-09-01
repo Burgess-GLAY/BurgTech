@@ -12,6 +12,7 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed": "tsx src/seed.ts",
+    "db:update-production": "tsx src/updateProductionData.ts",
     "lint": "eslint src --ext .ts",
     "test": "vitest run",
     "test:watch": "vitest"

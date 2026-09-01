@@ -27,6 +27,7 @@ services:
         value: SET_IN_RENDER_ENV
       - key: GROQ_API_KEY
         value: SET_IN_RENDER_ENV
+        sync: false
       - key: ADMIN_EMAIL
         value: burgtechsolutions@gmail.com
       - key: FRONTEND_URL
