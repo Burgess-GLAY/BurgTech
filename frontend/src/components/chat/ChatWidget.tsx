@@ -52,7 +52,20 @@ export function ChatWidget() {
   useEffect(() => { if (open) setUnread(0) }, [open])
 
   const connectSocket = useCallback(() => {
-    if (socket?.connected) return
+    if (socket?.connected) {
+      // Socket already connected, ensure we have listeners
+      socket.on('chat:message', (msg: any) => {
+        setMessages(p => [...p, { id: msg.id, content: msg.content, sender: msg.sender.toLowerCase() as Sender, createdAt: new Date(msg.createdAt) }])
+      })
+      socket.on('chat:typing', ({ isTyping, role }: any) => { if (role === 'admin') setTyping(isTyping) })
+      socket.on('chat:session', ({ sessionId, history }: any) => {
+        localStorage.setItem('bt_sid', sessionId)
+        if (history?.length) {
+          setMessages(history.map((m: any) => ({ id: m.id, content: m.content, sender: m.sender.toLowerCase() as Sender, createdAt: new Date(m.createdAt) })))
+        }
+      })
+      return
+    }
     socket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000', { transports: ['websocket'] })
     socket.on('connect', () => {
       setConnected(true)
