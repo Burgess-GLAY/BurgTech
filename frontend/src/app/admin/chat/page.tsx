@@ -68,10 +68,20 @@ export default function AdminChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const selectSession = (session: any) => {
+  const selectSession = async (session: any) => {
     setActiveSession(session)
     socket?.emit('chat:adminJoin', { sessionId: session.id, adminId: user?.id })
-    // Joined session, now messages should be loaded via chat:session listener
+    // Also fetch messages via REST API as fallback to ensure history loads
+    try {
+      const token = localStorage.getItem('bt_token')
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/chat/sessions/${session.id}/messages`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const data = await res.json()
+      setMessages(data.messages || [])
+    } catch (error) {
+      console.error('Failed to fetch messages:', error)
+    }
   }
 
   const sendMessage = () => {

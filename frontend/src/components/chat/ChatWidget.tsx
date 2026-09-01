@@ -105,7 +105,7 @@ export function ChatWidget() {
     if (mode === 'ai') {
       setLoading(true)
       try {
-        const history = messages.filter(m => m.sender !== 'bot').map(m => ({ role: m.sender === 'visitor' ? 'user' : 'assistant' as const, content: m.content }))
+        const history = messages.filter(m => m.sender === 'visitor' || m.sender === 'bot').map(m => ({ role: m.sender === 'visitor' ? 'user' : 'assistant' as const, content: m.content }))
         
         let body: any
         let headers: any = {}

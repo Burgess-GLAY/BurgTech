@@ -53,6 +53,13 @@ export function registerSocketHandlers(io: Server) {
       socket.data.role = 'admin'
       socket.data.adminId = adminId
       await prisma.chatSession.update({ where: { id: sessionId }, data: { adminJoined: true } })
+      
+      const history = await prisma.chatMessage.findMany({
+        where: { sessionId: session.id },
+        orderBy: { createdAt: 'asc' },
+        take: 50,
+      })
+      socket.emit('chat:session', { sessionId: session.id, history })
       io.to(sessionId).emit('chat:adminJoined', { sessionId })
     })
 
