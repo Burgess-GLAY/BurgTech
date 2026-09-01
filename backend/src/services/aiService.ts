@@ -1,13 +1,24 @@
 import OpenAI from 'openai'
 
 let groqClient: OpenAI | null = null
-if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY !== 'gsk-...') {
+
+function getGroqClient(): OpenAI | null {
+  if (groqClient) return groqClient
+  
+  const apiKey = process.env.GROQ_API_KEY
+  console.log('GROQ_API_KEY check:', apiKey ? `Present (length: ${apiKey.length})` : 'Missing')
+  
+  if (!apiKey || apiKey === 'gsk-...' || apiKey === 'SET_IN_RENDER_ENV') {
+    console.warn('Warning: GROQ_API_KEY is not defined or is placeholder. AI Assistant will operate in fallback mode.')
+    return null
+  }
+  
   groqClient = new OpenAI({
-    apiKey: process.env.GROQ_API_KEY,
+    apiKey: apiKey,
     baseURL: 'https://api.groq.com/openai/v1'
   })
-} else {
-  console.warn('Warning: GROQ_API_KEY is not defined or is placeholder. AI Assistant will operate in fallback mode.')
+  console.log('Groq client initialized successfully')
+  return groqClient
 }
 
 const SYSTEM_PROMPT = `You are Buri, the AI assistant for Burtech Solution — a modern technology company founded in Cyprus.
@@ -39,16 +50,26 @@ export interface ChatMessage {
 }
 
 export async function getAIResponse(messages: ChatMessage[]): Promise<string> {
-  if (!groqClient) {
+  const client = getGroqClient()
+  if (!client) {
+    console.error('Groq client not available')
     return "Thank you for your message. The AI Assistant is currently in offline mode. Please use the contact form to reach out to the team directly."
   }
-  const response = await groqClient.chat.completions.create({
-    model: 'openai/gpt-oss-120b',
-    messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.slice(-10)],
-    max_tokens: 400,
-    temperature: 0.7,
-  })
-  return response.choices[0]?.message?.content ?? "I'm having trouble right now. Please use the contact form."
+  
+  console.log('Sending request to Groq API...')
+  try {
+    const response = await client.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.slice(-10)],
+      max_tokens: 400,
+      temperature: 0.7,
+    })
+    console.log('Groq API response received')
+    return response.choices[0]?.message?.content ?? "I'm having trouble right now. Please use the contact form."
+  } catch (error) {
+    console.error('Groq API error:', error)
+    return "I'm having trouble right now. Please try the contact form!"
+  }
 }
 
 export function getQuickReplies(lastMessage: string): string[] {
