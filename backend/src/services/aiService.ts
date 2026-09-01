@@ -59,7 +59,7 @@ export async function getAIResponse(messages: ChatMessage[]): Promise<string> {
   console.log('Sending request to Groq API...')
   try {
     const response = await client.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.slice(-10)],
       max_tokens: 400,
       temperature: 0.7,

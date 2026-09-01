@@ -107,15 +107,17 @@ export function ChatWidget() {
       try {
         const history = messages.filter(m => m.sender !== 'bot').map(m => ({ role: m.sender === 'visitor' ? 'user' : 'assistant' as const, content: m.content }))
         
-        let body: any = { messages: [...history, { role: 'user', content: text }] }
-        let headers: any = { 'Content-Type': 'application/json' }
+        let body: any
+        let headers: any = {}
         
         if (attachedFile) {
           const formData = new FormData()
           formData.append('file', attachedFile)
           formData.append('message', text)
           body = formData
-          headers = {}
+        } else {
+          headers['Content-Type'] = 'application/json'
+          body = JSON.stringify({ messages: [...history, { role: 'user', content: text }] })
         }
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/ai/chat`, {
