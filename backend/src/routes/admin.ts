@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { prisma } from '../lib/prisma'
 import { requireAuth, requireAdmin, requireSuperAdmin } from '../middleware/auth'
+import { main as updateProductionData } from '../updateProductionData'
 
 export const adminRouter = Router()
 
@@ -82,4 +83,14 @@ adminRouter.get('/audit-logs', requireAuth, requireSuperAdmin, async (req, res) 
     page,
     pages: Math.ceil(total / limit),
   })
+})
+
+adminRouter.post('/update-production-data', requireAuth, requireSuperAdmin, async (req, res) => {
+  try {
+    await updateProductionData()
+    res.json({ success: true, message: 'Production data updated successfully' })
+  } catch (error) {
+    console.error('Production data update error:', error)
+    res.status(500).json({ success: false, error: 'Failed to update production data' })
+  }
 })
