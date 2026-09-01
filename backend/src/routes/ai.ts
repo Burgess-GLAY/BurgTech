@@ -31,7 +31,7 @@ aiRouter.post('/chat', aiLimiter, upload.single('file'), async (req: Request, re
       // File processing can be added later if needed
       messages = [{
         role: 'user' as const,
-        content: message || `I've uploaded a file: ${file.originalName}. Please help me with it.`
+        content: message || `I've uploaded a file: ${file.originalname}. Please help me with it.`
       }]
     } else {
       const result = chatSchema.safeParse(req.body)
