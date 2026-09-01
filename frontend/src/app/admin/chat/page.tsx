@@ -86,8 +86,21 @@ export default function AdminChatPage() {
 
   const sendMessage = () => {
     if (!input.trim() || !activeSession) return
-    socket?.emit('chat:message', { content: input.trim() })
+    const content = input.trim()
     setInput('')
+    
+    // Add message to local state immediately for instant feedback
+    const adminMsg = {
+      id: Date.now().toString(),
+      sender: 'ADMIN',
+      content,
+      createdAt: new Date(),
+      sessionId: activeSession.id
+    }
+    setMessages(p => [...p, adminMsg])
+    
+    // Emit to backend
+    socket?.emit('chat:message', { content })
   }
 
   const handleNewChatSubmit = () => {

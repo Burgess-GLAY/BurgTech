@@ -30,6 +30,7 @@ export function ChatWidget() {
   const [typing, setTyping]       = useState(false)
   const [unread, setUnread]       = useState(0)
   const [attachedFile, setAttachedFile] = useState<File | null>(null)
+  const [connected, setConnected] = useState(false)
   const bottomRef                 = useRef<HTMLDivElement>(null)
   const fileInputRef              = useRef<HTMLInputElement>(null)
   const visitorId                 = useRef<string | null>(null)
@@ -54,7 +55,11 @@ export function ChatWidget() {
     if (socket?.connected) return
     socket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000', { transports: ['websocket'] })
     socket.on('connect', () => {
+      setConnected(true)
       socket!.emit('chat:join', { visitorId: visitorId.current || 'anon', sessionId: localStorage.getItem('bt_sid') || undefined })
+    })
+    socket.on('disconnect', () => {
+      setConnected(false)
     })
     socket.on('chat:session', ({ sessionId, history }: any) => {
       localStorage.setItem('bt_sid', sessionId)
@@ -63,9 +68,7 @@ export function ChatWidget() {
       }
     })
     socket.on('chat:message', (msg: any) => {
-      if (msg.sender !== 'VISITOR') {
-        setMessages(p => [...p, { id: msg.id, content: msg.content, sender: msg.sender.toLowerCase() as Sender, createdAt: new Date(msg.createdAt) }])
-      }
+      setMessages(p => [...p, { id: msg.id, content: msg.content, sender: msg.sender.toLowerCase() as Sender, createdAt: new Date(msg.createdAt) }])
     })
     socket.on('chat:typing', ({ isTyping, role }: any) => { if (role === 'admin') setTyping(isTyping) })
   }, [])
@@ -152,7 +155,7 @@ export function ChatWidget() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold">Burtech Assistant</p>
-                  <p className="text-xs text-white/40">{mode === 'ai' ? 'AI Online' : 'Connecting to team...'}</p>
+                  <p className="text-xs text-white/40">{mode === 'ai' ? 'AI Online' : (connected ? 'Team Online' : 'Connecting to team...')}</p>
                 </div>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 text-white/40 hover:text-white"><X className="w-4 h-4" /></button>
