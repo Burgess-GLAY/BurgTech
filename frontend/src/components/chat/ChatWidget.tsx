@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Bot, User, Loader2, ChevronDown } from 'lucide-react'
+import { MessageCircle, X, Send, Bot, User, Loader2, ChevronDown, Paperclip } from 'lucide-react'
 import { io, Socket } from 'socket.io-client'
 import { cn } from '@/lib/utils'
 
@@ -29,7 +29,9 @@ export function ChatWidget() {
   const [loading, setLoading]     = useState(false)
   const [typing, setTyping]       = useState(false)
   const [unread, setUnread]       = useState(0)
+  const [attachedFile, setAttachedFile] = useState<File | null>(null)
   const bottomRef                 = useRef<HTMLDivElement>(null)
+  const fileInputRef              = useRef<HTMLInputElement>(null)
   const visitorId                 = useRef<string | null>(null)
 
   useEffect(() => {
@@ -74,20 +76,52 @@ export function ChatWidget() {
     setMessages(p => [...p, { id: Date.now().toString(), content: "Connecting you to the Burtech team. We typically reply within a few minutes — leave your message and we'll get back to you!", sender: 'bot', createdAt: new Date() }])
   }
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain']
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a PDF, DOC, DOCX, or TXT file')
+        return
+      }
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File size must be less than 5MB')
+        return
+      }
+      setAttachedFile(file)
+    }
+  }
+
   const sendMessage = async () => {
-    if (!input.trim() || loading) return
+    if ((!input.trim() && !attachedFile) || loading) return
     const text = input.trim()
     setInput('')
-    const userMsg: Msg = { id: Date.now().toString(), content: text, sender: 'visitor', createdAt: new Date() }
+    setAttachedFile(null)
+    const userMsg: Msg = { id: Date.now().toString(), content: text || (attachedFile ? `Attached: ${attachedFile.name}` : ''), sender: 'visitor', createdAt: new Date() }
     setMessages(p => [...p, userMsg])
 
     if (mode === 'ai') {
       setLoading(true)
       try {
         const history = messages.filter(m => m.sender !== 'bot').map(m => ({ role: m.sender === 'visitor' ? 'user' : 'assistant' as const, content: m.content }))
+        
+        let body: any = { messages: [...history, { role: 'user', content: text }] }
+        let headers: any = { 'Content-Type': 'application/json' }
+        
+        if (attachedFile) {
+          const formData = new FormData()
+          formData.append('file', attachedFile)
+          formData.append('message', text)
+          body = formData
+          headers = {}
+        }
+
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/ai/chat`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: [...history, { role: 'user', content: text }] }),
+          method: 'POST',
+          headers,
+          body,
         })
         const data = await res.json()
         setMessages(p => [...p, { id: Date.now().toString(), content: data.reply, sender: 'bot', createdAt: new Date() }])
@@ -169,16 +203,36 @@ export function ChatWidget() {
             {/* Input */}
             <div className="px-3 pb-3 pt-2 border-t border-white/[0.06]">
               <div className="flex items-end gap-2 bg-white/[0.04] rounded-xl border border-white/[0.08] px-3 py-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.doc,.docx,.txt"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/[0.08] transition-colors flex-shrink-0"
+                  title="Attach file"
+                >
+                  <Paperclip className="w-4 h-4" />
+                </button>
                 <textarea value={input} onChange={e => setInput(e.target.value)}
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() } }}
                   placeholder="Type a message..." rows={1}
                   className="flex-1 bg-transparent text-sm text-white placeholder-white/30 resize-none outline-none max-h-24"
                 />
-                <button onClick={sendMessage} disabled={!input.trim() || loading}
+                <button onClick={sendMessage} disabled={(!input.trim() && !attachedFile) || loading}
                   className="p-1.5 rounded-lg bg-bt-cyan text-bg-primary disabled:opacity-40 hover:bg-bt-cyan-light transition-colors flex-shrink-0">
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </button>
               </div>
+              {attachedFile && (
+                <div className="mt-2 flex items-center gap-2 text-xs text-white/60">
+                  <span className="truncate">{attachedFile.name}</span>
+                  <button onClick={() => setAttachedFile(null)} className="text-white/40 hover:text-white">✕</button>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
@@ -186,12 +240,12 @@ export function ChatWidget() {
 
       {/* Toggle button */}
       <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setOpen(!open)}
-        className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 shadow-lg flex items-center justify-center relative"
+        className="w-14 h-14 md:w-14 md:h-14 sm:w-12 sm:h-12 rounded-full bg-bt-cyan shadow-lg flex items-center justify-center relative"
       >
         <AnimatePresence mode="wait">
           {open
-            ? <motion.div key="c" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}><ChevronDown className="w-6 h-6 text-slate-900" /></motion.div>
-            : <motion.div key="o" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><MessageCircle className="w-6 h-6 text-slate-900" /></motion.div>
+            ? <motion.div key="c" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}><ChevronDown className="w-6 h-6 text-white" /></motion.div>
+            : <motion.div key="o" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><MessageCircle className="w-6 h-6 text-white" /></motion.div>
           }
         </AnimatePresence>
         {unread > 0 && !open && (

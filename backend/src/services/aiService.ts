@@ -1,10 +1,13 @@
 import OpenAI from 'openai'
 
 let openai: OpenAI | null = null
-if (process.env.OPENAI_API_KEY && process.env.OPENAI_API_KEY !== 'sk-...') {
-  openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY !== 'gsk-...') {
+  openai = new OpenAI({
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: 'https://api.groq.com/openai/v1'
+  })
 } else {
-  console.warn('Warning: OPENAI_API_KEY is not defined or is placeholder. AI Assistant will operate in fallback mode.')
+  console.warn('Warning: GROQ_API_KEY is not defined or is placeholder. AI Assistant will operate in fallback mode.')
 }
 
 const SYSTEM_PROMPT = `You are Buri, the AI assistant for Burtech Solution — a modern technology company founded in Cyprus.
@@ -40,7 +43,7 @@ export async function getAIResponse(messages: ChatMessage[]): Promise<string> {
     return "Thank you for your message. The AI Assistant is currently in offline mode. Please use the contact form to reach out to the team directly."
   }
   const response = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
+    model: 'openai/gpt-oss-120b',
     messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages.slice(-10)],
     max_tokens: 400,
     temperature: 0.7,

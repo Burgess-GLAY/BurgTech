@@ -63,8 +63,8 @@ export default function ContactPage() {
             <p className="text-xs text-white/40 mb-3 uppercase tracking-wide">Follow us</p>
             <div className="flex gap-3">
               {[
-                { icon: Facebook, href: 'https://www.facebook.com/share/1T74GwKndw/?mibextid=wwXIfr', label: 'Facebook' },
-                { icon: Instagram, href: 'https://www.instagram.com/burgess.glay?igsh=MWJtazIyaWxzcXJ5dQ%3D%3D&utm_source=qr', label: 'Instagram' },
+                { icon: Facebook, href: 'https://www.facebook.com/share/1CaiH7iYSw/?mibextid=wwXIfr', label: 'Facebook' },
+                { icon: Instagram, href: 'https://www.instagram.com/burgessaglay?igsi=MWJtazIyaWxzcXJ5dQ%3D%3D&utm_source=qr', label: 'Instagram' },
                 { icon: Linkedin, href: 'https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4?utm_source=share_via&utm_content=profile&utm_medium=member_ios', label: 'LinkedIn' },
                 { icon: Github, href: 'https://github.com/Burgess-GLAY', label: 'GitHub' }
               ].map(s => {

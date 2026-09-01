@@ -688,7 +688,7 @@ export function FounderSection() {
                 <div className="absolute inset-0 bg-bt-cyan/20 rounded-3xl rotate-6 -z-10" />
                 <div className="absolute inset-0 border border-white/10 rounded-3xl -z-10" />
                 <img
-                  src="/images/burgessprofile.jpeg"
+                  src="/images/newburgessprofile.jpeg"
                   alt="Burgess Awalayah Glay"
                   className="w-full h-full object-cover rounded-3xl shadow-2xl"
                 />
@@ -894,7 +894,7 @@ const CONTACTS = [
       </svg>
     ),
     label: 'Facebook',
-    href: 'https://facebook.com/burgtechsolutions',
+    href: 'https://www.facebook.com/share/1CaiH7iYSw/?mibextid=wwXIfr',
     expandable: false,
   },
   {
@@ -905,7 +905,7 @@ const CONTACTS = [
       </svg>
     ),
     label: 'LinkedIn',
-    href: 'https://linkedin.com/company/burgtech',
+    href: 'https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4?utm_source=share_via&utm_content=profile&utm_medium=member_ios',
     expandable: false,
   },
 ];

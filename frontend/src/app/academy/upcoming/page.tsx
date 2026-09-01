@@ -93,7 +93,7 @@ export default function UpcomingPage() {
                   className="w-full sm:w-auto px-8 py-4 bg-bt-cyan text-bg-primary font-bold rounded-xl hover:bg-bt-cyan-light transition-colors text-center inline-flex justify-center items-center gap-2">
                   Register now — it is free <ArrowRight className="w-5 h-5" />
                 </Link>
-                <a href="https://www.facebook.com/burgtech" target="_blank" rel="noopener noreferrer"
+                <a href="https://www.facebook.com/share/1CaiH7iYSw/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"
                   className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-colors text-center">
                   Announcement on Facebook
                 </a>

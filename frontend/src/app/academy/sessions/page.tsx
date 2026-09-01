@@ -74,7 +74,7 @@ const SESSIONS = [
       'Cloud security basics',
       'Real-world deployment walkthrough',
     ],
-    facebookUrl: 'https://www.facebook.com/burgtech',
+    facebookUrl: 'https://www.facebook.com/share/1CaiH7iYSw/?mibextid=wwXIfr',
     image: '/images/teaching/cloud computing poster.jpeg',
     colorKey: 'from-bt-cyan/20 to-bt-teal/20',
   },

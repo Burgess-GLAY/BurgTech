@@ -25,7 +25,7 @@ services:
         value: SET_IN_RENDER_ENV
       - key: RESEND_API_KEY
         value: SET_IN_RENDER_ENV
-      - key: OPENAI_API_KEY
+      - key: GROQ_API_KEY
         value: SET_IN_RENDER_ENV
       - key: ADMIN_EMAIL
         value: burgtechsolutions@gmail.com

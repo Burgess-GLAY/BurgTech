@@ -159,7 +159,7 @@ export default function AcademyPage() {
           <p className="text-white/70">
             Follow BurgTech on Facebook for live updates on all sessions
           </p>
-          <a href="https://www.facebook.com/burgtech" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.facebook.com/share/1CaiH7iYSw/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"
              className="px-5 py-2 bg-bt-cyan text-bg-primary font-medium rounded-lg hover:bg-bt-cyan-light transition-colors">
             View Facebook Page
           </a>

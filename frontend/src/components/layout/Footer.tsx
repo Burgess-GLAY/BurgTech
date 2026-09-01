@@ -27,10 +27,10 @@ const LINKS = {
 }
 
 const NEW_SOCIALS = [
-  { Icon: Facebook, href: 'https://www.facebook.com/share/1T74GwKndw/?mibextid=wwXIfr', label: 'Facebook' },
-  { Icon: Instagram, href: 'https://www.instagram.com/burgess.glay?igsh=MWJtazIyaWxzcXJ5dQ%3D%3D&utm_source=qr', label: 'Instagram' },
+  { Icon: Facebook, href: 'https://www.facebook.com/share/1CaiH7iYSw/?mibextid=wwXIfr', label: 'Facebook' },
+  { Icon: Instagram, href: 'https://www.instagram.com/burgessaglay?igsi=MWJtazIyaWxzcXJ5dQ%3D%3D&utm_source=qr', label: 'Instagram' },
   { Icon: Linkedin, href: 'https://www.linkedin.com/in/burgess-awalayah-glay-4696112b4?utm_source=share_via&utm_content=profile&utm_medium=member_ios', label: 'LinkedIn' },
-  { Icon: Twitter, href: 'https://twitter.com/burtechsolution', label: 'Twitter / X' },
+  { Icon: Twitter, href: 'https://x.com/glayburges27267?s=11', label: 'Twitter / X' },
   { Icon: Github, href: 'https://github.com/Burgess-GLAY', label: 'GitHub' },
   { Icon: MessageCircle, href: 'https://wa.me/231881952954', label: 'WhatsApp' },
 ]
@@ -197,7 +197,6 @@ export function Footer() {
 
         <div className="pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-white/35">© {year} BurgTech Solutions. All rights reserved.</p>
-          <p className="text-xs text-white/20">Cyprus · China · Liberia | Research at Nanjing University of Post and Telecommunications</p>
         </div>
       </div>
     </footer>
