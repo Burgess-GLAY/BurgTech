@@ -18,30 +18,50 @@ const chatSchema = z.object({
   })).max(20),
 })
 
-aiRouter.post('/chat', aiLimiter, upload.single('file'), async (req: Request, res: Response) => {
+aiRouter.post('/chat', aiLimiter, async (req: Request, res: Response) => {
   try {
     let messages
     
-    if (req.file) {
-      // Handle file upload
-      const file = req.file
-      const message = req.body.message || ''
-      
-      // For now, just acknowledge the file and process the text message
-      // File processing can be added later if needed
-      messages = [{
-        role: 'user' as const,
-        content: message || `I've uploaded a file: ${file.originalname}. Please help me with it.`
-      }]
+    // Check if this is a multipart/form-data request (file upload)
+    const contentType = req.headers['content-type'] || ''
+    if (contentType.includes('multipart/form-data')) {
+      // Handle file upload with multer
+      upload.single('file')(req, res, async (err) => {
+        if (err) {
+          console.error('File upload error:', err)
+          return res.status(400).json({ error: 'File upload failed' })
+        }
+        
+        try {
+          const file = (req as any).file
+          const message = req.body.message || ''
+          
+          messages = [{
+            role: 'user' as const,
+            content: message || `I've uploaded a file: ${file?.originalname || 'unknown'}. Please help me with it.`
+          }]
+          
+          const reply = await getAIResponse(messages)
+          const lastMsg = messages[messages.length - 1]?.content ?? ''
+          res.json({ reply, quickReplies: getQuickReplies(lastMsg) })
+        } catch (error) {
+          console.error('AI chat error with file:', error)
+          res.json({ reply: "I'm having trouble right now. Please try the contact form!" })
+        }
+      })
     } else {
+      // Handle regular JSON request
       const result = chatSchema.safeParse(req.body)
-      if (!result.success) return res.status(400).json({ error: result.error.flatten().fieldErrors })
+      if (!result.success) {
+        console.error('Validation error:', result.error.flatten().fieldErrors)
+        return res.status(400).json({ error: result.error.flatten().fieldErrors })
+      }
       messages = result.data.messages
+      
+      const reply = await getAIResponse(messages)
+      const lastMsg = messages[messages.length - 1]?.content ?? ''
+      res.json({ reply, quickReplies: getQuickReplies(lastMsg) })
     }
-    
-    const reply = await getAIResponse(messages)
-    const lastMsg = messages[messages.length - 1]?.content ?? ''
-    res.json({ reply, quickReplies: getQuickReplies(lastMsg) })
   } catch (error) {
     console.error('AI chat error:', error)
     res.json({ reply: "I'm having trouble right now. Please try the contact form!" })
