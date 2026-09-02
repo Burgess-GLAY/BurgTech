@@ -1,13 +1,10 @@
 import express from 'express'
-import http from 'http'
-import { Server as SocketServer } from 'socket.io'
 import cors from 'cors'
 import helmet from 'helmet'
 import compression from 'compression'
 import morgan from 'morgan'
 import { createRateLimiter } from './middleware/rateLimiter'
 import { errorHandler } from './middleware/errorHandler'
-import { registerSocketHandlers } from './services/socketService'
 import { prisma } from './lib/prisma'
 
 // Routes
@@ -19,23 +16,11 @@ import { projectsRouter } from './routes/projects'
 import { testimonialsRouter } from './routes/testimonials'
 import { blogRouter } from './routes/blog'
 import { messagesRouter } from './routes/messages'
-import { chatRouter } from './routes/chat'
 import { aiRouter } from './routes/ai'
 import { adminRouter } from './routes/admin'
 
 const app = express()
 app.set('trust proxy', 1)
-const server = http.createServer(app)
-
-export const io = new SocketServer(server, {
-  cors: {
-    origin: (process.env.FRONTEND_URL || 'http://localhost:3000').replace(/\/$/, ''),
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-})
-
-registerSocketHandlers(io)
 
 // Middleware
 app.use(helmet())
@@ -78,14 +63,13 @@ app.use(`${api}/projects`,     projectsRouter)
 app.use(`${api}/testimonials`, testimonialsRouter)
 app.use(`${api}/blog`,         blogRouter)
 app.use(`${api}/messages`,     messagesRouter)
-app.use(`${api}/chat`,         chatRouter)
 app.use(`${api}/ai`,           aiRouter)
 app.use(`${api}/admin`,        adminRouter)
 
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 4000
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Burtech API running on http://localhost:${PORT}`)
 })
 

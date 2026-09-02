@@ -12,7 +12,6 @@ import { cn } from '@/lib/utils'
 const NAV = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard },
   { label: 'Messages', href: '/admin/messages', icon: MessageSquare },
-  { label: 'Chat', href: '/admin/chat', icon: MessageSquare },
   { label: 'Projects', href: '/admin/projects', icon: FolderOpen },
   { label: 'Services', href: '/admin/services', icon: Layers },
   { label: 'Team', href: '/admin/team', icon: Users },

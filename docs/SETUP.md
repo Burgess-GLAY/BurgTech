@@ -7,7 +7,6 @@
 | Frontend | Next.js 14, React 18, TypeScript, Tailwind CSS, Framer Motion |
 | Backend | Express.js, TypeScript, Prisma ORM |
 | Database | PostgreSQL (Neon) |
-| Real-time | Socket.io (in-memory) |
 | AI Chatbot | OpenAI GPT-4o-mini |
 | Email | Resend |
 | Auth | JWT (custom) |
@@ -77,11 +76,11 @@ BurgTech/
 │   ├── prisma/
 │   │   └── schema.prisma          # Full database schema
 │   └── src/
-│       ├── index.ts               # Express + Socket.io server entry
+│       ├── index.ts               # Express server entry
 │       ├── controllers/           # Business logic (auth, projects)
 │       ├── routes/                # API route definitions
 │       ├── middleware/            # auth.ts, rateLimiter, errorHandler
-│       ├── services/              # socketService, aiService, emailService
+│       ├── services/              # aiService, emailService
 │       ├── lib/prisma.ts          # Prisma singleton
 │       └── seed.ts                # Initial data seeder
 │
@@ -101,8 +100,7 @@ BurgTech/
 │       │       └── messages/      # Inbox
 │       ├── components/
 │       │   ├── layout/            # Navbar, Footer, Providers
-│       │   ├── sections/          # All homepage sections
-│       │   └── chat/              # ChatWidget (AI + live Socket.io)
+│       │   └── sections/          # All homepage sections
 │       ├── hooks/useAuth.ts       # Zustand auth store
 │       └── lib/
 │           ├── api.ts             # Axios client with JWT interceptor
@@ -147,28 +145,6 @@ BurgTech/
 
 ---
 
-## Socket.io Events
-
-### Client → Server
-| Event | Payload | Description |
-|---|---|---|
-| `chat:join` | `{ visitorId, sessionId? }` | Join or create chat session |
-| `chat:message` | `{ content }` | Send a message |
-| `chat:typing` | `{ isTyping }` | Typing indicator |
-| `chat:adminJoin` | `{ sessionId, adminId }` | Admin joins a session |
-| `chat:getSessions` | — | Get all active sessions (admin) |
-
-### Server → Client
-| Event | Payload | Description |
-|---|---|---|
-| `chat:session` | `{ sessionId, history }` | Session info + message history |
-| `chat:message` | `{ id, sender, content, createdAt }` | New incoming message |
-| `chat:typing` | `{ isTyping, role }` | Typing indicator |
-| `chat:adminJoined` | `{ sessionId }` | Admin connected notification |
-| `chat:sessions` | `[session]` | Active sessions list |
-
----
-
 ## Admin Roles
 
 | Feature | SUPER_ADMIN | ADMIN | TEAM_MEMBER |
@@ -179,7 +155,6 @@ BurgTech/
 | Manage services | ✅ | ✅ | ❌ |
 | Manage blog | ✅ | ✅ | ✅ |
 | View messages | ✅ | ✅ | ✅ |
-| Reply to chat | ✅ | ✅ | ✅ |
 
 ---
 
@@ -223,7 +198,7 @@ docker compose logs -f web
 | `DIRECT_URL` | ✅ | Auto-configured from Render PostgreSQL (render.yaml) |
 | `JWT_SECRET` | ✅ | Min 32 chars, random (set in Render dashboard) |
 | `OPENAI_API_KEY` | ✅ | For AI chatbot (Buri) - from OpenAI dashboard |
-| `RESEND_API_KEY` | ✅ | For contact + chat emails - from Resend dashboard |
+| `RESEND_API_KEY` | ✅ | For contact emails - from Resend dashboard |
 | `ADMIN_EMAIL` | ✅ | Where alerts are sent (set in render.yaml) |
 | `FRONTEND_URL` | ✅ | For CORS — your production domain (set in render.yaml) |
 | `NEXT_PUBLIC_API_URL` | ✅ | Backend URL used by frontend (set in Vercel) |

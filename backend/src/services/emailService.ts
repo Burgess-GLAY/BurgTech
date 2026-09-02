@@ -33,19 +33,6 @@ export async function sendWelcomeEmail(to: string, name: string) {
   })
 }
 
-export async function sendChatNotificationEmail(message: string, visitorId: string) {
-  await resend.emails.send({
-    from: FROM,
-    to: ADMIN_EMAIL,
-    subject: 'New chat message on Burtech Solution',
-    html: `<h2>New visitor chat message</h2>
-      <p><strong>Visitor ID:</strong> ${visitorId}</p>
-      <p><strong>Message:</strong></p>
-      <blockquote>${message}</blockquote>
-      <p><a href="${process.env.FRONTEND_URL}/admin/messages">Reply in admin dashboard</a></p>`,
-  })
-}
-
 export async function sendOtpEmail(to: string, name: string, otp: string) {
   await resend.emails.send({
     from: FROM,

@@ -16,13 +16,12 @@
 
 **Advanced digital solutions — web, mobile, data analytics, AI, and cloud.**
 
-A production and development -ready full-stack company website and content management platform built with Next.js 14, Express, PostgreSQL, Socket.io, and OpenAI.
+A production and development -ready full-stack company website and content management platform built with Next.js 14, Express, PostgreSQL, and OpenAI.
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.1-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue?style=flat-square&logo=typescript)](https://typescriptlang.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql)](https://postgresql.org)
 [![Prisma](https://img.shields.io/badge/Prisma-5.10-2D3748?style=flat-square&logo=prisma)](https://prisma.io)
-[![Socket.io](https://img.shields.io/badge/Socket.io-4.7-010101?style=flat-square&logo=socket.io)](https://socket.io)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat-square&logo=docker)](https://docker.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
@@ -82,12 +81,6 @@ The platform is designed to be a scalable, production-ready MVP that a developme
 - **Blog management** — write, publish, and delete articles
 - **Users management** — Super Admin can manage all user accounts
 
-### Real-Time Chat System
-- **Floating chat widget** on every public page
-- **Dual mode** — AI assistant mode (instant) and live human agent mode
-- **Socket.io** — live message delivery, typing indicators, session persistence
-- **Admin receives live chat notifications** via email when no admin is online
-
 ### AI Chatbot — Buri
 - Powered by **OpenAI GPT-4o-mini**
 - Knows all Burtech services, pricing guidance, and company background
@@ -121,7 +114,6 @@ The platform is designed to be a scalable, production-ready MVP that a developme
 | Backend language | TypeScript | 5.3.3 |
 | ORM | Prisma | 5.10.0 |
 | Database | PostgreSQL | 16 |
-| Real-time | Socket.io | 4.7.4 |
 | AI | OpenAI SDK (GPT-4o-mini) | 4.28.0 |
 | Email | Resend | 3.1.0 |
 | Auth | JSON Web Tokens | 9.0.2 |
@@ -141,9 +133,9 @@ BurgTech/
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── prisma/
-│   │   └── schema.prisma             # Database schema (10 models)
+│   │   └── schema.prisma             # Database schema (8 models)
 │   └── src/
-│       ├── index.ts                  # Server entry — Express + Socket.io
+│       ├── index.ts                  # Server entry — Express
 │       ├── seed.ts                   # Database seeder
 │       ├── lib/
 │       │   └── prisma.ts             # Prisma client singleton
@@ -163,11 +155,9 @@ BurgTech/
 │       │   ├── blog.ts               # CRUD /blog
 │       │   ├── messages.ts           # CRUD /messages
 │       │   ├── users.ts              # CRUD /users (Super Admin)
-│       │   ├── chat.ts               # Chat session management
 │       │   ├── ai.ts                 # POST /ai/chat
 │       │   └── admin.ts              # GET /admin/stats
 │       └── services/
-│           ├── socketService.ts      # Socket.io event handlers
 │           ├── aiService.ts          # OpenAI integration (Buri)
 │           └── emailService.ts       # Resend email templates
 │
@@ -179,7 +169,7 @@ BurgTech/
 │   ├── next.config.js
 │   └── src/
 │       ├── app/                      # File-system routing
-│       │   ├── layout.tsx            # Root layout (Navbar, Footer, ChatWidget)
+│       │   ├── layout.tsx            # Root layout (Navbar, Footer)
 │       │   ├── globals.css           # Tailwind + custom utilities
 │       │   ├── page.tsx              # / — Home
 │       │   ├── about/page.tsx        # /about
@@ -200,10 +190,8 @@ BurgTech/
 │       │   │   ├── Navbar.tsx        # Sticky nav with services dropdown
 │       │   │   ├── Footer.tsx        # Full footer with links
 │       │   │   └── Providers.tsx     # React Query + Toaster
-│       │   ├── sections/
-│       │   │   └── index.tsx         # All homepage section components
-│       │   └── chat/
-│       │       └── ChatWidget.tsx    # Floating chat (AI + Socket.io)
+│       │   └── sections/
+│       │       └── index.tsx         # All homepage section components
 │       ├── hooks/
 │       │   └── useAuth.ts            # Zustand auth store (persist)
 │       └── lib/
@@ -361,26 +349,13 @@ All endpoints are prefixed with `/api/v1`.
 |---|---|---|---|---|
 | `POST` | `/ai/chat` | Public | 20/min | Get a response from Buri (AI assistant) |
 
-### Socket.io Events
+### Rate Limits
 
-**Client → Server**
-
-| Event | Payload | Description |
-|---|---|---|
-| `chat:join` | `{ visitorId, sessionId? }` | Join or create a chat session |
-| `chat:message` | `{ content }` | Send a message |
-| `chat:typing` | `{ isTyping }` | Broadcast typing state |
-| `chat:adminJoin` | `{ sessionId, adminId }` | Admin connects to a visitor session |
-| `chat:getSessions` | — | Fetch all active sessions (admin) |
-
-**Server → Client**
-
-| Event | Payload | Description |
-|---|---|---|
-| `chat:session` | `{ sessionId, history }` | Session confirmed + message history |
-| `chat:message` | `{ id, sender, content, createdAt }` | Incoming message |
-| `chat:typing` | `{ isTyping, role }` | Typing indicator from other participant |
-| `chat:adminJoined` | `{ sessionId }` | Notifies visitor that admin connected |
+| Endpoint | Limit |
+|---|---|
+| Global | 200 req / 15 min |
+| Auth endpoints (`/login`, `/register`) | 10 req / 15 min |
+| AI chat (`/ai/chat`) | 20 req / min |
 
 ---
 
@@ -415,7 +390,7 @@ The `npm run db:seed` command creates the following data automatically:
 
 ## Database Schema
 
-The Prisma schema at `backend/prisma/schema.prisma` defines 10 models:
+The Prisma schema at `backend/prisma/schema.prisma` defines 8 models:
 
 ```
 User             → Authentication, roles, profile
@@ -425,8 +400,6 @@ Project          → Portfolio projects
 Testimonial      → Client testimonials
 BlogPost         → News and insights articles
 Message          → Contact form submissions
-ChatSession      → Real-time chat session container
-ChatMessage      → Individual messages within a session
 SiteSetting      → Key-value store for global settings
 ```
 
@@ -434,7 +407,6 @@ SiteSetting      → Key-value store for global settings
 - `Role` — `SUPER_ADMIN`, `ADMIN`, `TEAM_MEMBER`, `CLIENT`
 - `ProjectStatus` — `COMPLETED`, `IN_PROGRESS`, `ARCHIVED`
 - `MessageStatus` — `UNREAD`, `READ`, `REPLIED`, `ARCHIVED`
-- `SenderType` — `VISITOR`, `ADMIN`, `BOT`
 - `PostCategory` — `COMPANY_NEWS`, `TECH_INSIGHTS`, `PROJECT_ANNOUNCEMENT`, `AI_DATA_SCIENCE`, `TUTORIAL`
 
 ---
