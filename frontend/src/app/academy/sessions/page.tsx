@@ -194,7 +194,7 @@ export default function SessionsPage() {
                         alt={session.title} 
                         className={cn(
                           "w-full h-full object-cover",
-                          session.id === 'data-analytics-series-2026' && "object-[0%_-10%]"
+                          session.id === 'data-analytics-series-2026' && "object-top"
                         )} 
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent" />
