@@ -189,7 +189,7 @@ export default function SessionsPage() {
                 <div className="h-52 relative w-full bg-surface border-b border-white/[0.06] overflow-hidden">
                   {session.image ? (
                     <>
-                      <img src={session.image} alt={session.title} className="w-full h-full object-cover" />
+                      <img src={session.image} alt={session.title} className="w-full h-full object-cover object-top" />
                       <div className="absolute inset-0 bg-gradient-to-t from-surface via-surface/20 to-transparent" />
                     </>
                   ) : (
