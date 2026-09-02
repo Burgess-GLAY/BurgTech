@@ -1,9 +1,11 @@
+'use client'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { BookOpen, Laptop, CalendarDays, Calendar } from 'lucide-react'
+import { useState } from 'react'
+import { BookOpen, Laptop, CalendarDays, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-export const metadata: Metadata = { 
+export const metadata: Metadata = {
   title: 'BurgTech Academy | Training and Internships',
   description: 'Practical technology training, professional workshops, and remote internship programmes by BurgTech Solutions.'
 }
@@ -33,13 +35,29 @@ const RECENT_SESSIONS = [
   {
     id:          'prompt-engineering-2026',
     title:       'Prompt Engineering Masterclass',
-    date:        'April 11, 2026',
+    date:        'November 18, 2026',
     instructor:  'Burgess Awalayah Glay',
     status:      'upcoming',
   },
 ]
 
+const SESSIONS_PER_PAGE = 4
+
 export default function AcademyPage() {
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const totalPages = Math.ceil(RECENT_SESSIONS.length / SESSIONS_PER_PAGE)
+  const startIndex = (currentPage - 1) * SESSIONS_PER_PAGE
+  const endIndex = startIndex + SESSIONS_PER_PAGE
+  const displayedSessions = RECENT_SESSIONS.slice(startIndex, endIndex)
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
   return (
     <div className="pt-28 pb-20">
       {/* Hero */}
@@ -111,7 +129,7 @@ export default function AcademyPage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {RECENT_SESSIONS.map((session) => (
+          {displayedSessions.map((session) => (
             <div key={session.id} className="glass-card p-6 relative flex flex-col">
               {/* Badge */}
               <div className="absolute top-6 right-6">
@@ -128,12 +146,12 @@ export default function AcademyPage() {
               </div>
 
               <h3 className="font-semibold text-white text-lg mb-2 pr-24">{session.title}</h3>
-              
+
               <div className="flex items-center gap-2 text-sm text-white/50 mb-4">
                 <Calendar className="w-4 h-4" />
                 <span>{session.date}</span>
               </div>
-              
+
               <p className="text-sm mb-1"><span className="text-white/40">Instructor:</span> <span className="text-bt-cyan font-medium">{session.instructor}</span></p>
               <p className="text-sm text-white/40 mb-6">Format: Online · Google Meet</p>
 
@@ -151,6 +169,54 @@ export default function AcademyPage() {
             </div>
           ))}
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-4 mt-8">
+            <button
+              onClick={() => goToPage(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={cn(
+                "p-2 rounded-lg border transition-colors",
+                currentPage === 1
+                  ? "border-white/10 text-white/30 cursor-not-allowed"
+                  : "border-white/20 text-white/70 hover:text-white hover:border-white/30"
+              )}
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  onClick={() => goToPage(page)}
+                  className={cn(
+                    "w-10 h-10 rounded-lg text-sm font-medium transition-colors",
+                    currentPage === page
+                      ? "bg-bt-cyan text-bg-primary"
+                      : "border border-white/20 text-white/70 hover:text-white hover:border-white/30"
+                  )}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => goToPage(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={cn(
+                "p-2 rounded-lg border transition-colors",
+                currentPage === totalPages
+                  ? "border-white/10 text-white/30 cursor-not-allowed"
+                  : "border-white/20 text-white/70 hover:text-white hover:border-white/30"
+              )}
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </section>
 
       {/* Social Proof */}
