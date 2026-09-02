@@ -514,6 +514,19 @@ async function main() {
       coverImage: '/images/blog/prompt.jpg',
       authorId: admin.id,
     },
+    {
+      slug: 'data-analytics-series-september-2026',
+      title: 'Burtech Academy: Data Analytics Series with Python — September 12 – October 17, 2026',
+      summary: 'Six-week live series on data analysis with Python. Learn fundamentals, data cleaning, analysis, and complete a real-world project.',
+      content: '<p>Burtech Academy is launching a six-week live series on Data Analysis with Python, running every Saturday from <strong>September 12 to October 17, 2026</strong> at 10:00 AM GMT via Google Meet.</p><h2>What You Will Learn</h2><ul><li>Data analytics fundamentals</li><li>Python programming essentials</li><li>Data cleaning and analysis</li><li>Real-world project and presentation</li></ul><h2>Format</h2><p>6 Saturdays (live, weekly) · Online via Google Meet · 10:00 AM GMT / UTC+0</p><h2>Instructor</h2><p>Burgess A. Glay — Chief System Architect and Founder, BurgTech Solutions · MSc Student, Computer Science and Technology</p><h2>How to Register</h2><p>Register via the Google Form: <a href="https://forms.gle/me6ejnhNEHPVC6HQ8" target="_blank" rel="noopener noreferrer">https://forms.gle/me6ejnhNEHPVC6HQ8</a></p>',
+      category: 'COMPANY_NEWS' as const,
+      tags: ['Academy', 'Data Analytics', 'Python', 'Data Science', 'Training'],
+      isPublished: true,
+      publishedAt: new Date('2026-09-02'),
+      readTimeMin: 5,
+      coverImage: '/images/teaching/dataanalysis.jpeg',
+      authorId: admin.id,
+    },
   ]
 
   for (const post of posts) {
@@ -525,7 +538,7 @@ async function main() {
   console.log('=== SEED COMPLETE ===')
   console.log('Admin: burgtechsolutions@gmail.com / CodeWithCarp!')
   console.log('Services: 16')
-  console.log('Blog posts: 4')
+  console.log('Blog posts: 5')
   console.log('Testimonials: 3')
   console.log('Team members: 4')
 }

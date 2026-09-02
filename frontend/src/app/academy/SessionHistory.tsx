@@ -33,6 +33,13 @@ const RECENT_SESSIONS = [
     instructor:  'Burgess Awalayah Glay',
     status:      'upcoming',
   },
+  {
+    id:          'data-analytics-series-2026',
+    title:       'BurgTech Data Analytics Series',
+    date:        'September 12, 2026 – October 17, 2026',
+    instructor:  'Burgess A. Glay',
+    status:      'upcoming',
+  },
 ]
 
 const SESSIONS_PER_PAGE = 4

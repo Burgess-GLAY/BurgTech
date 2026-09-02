@@ -99,8 +99,31 @@ const SESSIONS = [
       'Practical hands-on exercises',
     ],
     facebookUrl: null,
+    registrationUrl: null,
     image: '/images/blog/prompt.jpg',
     colorKey: 'from-indigo-500/20 to-purple-500/20',
+  },
+  {
+    id:          'data-analytics-series-2026',
+    title:       'BurgTech Data Analytics Series',
+    date:        'September 12, 2026 – October 17, 2026',
+    isoDate:     '2026-09-12',
+    duration:    '6 Saturdays (live, weekly)',
+    format:      'Online — Google Meet · 10:00 AM GMT / UTC+0',
+    instructor:  'Burgess A. Glay',
+    instructorRole: 'Chief System Architect and Founder, BurgTech Solutions · MSc Student, Computer Science and Technology',
+    status:      'upcoming',
+    description: 'A six-week live series on data analysis with Python. Students will progress from fundamentals through data cleaning and analysis, culminating in a real-world project presentation. Delivered live over six Saturday sessions by Burgess A. Glay, this hands-on course covers the complete data analytics workflow from Python programming essentials to practical application.',
+    topics: [
+      'Data analytics fundamentals',
+      'Python programming essentials',
+      'Data cleaning and analysis',
+      'Real-world project and presentation',
+    ],
+    facebookUrl: null,
+    registrationUrl: 'https://forms.gle/me6ejnhNEHPVC6HQ8',
+    image: '/images/teaching/dataanalysis.jpeg',
+    colorKey: 'from-emerald-500/20 to-teal-500/20',
   },
 ]
 
@@ -242,7 +265,12 @@ export default function SessionsPage() {
                         View on Facebook <ExternalLink className="w-4 h-4" />
                       </a>
                     )}
-                    {session.status === 'upcoming' && (
+                    {session.status === 'upcoming' && session.registrationUrl ? (
+                      <a href={session.registrationUrl} target="_blank" rel="noopener noreferrer"
+                        className="btn-primary w-full">
+                        Register now <ArrowRight className="w-4 h-4" />
+                      </a>
+                    ) : session.status === 'upcoming' && (
                       <Link href="/contact"
                         className="btn-primary w-full">
                         Register now <ArrowRight className="w-4 h-4" />
