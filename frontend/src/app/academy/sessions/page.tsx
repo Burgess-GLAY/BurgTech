@@ -298,7 +298,7 @@ export default function SessionsPage() {
           <p className="text-white/60 text-sm leading-relaxed flex-1">
             When a new session is announced, it is also published in our Insights section. Follow BurgTech on Facebook for the latest announcements.
           </p>
-          <a href="https://www.facebook.com/burgtech" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.facebook.com/share/1CaiH7iYSw/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer"
             className="flex-shrink-0 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-xs font-semibold hover:bg-white/10 transition-colors">
             Follow Us
           </a>
