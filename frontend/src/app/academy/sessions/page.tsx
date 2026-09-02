@@ -81,8 +81,8 @@ const SESSIONS = [
   {
     id:          'prompt-engineering-2026',
     title:       'Prompt Engineering Masterclass',
-    date:        'April 11, 2026',
-    isoDate:     '2026-04-11',
+    date:        'November 18, 2026',
+    isoDate:     '2026-11-18',
     duration:    'One day',
     format:      'Online — Google Meet',
     instructor:  'Burgess Awalayah Glay',
@@ -99,7 +99,7 @@ const SESSIONS = [
       'Practical hands-on exercises',
     ],
     facebookUrl: null,
-    image: null,
+    image: '/images/blog/prompt.jpg',
     colorKey: 'from-indigo-500/20 to-purple-500/20',
   },
 ]
