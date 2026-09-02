@@ -32,6 +32,7 @@ const RECENT_SESSIONS = [
     date:        'November 18, 2026',
     instructor:  'Burgess Awalayah Glay',
     status:      'upcoming',
+    registrationUrl: null,
   },
   {
     id:          'data-analytics-series-2026',
@@ -39,6 +40,7 @@ const RECENT_SESSIONS = [
     date:        'September 12, 2026 – October 17, 2026',
     instructor:  'Burgess A. Glay',
     status:      'upcoming',
+    registrationUrl: 'https://forms.gle/me6ejnhNEHPVC6HQ8',
   },
 ]
 
@@ -55,7 +57,6 @@ export function SessionHistory() {
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
@@ -100,6 +101,10 @@ export function SessionHistory() {
                 <Link href={`/academy/sessions#${session.id}`} className="text-sm font-medium text-white/70 hover:text-white transition-colors">
                   View session details →
                 </Link>
+              ) : session.registrationUrl ? (
+                <a href={session.registrationUrl} target="_blank" rel="noopener noreferrer" className="btn-primary inline-block px-5 py-2.5 text-sm">
+                  Register now
+                </a>
               ) : (
                 <Link href="/contact" className="btn-primary inline-block px-5 py-2.5 text-sm">
                   Register now
