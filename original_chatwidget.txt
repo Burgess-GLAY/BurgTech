@@ -1,38 +1,107 @@
-'use client'
-import { useState, useEffect, useRef } from 'react'
+﻿'use client'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Bot, Loader2, ChevronDown, Paperclip } from 'lucide-react'
+import { MessageCircle, X, Send, Bot, User, Loader2, ChevronDown, Paperclip } from 'lucide-react'
+import { io, Socket } from 'socket.io-client'
 import { cn } from '@/lib/utils'
 
-type Sender = 'visitor' | 'bot'
+type Mode = 'ai' | 'human'
+type Sender = 'visitor' | 'admin' | 'bot'
 
 interface Msg { id: string; content: string; sender: Sender; createdAt: Date }
 
 const QUICK = ['What services do you offer?', 'How much does a website cost?', 'See your portfolio', 'I need a mobile app']
 
+let socket: Socket | null = null
+
+function getVisitorId() {
+  if (typeof window === 'undefined') return 'anon'
+  let id = localStorage.getItem('bt_vid')
+  if (!id) { id = Math.random().toString(36).slice(2); localStorage.setItem('bt_vid', id) }
+  return id
+}
+
 export function ChatWidget() {
   const [open, setOpen]           = useState(false)
+  const [mode, setMode]           = useState<Mode>('ai')
   const [messages, setMessages]   = useState<Msg[]>([])
   const [input, setInput]         = useState('')
   const [loading, setLoading]     = useState(false)
+  const [typing, setTyping]       = useState(false)
+  const [unread, setUnread]       = useState(0)
   const [attachedFile, setAttachedFile] = useState<File | null>(null)
+  const [connected, setConnected] = useState(false)
   const bottomRef                 = useRef<HTMLDivElement>(null)
   const fileInputRef              = useRef<HTMLInputElement>(null)
+  const visitorId                 = useRef<string | null>(null)
 
   useEffect(() => {
-    setMessages([{ id: 'w', content: "Hi! I'm Buri, Burtech's AI assistant. Ask me anything about our services!", sender: 'bot', createdAt: new Date() }])
+    visitorId.current = getVisitorId()
+    setMessages([{ id: 'w', content: "Hi! I'm Buri, Burtech's AI assistant. Ask me anything about our services, or click 'Talk to team' to connect with us directly.", sender: 'bot', createdAt: new Date() }])
   }, [])
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
 
+  useEffect(() => {
+    if (!open && messages.length > 1) {
+      const last = messages[messages.length - 1]
+      if (last.sender !== 'visitor') setUnread(n => n + 1)
+    }
+  }, [messages])
+
+  useEffect(() => { if (open) setUnread(0) }, [open])
+
+  const connectSocket = useCallback(() => {
+    if (socket?.connected) {
+      // Socket already connected, ensure we have listeners
+      socket.on('chat:message', (msg: any) => {
+        setMessages(p => [...p, { id: msg.id, content: msg.content, sender: msg.sender.toLowerCase() as Sender, createdAt: new Date(msg.createdAt) }])
+      })
+      socket.on('chat:typing', ({ isTyping, role }: any) => { if (role === 'admin') setTyping(isTyping) })
+      socket.on('chat:session', ({ sessionId, history }: any) => {
+        localStorage.setItem('bt_sid', sessionId)
+        if (history?.length) {
+          setMessages(history.map((m: any) => ({ id: m.id, content: m.content, sender: m.sender.toLowerCase() as Sender, createdAt: new Date(m.createdAt) })))
+        }
+      })
+      return
+    }
+    socket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000', { transports: ['websocket'] })
+    socket.on('connect', () => {
+      setConnected(true)
+      socket!.emit('chat:join', { visitorId: visitorId.current || 'anon', sessionId: localStorage.getItem('bt_sid') || undefined })
+    })
+    socket.on('disconnect', () => {
+      setConnected(false)
+    })
+    socket.on('chat:session', ({ sessionId, history }: any) => {
+      localStorage.setItem('bt_sid', sessionId)
+      if (history?.length) {
+        setMessages(history.map((m: any) => ({ id: m.id, content: m.content, sender: m.sender.toLowerCase() as Sender, createdAt: new Date(m.createdAt) })))
+      }
+    })
+    socket.on('chat:message', (msg: any) => {
+      setMessages(p => [...p, { id: msg.id, content: msg.content, sender: msg.sender.toLowerCase() as Sender, createdAt: new Date(msg.createdAt) }])
+    })
+    socket.on('chat:typing', ({ isTyping, role }: any) => { if (role === 'admin') setTyping(isTyping) })
+  }, [])
+
+  const switchToHuman = () => {
+    setMode('human')
+    connectSocket()
+    setMessages(p => [...p, { id: Date.now().toString(), content: "Connecting you to the Burtech team. We typically reply within a few minutes ΓÇö leave your message and we'll get back to you!", sender: 'bot', createdAt: new Date() }])
+  }
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // Validate file type
       const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain']
       if (!allowedTypes.includes(file.type)) {
         alert('Please upload a PDF, DOC, DOCX, or TXT file')
         return
       }
+      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert('File size must be less than 5MB')
         return
@@ -49,33 +118,37 @@ export function ChatWidget() {
     const userMsg: Msg = { id: Date.now().toString(), content: text || (attachedFile ? `Attached: ${attachedFile.name}` : ''), sender: 'visitor', createdAt: new Date() }
     setMessages(p => [...p, userMsg])
 
-    setLoading(true)
-    try {
-      const history = messages.filter(m => m.sender === 'visitor' || m.sender === 'bot').map(m => ({ role: m.sender === 'visitor' ? 'user' : 'assistant' as const, content: m.content }))
-      
-      let body: any
-      let headers: any = {}
-      
-      if (attachedFile) {
-        const formData = new FormData()
-        formData.append('file', attachedFile)
-        formData.append('message', text)
-        body = formData
-      } else {
-        headers['Content-Type'] = 'application/json'
-        body = JSON.stringify({ messages: [...history, { role: 'user', content: text }] })
-      }
+    if (mode === 'ai') {
+      setLoading(true)
+      try {
+        const history = messages.filter(m => m.sender === 'visitor' || m.sender === 'bot').map(m => ({ role: m.sender === 'visitor' ? 'user' : 'assistant' as const, content: m.content }))
+        
+        let body: any
+        let headers: any = {}
+        
+        if (attachedFile) {
+          const formData = new FormData()
+          formData.append('file', attachedFile)
+          formData.append('message', text)
+          body = formData
+        } else {
+          headers['Content-Type'] = 'application/json'
+          body = JSON.stringify({ messages: [...history, { role: 'user', content: text }] })
+        }
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/ai/chat`, {
-        method: 'POST',
-        headers,
-        body,
-      })
-      const data = await res.json()
-      setMessages(p => [...p, { id: Date.now().toString(), content: data.reply, sender: 'bot', createdAt: new Date() }])
-    } catch {
-      setMessages(p => [...p, { id: Date.now().toString(), content: "Sorry, I'm having trouble. Try our contact form!", sender: 'bot', createdAt: new Date() }])
-    } finally { setLoading(false) }
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/api/v1/ai/chat`, {
+          method: 'POST',
+          headers,
+          body,
+        })
+        const data = await res.json()
+        setMessages(p => [...p, { id: Date.now().toString(), content: data.reply, sender: 'bot', createdAt: new Date() }])
+      } catch {
+        setMessages(p => [...p, { id: Date.now().toString(), content: "Sorry, I'm having trouble. Try our contact form!", sender: 'bot', createdAt: new Date() }])
+      } finally { setLoading(false) }
+    } else {
+      socket?.emit('chat:message', { content: text })
+    }
   }
 
   return (
@@ -95,10 +168,16 @@ export function ChatWidget() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold">Burtech Assistant</p>
-                  <p className="text-xs text-white/40">AI Online</p>
+                  <p className="text-xs text-white/40">{mode === 'ai' ? 'AI Online' : (connected ? 'Team Online' : 'Connecting to team...')}</p>
                 </div>
               </div>
               <button onClick={() => setOpen(false)} className="p-1 text-white/40 hover:text-white"><X className="w-4 h-4" /></button>
+            </div>
+
+            {/* Mode toggle */}
+            <div className="flex px-3 pt-2 gap-2">
+              <button onClick={() => setMode('ai')} className={cn('flex-1 text-xs py-1.5 rounded-lg transition-colors', mode === 'ai' ? 'bg-bt-cyan/15 text-bt-cyan border border-bt-cyan/25' : 'text-white/40 hover:text-white/60')}>AI Assistant</button>
+              <button onClick={switchToHuman}        className={cn('flex-1 text-xs py-1.5 rounded-lg transition-colors', mode === 'human' ? 'bg-bt-cyan/15 text-bt-cyan border border-bt-cyan/25' : 'text-white/40 hover:text-white/60')}>Talk to team</button>
             </div>
 
             {/* Messages */}
@@ -107,7 +186,7 @@ export function ChatWidget() {
                 <div key={msg.id} className={cn('flex gap-2', msg.sender === 'visitor' ? 'flex-row-reverse' : 'flex-row')}>
                   {msg.sender !== 'visitor' && (
                     <div className="w-6 h-6 rounded-full bg-bt-cyan/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Bot className="w-3 h-3 text-bt-cyan-light" />
+                      {msg.sender === 'admin' ? <User className="w-3 h-3 text-bt-cyan" /> : <Bot className="w-3 h-3 text-bt-cyan-light" />}
                     </div>
                   )}
                   <div className={cn('max-w-[75%] px-3 py-2 rounded-2xl text-sm leading-relaxed',
@@ -115,7 +194,7 @@ export function ChatWidget() {
                   )}>{msg.content}</div>
                 </div>
               ))}
-              {loading && (
+              {(loading || typing) && (
                 <div className="flex gap-2">
                   <div className="w-6 h-6 rounded-full bg-bt-cyan/20 flex items-center justify-center"><Bot className="w-3 h-3 text-bt-cyan-light" /></div>
                   <div className="bg-white/[0.06] px-3 py-2 rounded-2xl rounded-tl-sm flex items-center gap-1">
@@ -169,7 +248,7 @@ export function ChatWidget() {
               {attachedFile && (
                 <div className="mt-2 flex items-center gap-2 text-xs text-white/60">
                   <span className="truncate">{attachedFile.name}</span>
-                  <button onClick={() => setAttachedFile(null)} className="text-white/40 hover:text-white">✕</button>
+                  <button onClick={() => setAttachedFile(null)} className="text-white/40 hover:text-white">Γ£ò</button>
                 </div>
               )}
             </div>
@@ -187,6 +266,11 @@ export function ChatWidget() {
             : <motion.div key="o" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}><MessageCircle className="w-6 h-6 text-white" /></motion.div>
           }
         </AnimatePresence>
+        {unread > 0 && !open && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+            {unread > 9 ? '9+' : unread}
+          </span>
+        )}
       </motion.button>
     </div>
   )
