@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { BookOpen, Laptop, CalendarDays } from 'lucide-react'
 import { SessionHistory } from './SessionHistory'
 
+// Server component - metadata export requires server component
+
 export const metadata: Metadata = {
   title: 'BurgTech Academy | Training and Internships',
   description: 'Practical technology training, professional workshops, and remote internship programmes by BurgTech Solutions.'
