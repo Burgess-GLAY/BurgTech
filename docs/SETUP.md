@@ -100,7 +100,8 @@ BurgTech/
 │       │       └── messages/      # Inbox
 │       ├── components/
 │       │   ├── layout/            # Navbar, Footer, Providers
-│       │   └── sections/          # All homepage sections
+│       │   ├── sections/          # All homepage sections
+│       │   └── chat/              # ChatWidget (AI assistant)
 │       ├── hooks/useAuth.ts       # Zustand auth store
 │       └── lib/
 │           ├── api.ts             # Axios client with JWT interceptor

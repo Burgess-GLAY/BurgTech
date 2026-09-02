@@ -82,9 +82,9 @@ The platform is designed to be a scalable, production-ready MVP that a developme
 - **Users management** — Super Admin can manage all user accounts
 
 ### AI Chatbot — Buri
+- Floating chat widget on every public page
 - Powered by **OpenAI GPT-4o-mini**
 - Knows all Burtech services, pricing guidance, and company background
-- Smart quick-reply suggestions based on conversation context
 - Rate-limited to prevent abuse
 - Falls back gracefully when OpenAI is unavailable
 
@@ -169,7 +169,7 @@ BurgTech/
 │   ├── next.config.js
 │   └── src/
 │       ├── app/                      # File-system routing
-│       │   ├── layout.tsx            # Root layout (Navbar, Footer)
+│       │   ├── layout.tsx            # Root layout (Navbar, Footer, ChatWidget)
 │       │   ├── globals.css           # Tailwind + custom utilities
 │       │   ├── page.tsx              # / — Home
 │       │   ├── about/page.tsx        # /about
@@ -190,8 +190,10 @@ BurgTech/
 │       │   │   ├── Navbar.tsx        # Sticky nav with services dropdown
 │       │   │   ├── Footer.tsx        # Full footer with links
 │       │   │   └── Providers.tsx     # React Query + Toaster
-│       │   └── sections/
-│       │       └── index.tsx         # All homepage section components
+│       │   ├── sections/
+│       │   │   └── index.tsx         # All homepage section components
+│       │   └── chat/
+│       │       └── ChatWidget.tsx    # AI assistant chat widget
 │       ├── hooks/
 │       │   └── useAuth.ts            # Zustand auth store (persist)
 │       └── lib/
