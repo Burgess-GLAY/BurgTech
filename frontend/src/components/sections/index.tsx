@@ -227,13 +227,13 @@ export function ServicesPreview() {
               [1, 2, 3, 4].map(i => <div key={i} className="glass-card h-16 animate-pulse rounded-2xl" />)
             ) : (
               grouped.map((group) => (
-                <div key={group.label} className="glass-card overflow-hidden rounded-2xl border border-white/[0.05] transition-all">
+                <div key={group.label} className={cn('glass-card overflow-hidden rounded-2xl border border-white/[0.05] transition-all', openCategory === group.label && 'border-bt-cyan/30 bg-bt-cyan/5')}>
                   <button
                     onClick={() => setOpenCategory(openCategory === group.label ? null : group.label)}
-                    className="w-full flex items-center justify-between px-6 py-4 hover:bg-white/[0.02] transition-colors"
+                    className={cn('w-full flex items-center justify-between px-6 py-4 hover:bg-white/[0.02] transition-colors', openCategory === group.label && 'bg-bt-cyan/10')}
                   >
-                    <span className={cn('text-base md:text-lg font-bold transition-colors', openCategory === group.label ? 'text-bt-cyan' : 'text-white/80')}>{group.label}</span>
-                    <ChevronDown className={cn('w-4 h-4 text-white/40 transition-transform duration-300', openCategory === group.label && 'rotate-180')} />
+                    <span className="text-base md:text-lg font-bold text-bt-cyan transition-colors">{group.label}</span>
+                    <ChevronDown className={cn('w-4 h-4 text-bt-cyan transition-transform duration-300', openCategory === group.label && 'rotate-180')} />
                   </button>
                   <AnimatePresence initial={false}>
                     {openCategory === group.label && (
