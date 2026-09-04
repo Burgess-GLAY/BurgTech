@@ -29,7 +29,7 @@ export default function PrivacyPolicy() {
               <h2 className="text-xl font-bold text-white">Introduction</h2>
             </div>
             <p className="text-white/60 text-sm leading-relaxed">
-              BurgTech Solutions ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website burgtechsolutions.com and use our services.
+              BurgTech Solutions ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our services.
             </p>
           </section>
 
@@ -40,18 +40,18 @@ export default function PrivacyPolicy() {
               </div>
               <h2 className="text-xl font-bold text-white">Information We Collect</h2>
             </div>
-            <div className="space-y-3 text-white/60 text-sm">
+            <div className="space-y-3">
               <div>
-                <h3 className="font-semibold text-white mb-1">Personal Information</h3>
-                <p className="leading-relaxed">Name, email address, phone number from contact forms, newsletter subscriptions, and service requests.</p>
+                <h3 className="text-base font-semibold text-white mb-1">Personal Information</h3>
+                <p className="text-white/60 text-sm leading-relaxed">Name, email address, phone number from contact forms, newsletter subscriptions, and service requests.</p>
               </div>
               <div>
-                <h3 className="font-semibold text-white mb-1">Technical Data</h3>
-                <p className="leading-relaxed">IP address, browser type, device information, operating system, and browsing behavior via cookies.</p>
+                <h3 className="text-base font-semibold text-white mb-1">Technical Data</h3>
+                <p className="text-white/60 text-sm leading-relaxed">IP address, browser type, device information, operating system, and browsing behavior via cookies.</p>
               </div>
               <div>
-                <h3 className="font-semibold text-white mb-1">Communication Data</h3>
-                <p className="leading-relaxed">Records of email, contact form, and chat communications for service improvement and support.</p>
+                <h3 className="text-base font-semibold text-white mb-1">Communication Data</h3>
+                <p className="text-white/60 text-sm leading-relaxed">Records of email, contact form, and chat communications for service improvement and support.</p>
               </div>
             </div>
           </section>
