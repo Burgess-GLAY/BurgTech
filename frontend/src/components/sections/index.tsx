@@ -32,7 +32,6 @@ const SERVICE_ICONS: Record<string, React.ElementType> = {
 const CATEGORY_GROUPS = [
   {
     label: 'Development',
-    color: 'text-bt-cyan',
     slugs: [
       'web-development', 'web-design', 'mobile-apps',
       'software-development', 'database-systems', 'api-integration',
@@ -40,7 +39,6 @@ const CATEGORY_GROUPS = [
   },
   {
     label: 'Data & Intelligence',
-    color: 'text-bt-teal',
     slugs: [
       'data-analytics', 'predictive-analytics',
       'data-science', 'ai-ml',
@@ -48,12 +46,10 @@ const CATEGORY_GROUPS = [
   },
   {
     label: 'Cloud & Infrastructure',
-    color: 'text-bt-cyan-light',
     slugs: ['cloud-migration', 'cloud-architecture', 'devops'],
   },
   {
     label: 'Growth & Strategy',
-    color: 'text-bt-teal',
     slugs: [
       'seo-content', 'project-management', 'digital-transformation',
     ],
@@ -236,7 +232,7 @@ export function ServicesPreview() {
                     onClick={() => setOpenCategory(openCategory === group.label ? null : group.label)}
                     className="w-full flex items-center justify-between px-6 py-4 hover:bg-white/[0.02] transition-colors"
                   >
-                    <span className={`text-base md:text-lg font-bold ${group.color}`}>{group.label}</span>
+                    <span className={cn('text-base md:text-lg font-bold transition-colors', openCategory === group.label ? 'text-bt-cyan' : 'text-white/80')}>{group.label}</span>
                     <ChevronDown className={cn('w-4 h-4 text-white/40 transition-transform duration-300', openCategory === group.label && 'rotate-180')} />
                   </button>
                   <AnimatePresence initial={false}>
