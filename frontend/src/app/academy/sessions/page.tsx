@@ -1,6 +1,7 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, ExternalLink, ArrowRight, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -130,7 +131,17 @@ const SESSIONS = [
 type FilterTab = 'ALL' | 'COMPLETED' | 'UPCOMING'
 
 export default function SessionsPage() {
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<FilterTab>('ALL')
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam === 'upcoming') {
+      setActiveTab('UPCOMING')
+    } else if (tabParam === 'completed') {
+      setActiveTab('COMPLETED')
+    }
+  }, [searchParams])
 
   const filteredSessions = SESSIONS.filter(s => {
     if (activeTab === 'COMPLETED') return s.status === 'completed'

@@ -23,9 +23,9 @@ export default function AcademyPage() {
           BurgTech Academy is the education arm of BurgTech Solutions. We deliver practical technology training online, host workshops taught by industry practitioners, and run remote internship programmes for developers and analysts across Africa and beyond.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/academy/sessions"
+          <Link href="/academy/sessions?tab=upcoming"
             className="btn-primary w-full sm:w-auto px-8 py-3.5 bg-white text-slate-900">
-            View past sessions
+            View upcoming sessions
           </Link>
           <Link href="/academy/internship"
             className="w-full sm:w-auto px-8 py-3.5 bg-white/5 border border-white/10 text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
@@ -64,7 +64,7 @@ export default function AcademyPage() {
             <div className="w-12 h-12 rounded-xl bg-bt-teal-subtle border border-bt-teal/20 flex items-center justify-center mb-6">
               <CalendarDays className="w-6 h-6 text-bt-cyan" />
             </div>
-            <h3 className="text-xl font-bold mb-3">Upcoming Sessions</h3>
+            <h3 className="text-xl font-bold mb-3">All Sessions</h3>
             <p className="text-white/55 text-sm leading-relaxed">
               We regularly announce new training dates on our website and Facebook page. Register your interest to be notified when new sessions open.
             </p>

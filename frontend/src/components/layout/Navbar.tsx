@@ -134,9 +134,8 @@ const ABOUT_LINKS = [
 
 const ACADEMY_LINKS = [
   { label: 'Burtech Academy', href: '/academy', desc: 'All training programmes and sessions', Icon: GraduationCap },
-  { label: 'Past Sessions', href: '/academy/sessions', desc: 'Completed workshops and classes', Icon: BookOpen },
+  { label: 'Sessions', href: '/academy/sessions', desc: 'All workshops and classes', Icon: BookOpen },
   { label: 'Remote Internship', href: '/academy/internship', desc: 'Join our remote internship programme', Icon: Laptop },
-  { label: 'Upcoming Events', href: '/academy/upcoming', desc: 'Register for the next session', Icon: CalendarDays },
 ]
 
 export function Navbar() {
