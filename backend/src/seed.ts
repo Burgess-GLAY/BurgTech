@@ -467,7 +467,7 @@ async function main() {
       title: 'I Completed a Cloud Computing Workshop: What I Learned',
       summary: 'A first-hand account of completing an intensive cloud computing workshop covering AWS, serverless architecture, containerisation, and real-world deployment.',
       content: '<p>Earlier this year I had the privilege of completing an intensive cloud computing workshop. As someone who builds digital products for businesses across Africa, understanding cloud architecture is foundational.</p><h2>What the Workshop Covered</h2><p>The programme covered AWS core services, serverless with Lambda, Docker and Kubernetes, and CI/CD pipelines with GitHub Actions. It was taught by certified cloud engineer Naison Faray.</p><h2>Why This Matters for Burtech Solution</h2><p>Cloud computing is present tense for African businesses. This workshop deepened my technical foundation and will directly improve the infrastructure decisions we make for every client project going forward.</p>',
-      category: 'COMPANY_NEWS' as const,
+      category: 'TECH_INSIGHTS' as const,
       tags: ['Cloud Computing', 'AWS', 'Workshop', 'Learning', 'Liberia'],
       isPublished: true,
       publishedAt: new Date('2026-02-25'),

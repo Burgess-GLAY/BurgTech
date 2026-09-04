@@ -32,7 +32,6 @@ enum MessageStatus {
 enum PostCategory {
   COMPANY_NEWS
   TECH_INSIGHTS
-  PROJECT_ANNOUNCEMENT
   AI_DATA_SCIENCE
   TUTORIAL
 }

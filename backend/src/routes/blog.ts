@@ -12,7 +12,7 @@ const blogPostSchema = z.object({
   summary: z.string().min(10).max(300),
   content: z.string().min(20),
   coverImage: z.string().url().optional().or(z.literal('')),
-  category: z.enum(['COMPANY_NEWS', 'TECH_INSIGHTS', 'PROJECT_ANNOUNCEMENT', 'AI_DATA_SCIENCE', 'TUTORIAL']),
+  category: z.enum(['COMPANY_NEWS', 'TECH_INSIGHTS', 'AI_DATA_SCIENCE', 'TUTORIAL']),
   tags: z.array(z.string()).default([]),
   isPublished: z.boolean().default(false),
 })

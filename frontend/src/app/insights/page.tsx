@@ -8,7 +8,6 @@ const CATEGORIES = [
   { key: 'AI_DATA_SCIENCE',       label: 'AI & Data Science' },
   { key: 'COMPANY_NEWS',          label: 'Company News' },
   { key: 'TECH_INSIGHTS',         label: 'Tech Insights' },
-  { key: 'PROJECT_ANNOUNCEMENT',  label: 'Projects' },
   { key: 'TUTORIAL',              label: 'Tutorials' },
 ]
 
